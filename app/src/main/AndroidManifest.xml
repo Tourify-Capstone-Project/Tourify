@@ -16,9 +16,6 @@
             android:name=".ui.view.register.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.profile.ProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.view.onboardingpage.OnBoardingActivity"
             android:exported="false" />
         <activity
@@ -31,16 +28,7 @@
             android:name=".ui.view.detail.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.estimasi.EstimasiActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.view.favorite.FavoriteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.view.homepage.HomePageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".ui.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
