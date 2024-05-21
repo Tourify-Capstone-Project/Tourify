@@ -31,6 +31,7 @@
             android:name=".ui.view.detail.DetailActivity"
             android:exported="false" />
         <activity
+<<<<<<< HEAD
             android:name=".ui.view.estimasi.EstimasiActivity"
             android:exported="false" />
         <activity
@@ -41,6 +42,9 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+=======
+            android:name=".ui.view.MainActivity"
+>>>>>>> main
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
