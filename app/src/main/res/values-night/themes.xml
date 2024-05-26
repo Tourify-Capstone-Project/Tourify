@@ -87,4 +87,8 @@
         <item name="backgroundTint">@color/BackGroundCard</item>
     </style>
 
+    <style name="icon">
+        <item name="tint">@color/white</item>
+    </style>
+
 </resources>

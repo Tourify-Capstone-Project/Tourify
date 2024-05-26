@@ -27,8 +27,8 @@
                 android:id="@+id/imagePoster"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:src="@tools:sample/avatars"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -36,30 +36,31 @@
             style="@style/TextCard.Favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
             android:layout_marginStart="10dp"
+            android:text="Title"
             app:layout_constraintStart_toEndOf="@+id/cardPoster"
-            app:layout_constraintTop_toTopOf="@+id/cardPoster"/>
+            app:layout_constraintTop_toTopOf="@+id/cardPoster" />
 
         <TextView
             android:id="@+id/tvPrice"
             style="@style/TextTitle.Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@+id/cardPoster"
-            app:layout_constraintBottom_toBottomOf="@+id/cardPoster"/>
+            android:text="Price"
+            app:layout_constraintBottom_toBottomOf="@+id/cardPoster"
+            app:layout_constraintStart_toEndOf="@+id/cardPoster" />
 
         <ImageView
             android:id="@+id/favorite"
+            style="@style/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/heart_light"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/heart_light"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
