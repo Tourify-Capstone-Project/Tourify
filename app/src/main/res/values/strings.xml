@@ -2,4 +2,27 @@
     <string name="app_name">Tourify</string>
     <string name="hello_world_welcome">Hello World Welcome!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_onBoarding_1">Find Your Dream Destination</string>
+    <string name="title_onBoarding_2">Plan a Trip with Ease</string>
+    <string name="desc_onBoarding_1">Welcome to Tourify! We are here to help you discover and plan the trip of your dreams. Explore amazing destinations, from beautiful beaches to historic cities, all in one app.</string>
+    <string name="desc_onBoarding_2">With Tourify, planning a trip is easier and more fun. Find recommendations on the best places to visit, exciting activities you can do, and travel packages that suit your needs. Lets start your adventure with Tourify!</string>
+    <string name="btn_onBoarding_start">Start</string>
+    <string name="appBar_Detail">Detail Destination</string>
+    <string name="email_not_valid">Email Not Valid</string>
+    <string name="password_cannot_be_less_than_8_character">Password Cannot be Less Than 8 Character</string>
+    <string name="string_login">Login</string>
+    <string name="string_email">Email</string>
+    <string name="string_password">Password</string>
+    <string name="don_t_have_account_sign_up">Don’t have account? <font color="#4F4FC2">Sign up</font></string>
+    <string name="i_have_account_sign_in">I have account! <font color="#4F4FC2">Sign in</font></string>
+    <string name="string_forgot_password">Forgot Password?</string>
+    <string name="string_username">Username</string>
+    <string name="string_register">Register</string>
+    <string name="title_detail">The Great Asia Africa</string>
+    <string name="string_rating">4.4</string>
+    <string name="string_review">(137 review)</string>
+    <string name="string_price">Rp 44.000</string>
+    <string name="string_kategori">Kategori</string>
+    <string name="string_favorite">Favorite</string>
+    <string name="title_kategori">Mount Rinjani</string>
 </resources>
