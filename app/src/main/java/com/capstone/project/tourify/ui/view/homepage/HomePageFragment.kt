@@ -5,7 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.databinding.FragmentHomePageBinding
+import com.capstone.project.tourify.ui.adapter.ArticleAdapter
+import com.capstone.project.tourify.ui.adapter.ArticleItem
+import com.capstone.project.tourify.ui.adapter.CategoryAdapter
+import com.capstone.project.tourify.ui.adapter.CategoryItem
+import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
+import com.capstone.project.tourify.ui.adapter.RecommendedItem
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,12 +38,64 @@ class HomePageFragment : Fragment() {
         }
     }
 
+    private var _binding: FragmentHomePageBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var recommendedAdapter: RecommendedAdapter
+    private lateinit var articleAdapter: ArticleAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_page, container, false)
+        _binding = FragmentHomePageBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        // Contoh data
+        val categoryItems = listOf(
+            CategoryItem("Bahari", R.drawable.bahari),
+            CategoryItem("Village \nTourism", R.drawable.village_tourism),
+            CategoryItem("Cagar \nAlam", R.drawable.cagar_alam),
+            CategoryItem("Taman \nNasional", R.drawable.taman_nasional),
+            CategoryItem("Culture", R.drawable.culture),
+            CategoryItem("Culinary \nDestination", R.drawable.culinary)
+        )
+
+        val recommendedItems = listOf(
+            RecommendedItem("The Great Asia Africa", R.drawable.coba),
+            RecommendedItem("The Great Asia Africano numero uno", R.drawable.coba),
+            RecommendedItem("The Great Asia Africa", R.drawable.coba),
+            RecommendedItem("The Great Asia Africa", R.drawable.coba),
+            RecommendedItem("The Great Asia Africa", R.drawable.coba)
+        )
+
+        val articleItems = listOf(
+            ArticleItem("Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya", "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya", R.drawable.coba),
+            ArticleItem("Title 2", "Description 2", R.drawable.coba)
+            // Tambahkan artikel lainnya di sini
+        )
+
+        // Inisialisasi Adapter dan set ke RecyclerView untuk kategori
+        categoryAdapter = CategoryAdapter(categoryItems)
+        binding.rvCategory.adapter = categoryAdapter
+        binding.rvCategory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        // Inisialisasi Adapter dan set ke RecyclerView untuk rekomendasi
+        recommendedAdapter = RecommendedAdapter(recommendedItems)
+        binding.rvRecommend.adapter = recommendedAdapter
+        binding.rvRecommend.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        // Inisialisasi Adapter dan set ke RecyclerView untuk artikel
+        articleAdapter = ArticleAdapter(articleItems)
+        binding.rvArticle.adapter = articleAdapter
+        binding.rvArticle.layoutManager = LinearLayoutManager(context)
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
