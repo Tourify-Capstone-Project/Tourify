@@ -67,4 +67,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation("nl.joery.animatedbottombar:library:1.1.0")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }

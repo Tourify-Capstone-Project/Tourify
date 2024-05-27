@@ -1,14 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     tools:context=".ui.view.profile.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/titleFragment"
+            style="@style/TextTitle.AppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="My Profile"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/bahari"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleFragment" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            style="@style/TextTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageProfile"
+            app:layout_constraintTop_toTopOf="@+id/imageProfile" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            style="@style/TextTitle.Description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="Example@gmail.com"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageProfile"
+            app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:text="Edit Profile"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/imageProfile"
+            app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEdit" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

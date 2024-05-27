@@ -2,6 +2,8 @@
     <string name="app_name">Tourify</string>
     <string name="hello_world_welcome">Hello World Welcome!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="search_hint">Search location</string>
     <string name="title_onBoarding_1">Find Your Dream Destination</string>
     <string name="title_onBoarding_2">Plan a Trip with Ease</string>
     <string name="desc_onBoarding_1">Welcome to Tourify! We are here to help you discover and plan the trip of your dreams. Explore amazing destinations, from beautiful beaches to historic cities, all in one app.</string>

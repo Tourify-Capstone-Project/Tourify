@@ -5,7 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.ui.adapter.EstimasiAdapter
+import com.capstone.project.tourify.ui.adapter.FavoriteAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,12 +34,26 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: FavoriteAdapter
+    private lateinit var dataList: List<String>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        val view = inflater.inflate(R.layout.fragment_favorite, container, false)
+        recyclerView = view.findViewById(R.id.rvFavorite)
+
+        // Contoh data
+        dataList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7")
+
+        // Inisialisasi Adapter dan set ke RecyclerView
+        adapter = FavoriteAdapter(dataList)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        return view
     }
 
     companion object {

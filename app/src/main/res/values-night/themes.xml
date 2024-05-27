@@ -64,16 +64,19 @@
     </style>
 
     <style name="TextCard.RecommendationTitle">
+        <item name="android:textSize">12sp</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/montserratalternates_medium</item>
     </style>
 
     <style name="TextCard.ArticleTitle">
+        <item name="android:textSize">11sp</item>
         <item name="android:textSize">10sp</item>
         <item name="android:fontFamily">@font/montserratalternates_semibold</item>
     </style>
 
     <style name="TextCard.Description">
+        <item name="android:textSize">10sp</item>
         <item name="android:textSize">8sp</item>
         <item name="android:fontFamily">@font/montserratalternates_regular</item>
     </style>
@@ -96,6 +99,8 @@
         <item name="backgroundTint">@color/BackGroundCard</item>
     </style>
 
+    <style name="icon">
+        <item name="tint">@color/white</item>
     <style name="CustomButtonStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/montserratalternates_semibold</item>
