@@ -23,6 +23,10 @@
         <item name="android:fontFamily">@font/montserratalternates_semibold</item>
     </style>
 
+    <style name="TextTitle.Price">
+        <item name="android:fontFamily">@font/montserratalternates_regular</item>
+    </style>
+
     <style name="TextTitle.Homepage">
         <item name="android:fontFamily">@font/montserratalternates_bold</item>
     </style>
@@ -106,6 +110,4 @@
         <item name="android:fontFamily">@font/montserratalternates_semibold</item>
         <item name="android:textColor">@color/white</item>
     </style>
-
-
 </resources>
