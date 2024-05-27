@@ -3,9 +3,14 @@
 package com.capstone.project.tourify.ui.view.detail
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityDetailBinding
+import com.capstone.project.tourify.ui.adapter.ImageDetailAdapter
+import com.capstone.project.tourify.ui.adapter.SectionPagerAdapter
+import com.google.android.material.tabs.TabLayout
 
 class DetailActivity : AppCompatActivity() {
 
@@ -17,7 +22,45 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+
+        val sectionPagerAdapter = SectionPagerAdapter(this, supportFragmentManager)
+        binding.viewPager.adapter = sectionPagerAdapter
+
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+        val imageList = listOf(
+            R.drawable.pengandaran,
+            R.drawable.rinjani,
+            R.drawable.tangkubangperahu,
+            R.drawable.ancol,
+            R.drawable.rinjani
+        )
+
+        val adapter = ImageDetailAdapter(this, imageList)
+        binding.listItemImageDetail.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.listItemImageDetail.adapter = adapter
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                binding.nestedScrollView.post {
+                    binding.nestedScrollView.fullScroll(View.FOCUS_UP)
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Tidak perlu melakukan apa-apa
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                binding.nestedScrollView.post {
+                    binding.nestedScrollView.fullScroll(View.FOCUS_UP)
+                }
+            }
+        })
+
     }
+
     private fun setupToolbar() {
         setSupportActionBar(binding.materialBarDetail)
         supportActionBar?.apply {
@@ -30,4 +73,5 @@ class DetailActivity : AppCompatActivity() {
             onBackPressed()
         }
     }
+
 }

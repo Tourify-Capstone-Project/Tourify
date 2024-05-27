@@ -8,10 +8,10 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    tools:context=".ui.view.kategori.KategoriActivity">
+    tools:context=".ui.view.about.AboutActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarCategory"
+        android:id="@+id/appBarAbout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimaryVariant"
@@ -20,39 +20,48 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/materialBarCategory"
+            android:id="@+id/materialBarAbout"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             app:navigationIconTint="@color/white"
             app:titleTextAppearance="@style/TextTitle.AppBar"
             app:titleTextColor="@color/white"
-            tools:title="@string/string_kategori" />
+            tools:title="@string/string_about_application" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/list_search"
-        style="@style/TextTitle.Search"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/textinputlayout"
-        android:textCursorDrawable="@null"
-        app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarCategory"
-        app:queryHint="@string/string_search_category" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/itemRowCategory"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginVertical="10dp"
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/string_about_application"
+        android:src="@drawable/aboutlogo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_search" />
+        app:layout_constraintTop_toBottomOf="@id/appBarAbout" />
+
+    <TextView
+        android:id="@+id/layananTourify"
+        style="@style/TextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:text="@string/string_layanan_tourify"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgView" />
+
+    <TextView
+        android:id="@+id/descriptionLayananTourify"
+        style="@style/TextTitle.Description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/string_description_layanan_tourify"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layananTourify" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
