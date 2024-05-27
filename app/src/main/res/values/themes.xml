@@ -31,10 +31,6 @@
         <item name="android:fontFamily">@font/montserratalternates_bold</item>
     </style>
 
-    <style name="TextTitle.Price">
-        <item name="android:fontFamily">@font/montserratalternates_regular</item>
-    </style>
-
     <style name="TextTitle.Description">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/montserratalternates_regular</item>
