@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.capstone.project.tourify.ui.adapter
 
 import android.content.Context

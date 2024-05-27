@@ -8,6 +8,7 @@ import com.capstone.project.tourify.databinding.ActivityKategoriBinding
 import com.capstone.project.tourify.ui.adapter.Category
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
 
+@Suppress("DEPRECATION")
 class KategoriActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityKategoriBinding

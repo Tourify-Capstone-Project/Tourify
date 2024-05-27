@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityAboutBinding
 
+@Suppress("DEPRECATION")
 class AboutActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAboutBinding
