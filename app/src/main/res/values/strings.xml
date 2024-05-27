@@ -4,4 +4,54 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="search_hint">Search location</string>
+    <string name="title_onBoarding_1">Find Your Dream Destination</string>
+    <string name="title_onBoarding_2">Plan a Trip with Ease</string>
+    <string name="desc_onBoarding_1">Welcome to Tourify! We are here to help you discover and plan the trip of your dreams. Explore amazing destinations, from beautiful beaches to historic cities, all in one app.</string>
+    <string name="desc_onBoarding_2">With Tourify, planning a trip is easier and more fun. Find recommendations on the best places to visit, exciting activities you can do, and travel packages that suit your needs. Lets start your adventure with Tourify!</string>
+    <string name="btn_onBoarding_start">Start</string>
+    <string name="appBar_Detail">Detail Destination</string>
+    <string name="email_not_valid">Email Not Valid</string>
+    <string name="password_cannot_be_less_than_8_character">Password Cannot be Less Than 8 Character</string>
+    <string name="string_login">Login</string>
+    <string name="string_email">Email</string>
+    <string name="string_password">Password</string>
+    <string name="don_t_have_account_sign_up">Don’t have account? <font color="#4F4FC2">Sign up</font></string>
+    <string name="i_have_account_sign_in">I have account! <font color="#4F4FC2">Sign in</font></string>
+    <string name="string_forgot_password">Forgot Password?</string>
+    <string name="string_username">Username</string>
+    <string name="string_register">Register</string>
+    <string name="title_detail">The Great Asia Africa</string>
+    <string name="string_rating">4.4</string>
+    <string name="string_review">(137 review)</string>
+    <string name="string_price">Rp 44.000</string>
+    <string name="string_kategori">Kategori</string>
+    <string name="string_favorite">Favorite</string>
+    <string name="title_kategori">Mount Rinjani</string>
+    <string name="string_search_category">Search Category</string>
+    <string name="string_edit_profile">Edit Profile</string>
+    <string name="string_about_application">About Application</string>
+    <string name="string_layanan_tourify">Layanan Tourify</string>
+
+    <string name="tab_text_1">Overview</string>
+    <string name="tab_text_2">Review</string>
+    <string name="tab_text_3">Location</string>
+
+
+    <string name="string_description_layanan_tourify">Lorem Ipsum is simply dummy text of the printing
+        and typesetting industry.
+        Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged.
+        It was popularised in the 1960s with the release of
+        Letraset sheets containing Lorem Ipsum passages,
+        and more recently with desktop publishing software
+        like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
+    <string name="overview_text">Destinasi wisata yang mengusung tema sejarah dan budaya, terletak di Jalan Asia Afrika, Bandung. Tempat ini menggabungkan elemen sejarah, seni, dan budaya dari Asia dan Afrika, memberikan pengalaman unik kepada pengunjung untuk mengenal lebih dekat perjalanan diplomasi dan hubungan antarbangsa antara dua benua.
+
+    Pengunjung dapat menjelajahi museum dan galeri yang menampilkan artefak, dokumentasi, dan karya seni yang menggambarkan perjalanan konferensi Asia Afrika pada tahun 1955. Selain itu, wisata ini dilengkapi dengan taman dan ruang terbuka yang indah, serta menyelenggarakan acara dan pertunjukan bertema sejarah dan budaya Asia Afrika secara berkala.
+
+    Fasilitas lainnya termasuk area parkir, area istirahat, dan kios-kios penjualan suvenir dan cinderamata. Dengan suasana santai di tengah kota Bandung yang ramai, The Great Asia Africa menjadi destinasi menarik bagi pengunjung yang ingin memahami lebih dalam tentang sejarah dan hubungan antara Asia dan Afrika.</string>
+    <string name="string_write_a_review">Write</string>
 </resources>
