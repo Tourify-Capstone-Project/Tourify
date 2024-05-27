@@ -10,7 +10,7 @@ import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.FragmentHomePageBinding
 import com.capstone.project.tourify.ui.adapter.ArticleAdapter
 import com.capstone.project.tourify.ui.adapter.ArticleItem
-import com.capstone.project.tourify.ui.adapter.CategoryAdapter
+import com.capstone.project.tourify.ui.adapter.CategoryHomeAdapter
 import com.capstone.project.tourify.ui.adapter.CategoryItem
 import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
 import com.capstone.project.tourify.ui.adapter.RecommendedItem
@@ -41,7 +41,7 @@ class HomePageFragment : Fragment() {
     private var _binding: FragmentHomePageBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var categoryAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var articleAdapter: ArticleAdapter
 

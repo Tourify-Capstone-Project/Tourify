@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.capstone.project.tourify.R
 
-class CategoryAdapter(private val data: List<CategoryItem>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryHomeAdapter(private val data: List<CategoryItem>) : RecyclerView.Adapter<CategoryHomeAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewTitle: TextView = view.findViewById(R.id.textCategory)
