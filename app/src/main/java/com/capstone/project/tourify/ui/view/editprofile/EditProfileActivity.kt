@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityEditProfileBinding
 
+@Suppress("DEPRECATION")
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding

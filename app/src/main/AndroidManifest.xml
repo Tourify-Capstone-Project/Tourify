@@ -39,13 +39,12 @@
             android:exported="false" />
         <activity
             android:name=".ui.view.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".ui.view.onboardingpage.OnBoardingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.MainActivity"
-            android:windowSoftInputMode="adjustPan"
             android:name=".ui.view.editprofile.EditProfileActivity"
             android:exported="false" />
         <activity

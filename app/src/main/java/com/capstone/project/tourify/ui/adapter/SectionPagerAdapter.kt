@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.capstone.project.tourify.ui.adapter
 
 import android.content.Context
@@ -11,6 +13,7 @@ import com.capstone.project.tourify.ui.view.location.MapsFragment
 import com.capstone.project.tourify.ui.view.overview.OverviewFragment
 import com.capstone.project.tourify.ui.view.review.ReviewFragment
 
+@Suppress("DEPRECATION")
 class SectionPagerAdapter(
     private val context: Context,
     private val manager: FragmentManager

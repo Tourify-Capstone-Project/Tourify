@@ -77,7 +77,7 @@ class HomePageFragment : Fragment() {
         )
 
         // Inisialisasi Adapter dan set ke RecyclerView untuk kategori
-        categoryAdapter = CategoryAdapter(categoryItems)
+        categoryAdapter = CategoryHomeAdapter(categoryItems)
         binding.rvCategory.adapter = categoryAdapter
         binding.rvCategory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
