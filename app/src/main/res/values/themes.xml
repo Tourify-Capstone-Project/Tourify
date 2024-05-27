@@ -92,7 +92,7 @@
     </style>
 
     <style name="Card">
-        <item name="backgroundTint">@color/white</item>
+        <item name="backgroundTint">@color/Background</item>
     </style>
 
     <style name="Search">
