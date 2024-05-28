@@ -2,6 +2,7 @@ package com.capstone.project.tourify.ui.view.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
 import com.capstone.project.tourify.ui.customview.CustomEmailInputLayout
 import com.capstone.project.tourify.ui.customview.CustomPasswordInputLayout
+import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import com.google.android.material.textfield.TextInputEditText
 
 class LoginActivity : AppCompatActivity() {
@@ -36,6 +38,12 @@ class LoginActivity : AppCompatActivity() {
 
         emailInputLayout.setEditText(edtEmail)
         passwordInputLayout.setEditText(edtPassword)
+
+        binding.notHaveAccountTextView.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
 
         playAnimation()

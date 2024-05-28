@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tourify"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.view.detail.DetailActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -26,7 +28,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyCl8gne6FWoMD9ooin2_W82eO5cgN2cIl0" />
 
         <activity
             android:name=".ui.view.about.AboutActivity"
@@ -35,23 +37,23 @@
             android:name=".ui.view.kategori.KategoriActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.login.LoginActivity"
+            android:name=".ui.view.onboardingpage.OnBoardingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.MainActivity"
-            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
-            android:name=".ui.view.onboardingpage.OnBoardingActivity"
-            android:exported="false" />
+            android:name=".ui.view.register.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.view.editprofile.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.register.RegisterActivity"
+            android:name=".ui.view.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.detail.DetailActivity"
+            android:name=".ui.view.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -41,6 +41,11 @@
         <item name="android:fontFamily">@font/montserratalternates_semibold</item>
     </style>
 
+    <style name="TextTitle.Account">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/montserratalternates_semibold</item>
+    </style>
+
     <style name="TextTitle.Rating">
         <item name="android:textSize">15sp</item>
         <item name="android:fontFamily">@font/montserratalternates_medium</item>

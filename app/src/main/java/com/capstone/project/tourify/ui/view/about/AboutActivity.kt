@@ -22,7 +22,7 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(true)
-            title = getString(R.string.string_edit_profile)
+            title = getString(R.string.string_about_application)
         }
 
         binding.materialBarAbout.setNavigationOnClickListener {

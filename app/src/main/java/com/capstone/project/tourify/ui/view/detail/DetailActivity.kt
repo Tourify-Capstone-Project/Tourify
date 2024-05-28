@@ -44,7 +44,7 @@ class DetailActivity : AppCompatActivity() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 binding.nestedScrollView.post {
-                    binding.nestedScrollView.fullScroll(View.FOCUS_UP)
+                    binding.nestedScrollView.smoothScrollTo(0, binding.tabLayout.top)
                 }
             }
 
@@ -54,7 +54,7 @@ class DetailActivity : AppCompatActivity() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 binding.nestedScrollView.post {
-                    binding.nestedScrollView.fullScroll(View.FOCUS_UP)
+                    binding.nestedScrollView.smoothScrollTo(0, binding.tabLayout.top)
                 }
             }
         })
