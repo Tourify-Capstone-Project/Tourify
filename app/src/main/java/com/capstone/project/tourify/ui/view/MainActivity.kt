@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import nl.joery.animatedbottombar.AnimatedBottomBar
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,12 +33,11 @@ class MainActivity : AppCompatActivity() {
                 newIndex: Int,
                 newTab: AnimatedBottomBar.Tab
             ) {
-                // Navigate to the corresponding fragment when a tab is selected
                 navController.navigate(newTab.id)
             }
 
             override fun onTabReselected(index: Int, tab: AnimatedBottomBar.Tab) {
-                // Optional: Handle reselection of a tab
+
             }
         })
     }

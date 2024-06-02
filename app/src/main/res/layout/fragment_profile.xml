@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/background">
 
         <TextView
             android:id="@+id/titleFragment"
@@ -18,63 +19,79 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="My Profile"
+            android:textColor="@color/white"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="85dp"
+                android:background="@drawable/card_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleFragment"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/tvUsername"
+                    style="@style/TextTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="80dp"
+                    android:text="Username"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    style="@style/TextTitle.Description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Example@gmail.com"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvUsername"
+                    android:layout_marginTop="5dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonEdit"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_login_border"
+                    android:text="Edit Profile"
+                    style="@style/TextCard.Favorite"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonEdit" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageProfile"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/bahari"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleFragment" />
-
-        <TextView
-            android:id="@+id/tvUsername"
-            style="@style/TextTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Username"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="top|center_horizontal"
+            android:elevation="10dp"
+            android:src="@drawable/no_profile"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageProfile"
-            app:layout_constraintTop_toTopOf="@+id/imageProfile" />
-
-        <TextView
-            android:id="@+id/tvEmail"
-            style="@style/TextTitle.Description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:text="Example@gmail.com"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageProfile"
-            app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button_background"
-            android:fontFamily="@font/montserratalternates_medium"
-            android:text="Edit Profile"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/imageProfile"
-            app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSetting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/titleFragment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonEdit" />
+            android:layout_marginTop="30dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
+
+

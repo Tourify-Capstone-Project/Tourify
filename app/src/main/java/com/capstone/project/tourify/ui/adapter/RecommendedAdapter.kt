@@ -8,11 +8,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.capstone.project.tourify.R
 
-class RecommendedAdapter(private val data: List<RecommendedItem>) : RecyclerView.Adapter<RecommendedAdapter.ViewHolder>() {
+class RecommendedAdapter(
+    private val data: List<RecommendedItem>,
+    private val onItemClickListener: (RecommendedItem) -> Unit
+) : RecyclerView.Adapter<RecommendedAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewTitle: TextView = view.findViewById(R.id.tvTitle)
         val imageTitle: ImageView = view.findViewById(R.id.imagePoster)
+
+        fun bind(recommendedItem: RecommendedItem) {
+            textViewTitle.text = recommendedItem.title
+            imageTitle.setImageResource(recommendedItem.imageResId)
+            itemView.setOnClickListener {
+                onItemClickListener(recommendedItem)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,11 +33,9 @@ class RecommendedAdapter(private val data: List<RecommendedItem>) : RecyclerView
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
-        holder.textViewTitle.text = item.title
-        holder.imageTitle.setImageResource(item.imageResId)
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int = data.size
 }
-
 data class RecommendedItem(val title: String, val imageResId: Int)

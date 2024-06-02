@@ -22,7 +22,7 @@ class EstimasiAdapter(private val data: List<String>) : RecyclerView.Adapter<Est
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textViewTitle.text = data[position]
-        holder.imageTitle.setImageResource(R.drawable.coba)
+        holder.imageTitle.setImageResource(R.drawable.no_image)
     }
 
     override fun getItemCount(): Int = data.size

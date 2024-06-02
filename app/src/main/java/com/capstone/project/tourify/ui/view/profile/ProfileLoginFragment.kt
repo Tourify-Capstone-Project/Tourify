@@ -7,14 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.navigation.fragment.findNavController
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.FragmentProfileBinding
+import com.capstone.project.tourify.databinding.FragmentProfileLoginBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
 
-class ProfileFragment : Fragment() {
+class ProfileLoginFragment : Fragment() {
 
+    private var _binding: FragmentProfileLoginBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -22,25 +24,16 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var settingAdapter: SettingAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileLoginBinding.inflate(inflater, container, false)
         val view = binding.root
-
-        binding.buttonEdit.setOnClickListener(
-            Navigation.createNavigateOnClickListener(R.id.action_nav_profile_to_editProfileActivity)
-            )
 
         val settingItems = listOf(
             SettingItem("About Us", R.drawable.info_light),
-            SettingItem("Language", R.drawable.global_search),
-            SettingItem("Logout", R.drawable.logout_light),
+            SettingItem("Language", R.drawable.global_search)
         )
 
         val settingAdapter = SettingAdapter(settingItems) { settingItem ->
@@ -58,15 +51,6 @@ class ProfileFragment : Fragment() {
                 Navigation.findNavController(requireView())
                     .navigate(R.id.action_nav_profile_to_aboutActivity)
             }
-
-            "Logout" -> {
-                Navigation.findNavController(requireView())
-                    .navigate(R.id.action_nav_profile_to_loginActivity)
-            }
         }
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
