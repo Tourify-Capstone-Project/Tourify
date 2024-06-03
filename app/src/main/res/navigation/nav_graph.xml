@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_home_to_detailActivity"
             app:destination="@id/detailActivity" />
+        <action
+            android:id="@+id/action_nav_home_to_kategoriActivity"
+            app:destination="@id/kategoriActivity" />
     </fragment>
     <fragment
         android:id="@+id/nav_estimate"
@@ -28,7 +31,7 @@
         android:id="@+id/nav_profile"
         android:name="com.capstone.project.tourify.ui.view.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" >n
+        tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_nav_profile_to_editProfileActivity"
             app:destination="@id/editProfileActivity" />

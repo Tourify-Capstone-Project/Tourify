@@ -57,20 +57,33 @@ class HomePageFragment : Fragment() {
         )
 
         val articleItems = listOf(
-            ArticleItem("Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya", "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya", R.drawable.no_image),
+            ArticleItem(
+                "Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya",
+                "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya",
+                R.drawable.no_image
+            ),
             ArticleItem("Title 2", "Description 2", R.drawable.no_image)
         )
 
-        categoryAdapter = CategoryHomeAdapter(categoryItems)
+        categoryAdapter = CategoryHomeAdapter(categoryItems) { categoryItems ->
+            handleCategoryItemClick(categoryItems)
+        }
+
         binding.rvCategory.adapter = categoryAdapter
-        binding.rvCategory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvCategory.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+
 
         recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
             handleRecommendedItemClick(recommendedItems)
         }
 
+
+
         binding.rvRecommend.adapter = recommendedAdapter
-        binding.rvRecommend.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvRecommend.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         articleAdapter = ArticleAdapter(articleItems)
         binding.rvArticle.adapter = articleAdapter
@@ -88,6 +101,15 @@ class HomePageFragment : Fragment() {
             "The Great Asia Africa" -> {
                 Navigation.findNavController(requireView())
                     .navigate(R.id.action_nav_home_to_detailActivity)
+            }
+        }
+    }
+
+    private fun handleCategoryItemClick(settingItem: CategoryItem) {
+        when (settingItem.title) {
+            "Bahari" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_home_to_kategoriActivity)
             }
         }
     }
