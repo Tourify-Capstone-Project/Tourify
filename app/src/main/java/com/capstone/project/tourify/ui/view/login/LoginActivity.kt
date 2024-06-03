@@ -1,15 +1,15 @@
 package com.capstone.project.tourify.ui.view.login
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
 import com.capstone.project.tourify.ui.customview.CustomEmailInputLayout
 import com.capstone.project.tourify.ui.customview.CustomPasswordInputLayout
@@ -19,6 +19,7 @@ import com.capstone.project.tourify.ui.viewmodel.login.LoginViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.AuthViewModelFactory
 import com.capstone.project.tourify.utils.wrapEspressoIdlingResource
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -33,39 +34,14 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var edtEmail: TextInputEditText
     private lateinit var edtPassword: TextInputEditText
 
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var userPreference: UserPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPref = getSharedPreferences("LOGIN", MODE_PRIVATE)
-
-        binding.loginButton.setOnClickListener {
-            val email = binding.edLoginEmail.text.toString()
-            val password = binding.edLoginPassword.text.toString()
-
-            // Simple check for demonstration purposes
-            if (email == "admin@gmail.com" && password == "password") {
-                // Save login state
-                with(sharedPref.edit()) {
-                    putBoolean("isLoggedIn", true)
-                    apply()
-                }
-
-                // Show a success message
-                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-
-                // Redirect to MainActivity
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "Invalid credentials!", Toast.LENGTH_SHORT).show()
-            }
-        }
+        userPreference = UserPreference.getInstance(applicationContext)
 
         binding.notHaveAccountTextView.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -95,6 +71,7 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.edLoginEmail.text.toString()
             val password = binding.edLoginPassword.text.toString()
 
+            // Trigger API call for login
             viewModel.login(email, password)
 
             viewModel.isLoading.observe(this) { isLoading ->
@@ -107,31 +84,20 @@ class LoginActivity : AppCompatActivity() {
                         val token = response.loginResult?.token
                         if (token != null) {
                             val userModel = UserModel(email, token, true)
-                            viewModel.saveSession(userModel)
 
-                            AlertDialog.Builder(this).apply {
-                                setTitle(getString(R.string.string_yeaay))
-                                setMessage(getString(R.string.string_success))
-                                setPositiveButton(getString(R.string.string_next)) { _, _ ->
-                                    val intent =
-                                        Intent(this@LoginActivity, MainActivity::class.java)
-                                    intent.flags =
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                create()
-                                show()
+                            lifecycleScope.launch {
+                                userPreference.saveSession(userModel)
+
+                                Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
+
+                                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                                finish()
                             }
                         }
                     } else {
-                        AlertDialog.Builder(this).apply {
-                            setTitle(getString(R.string.string_error))
-                            setMessage(getString(R.string.login_failed))
-                            setPositiveButton(getString(R.string.String_ok)) { _, _ -> }
-                            create()
-                            show()
-                        }
+                        Toast.makeText(this@LoginActivity, "Invalid credentials!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
