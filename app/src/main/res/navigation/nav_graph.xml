@@ -28,7 +28,7 @@
         android:id="@+id/nav_profile"
         android:name="com.capstone.project.tourify.ui.view.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" >n
+        tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_nav_profile_to_editProfileActivity"
             app:destination="@id/editProfileActivity" />

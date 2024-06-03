@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.capstone.project.tourify.R
@@ -53,7 +54,17 @@ class FavoriteFragment : Fragment() {
             }
         }
 
+        setupToolbar()
+
         return view
+    }
+
+    private fun setupToolbar() {
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.materialBarEditProfile)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            setDisplayShowTitleEnabled(true)
+            title = getString(R.string.string_favorite)
+        }
     }
 
     override fun onDestroyView() {
