@@ -28,7 +28,7 @@
         android:id="@+id/nav_profile"
         android:name="com.capstone.project.tourify.ui.view.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile" >n
         <action
             android:id="@+id/action_nav_profile_to_editProfileActivity"
             app:destination="@id/editProfileActivity" />
@@ -55,18 +55,18 @@
         android:label="activity_edit_profile"
         tools:layout="@layout/activity_edit_profile" />
     <activity
+        android:id="@+id/registerActivity"
+        android:name="com.capstone.project.tourify.ui.view.register.RegisterActivity"
+        android:label="activity_register"
+        tools:layout="@layout/activity_register" />
+    <activity
+        android:id="@+id/kategoriActivity"
+        android:name="com.capstone.project.tourify.ui.view.kategori.KategoriActivity"
+        android:label="activity_kategori"
+        tools:layout="@layout/activity_kategori" />
+    <activity
         android:id="@+id/detailActivity"
         android:name="com.capstone.project.tourify.ui.view.detail.DetailActivity"
         android:label="activity_detail"
         tools:layout="@layout/activity_detail" />
-    <fragment
-        android:id="@+id/estimateLoginFragment"
-        android:name="com.capstone.project.tourify.ui.view.estimasi.EstimateLoginFragment"
-        android:label="fragment_estimate_login"
-        tools:layout="@layout/fragment_estimate_login" />
-    <fragment
-        android:id="@+id/profileLoginFragment"
-        android:name="com.capstone.project.tourify.ui.view.profile.ProfileLoginFragment"
-        android:label="fragment_profile_login"
-        tools:layout="@layout/fragment_profile_login" />
 </navigation>

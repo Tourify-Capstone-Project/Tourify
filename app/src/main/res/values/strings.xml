@@ -47,12 +47,16 @@
         Letraset sheets containing Lorem Ipsum passages,
         and more recently with desktop publishing software
         like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="overview_text">The Great Asia Africa: A Historical and Cultural Destination on Jalan Asia Afrika, Bandung\n\n
+The Great Asia Africa, located on Jalan Asia Afrika in Bandung, is a unique destination that allows visitors to explore the rich history, art, and culture of two diverse continents. This site offers a profound insight into the diplomatic journey and international relations between Asia and Africa.\n\n
+**Attractions and Facilities**\n\n
+Visitors can explore museums and galleries showcasing artifacts, documents, and artworks that illustrate the journey of the Asia-Africa Conference of 1955. This conference was a significant event in global history, bringing together leaders from Asian and African countries to discuss cooperation and solidarity.\n\n
+The site also features beautiful gardens and open spaces, providing a serene atmosphere amidst the bustling city of Bandung. Visitors can enjoy the lush green scenery, relax, and spend quality time with family and friends.\n\n
+Regularly scheduled cultural performances highlight the history and traditions of Asia and Africa. These performances include traditional dances, music, and dramas that bring the rich cultures of these continents to life.\n\n
+The Great Asia Africa offers ample parking and comfortable rest areas to ensure a pleasant visit. These rest areas are equipped with shaded seating and other amenities for maximum comfort.\n\n
+Various kiosks along the site sell unique souvenirs and memorabilia from Asia and Africa. Visitors can purchase distinctive items as keepsakes or gifts for loved ones.\n
+</string>
 
-    <string name="overview_text">Destinasi wisata yang mengusung tema sejarah dan budaya, terletak di Jalan Asia Afrika, Bandung. Tempat ini menggabungkan elemen sejarah, seni, dan budaya dari Asia dan Afrika, memberikan pengalaman unik kepada pengunjung untuk mengenal lebih dekat perjalanan diplomasi dan hubungan antar bangsa antara dua benua.
-
-    Pengunjung dapat menjelajahi museum dan galeri yang menampilkan artefak, dokumentasi, dan karya seni yang menggambarkan perjalanan konferensi Asia Afrika pada tahun 1955. Selain itu, wisata ini dilengkapi dengan taman dan ruang terbuka yang indah, serta menyelenggarakan acara dan pertunjukan bertema sejarah dan budaya Asia Afrika secara berkala.
-
-    Fasilitas lainnya termasuk area parkir, area istirahat, dan kios-kios penjualan suvenir dan cinderamata. Dengan suasana santai di tengah kota Bandung yang ramai, The Great Asia Africa menjadi destinasi menarik bagi pengunjung yang ingin memahami lebih dalam tentang sejarah dan hubungan antara Asia dan Afrika.</string>
     <string name="string_write_a_review">Write</string>
     <string name="category">Category</string>
     <string name="article_title">Article Title</string>
@@ -67,4 +71,16 @@
     <string name="adventure_finance">Adventure Finance</string>
     <string name="sign_in_unlock">Sign In or Register to Unlock All Features</string>
     <string name="sign_in_desc_unlock">Continue your experience by logging in or registering account.</string>
+    <string name="string_welcome">Welcome</string>
+    <string name="string_please_login_with_your_information">Please input with your information</string>
+    <string name="string_or_login_with">Or Login with</string>
+    <string name="string_join_us">Join US</string>
+    <string name="string_description">Description</string>
+    <string name="string_photo_gallery">Photo Gallery</string>
+    <string name="string_next">Next</string>
+    <string name="string_success">Success</string>
+    <string name="string_yeaay">Yeayyy</string>
+    <string name="string_error">Erorr</string>
+    <string name="login_failed">Login Failed</string>
+    <string name="String_ok">Oke</string>
 </resources>

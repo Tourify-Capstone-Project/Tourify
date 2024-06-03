@@ -3,13 +3,16 @@ package com.capstone.project.tourify.ui.view.profile
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.FragmentProfileBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
@@ -19,6 +22,13 @@ import com.capstone.project.tourify.ui.view.onboardingpage.OnBoardingActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 
 class ProfileFragment : Fragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+
+        }
+    }
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -41,6 +51,7 @@ class ProfileFragment : Fragment() {
         )
 
         val settingItems = mutableListOf<SettingItem>(
+        val settingItems = listOf(
             SettingItem("About Us", R.drawable.info_light),
             SettingItem("Language", R.drawable.global_search),
         )
@@ -82,6 +93,13 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        val settingAdapter = SettingAdapter(settingItems) { settingItem ->
+            handleSettingItemClick(settingItem)
+        }
+
+        binding.rvSetting.adapter = settingAdapter
+        binding.rvSetting.layoutManager = LinearLayoutManager(context)
+
         return view
     }
 
@@ -103,6 +121,22 @@ class ProfileFragment : Fragment() {
         val intent = Intent(requireContext(), OnBoardingActivity::class.java)
         startActivity(intent)
         requireActivity().finish() // Finish the activity to prevent the user from navigating back to it using the back button
+            "About Us" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_profile_to_aboutActivity)
+            }
+
+            "Language" -> settingLanguage()
+
+            "Logout" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_profile_to_loginActivity)
+            }
+        }
+    }
+
+    private fun settingLanguage() {
+        startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
     }
 
     override fun onDestroyView() {

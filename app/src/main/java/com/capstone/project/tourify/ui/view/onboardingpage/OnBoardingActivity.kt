@@ -21,7 +21,6 @@ class OnBoardingActivity : AppCompatActivity() {
         binding = ActivityOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
         setupView()
