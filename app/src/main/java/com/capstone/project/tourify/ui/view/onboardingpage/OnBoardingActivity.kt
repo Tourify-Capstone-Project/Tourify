@@ -5,12 +5,10 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityOnBoardingBinding
 import com.capstone.project.tourify.ui.view.MainActivity
-import com.capstone.project.tourify.ui.view.detail.DetailActivity
 
 class OnBoardingActivity : AppCompatActivity() {
 

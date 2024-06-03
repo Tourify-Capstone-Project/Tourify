@@ -1,25 +1,13 @@
 package com.capstone.project.tourify.ui.view.login
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import android.content.Intent
-import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.data.local.room.UserModel
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
@@ -100,8 +88,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setupAction()
-        playAnimation()
-        setupView()
     }
 
     private fun setupAction() {
