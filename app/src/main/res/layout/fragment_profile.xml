@@ -25,50 +25,53 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="85dp"
                 android:background="@drawable/card_background"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleFragment"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/buttonLogin"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="100dp"
-                    android:background="@drawable/button_login_border"
-                    android:text="@string/string_login"
-                    style="@style/TextCard.Favorite"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/buttonLogin"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="100dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/button_login_border"
+                        android:text="@string/string_login"
+                        style="@style/TextCard.Favorite"
+                        android:textColor="@color/white"
+                        android:visibility="gone"/>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/buttonRegister"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/button_border"
-                    android:text="@string/string_register"
-                    style="@style/TextCard.Favorite"
-                    app:layout_constraintBottom_toBottomOf="@+id/buttonLogin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/buttonLogin"
-                    app:layout_constraintTop_toTopOf="@+id/buttonLogin"
-                    android:visibility="gone"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/buttonRegister"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="100dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/button_border"
+                        android:text="@string/string_register"
+                        style="@style/TextCard.Favorite"
+                        android:visibility="gone"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvUsername"
                     style="@style/TextTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="80dp"
+                    android:layout_marginTop="85dp"
                     android:text="@string/string_username"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -102,11 +105,11 @@
                     android:id="@+id/rvSetting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="185dp"
+                    android:layout_marginTop="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageProfile"
