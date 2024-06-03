@@ -16,6 +16,7 @@ class ArticleAdapter(private val data: List<ArticleItem>) : RecyclerView.Adapter
         val imageTitle: ImageView = view.findViewById(R.id.imageArticlePoster)
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false)
         return ViewHolder(view)
