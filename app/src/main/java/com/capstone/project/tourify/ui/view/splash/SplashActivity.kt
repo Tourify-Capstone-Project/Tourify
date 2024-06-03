@@ -1,7 +1,5 @@
 package com.capstone.project.tourify.ui.view.splash
 
-import android.animation.Animator
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent

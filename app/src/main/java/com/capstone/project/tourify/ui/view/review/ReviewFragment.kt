@@ -22,7 +22,7 @@ class ReviewFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_review, container, false)
 
-        val dataList = generateSampleData() // Menghasilkan data dummy
+        val dataList = generateSampleData()
         adapter = ReviewAdapter(dataList)
 
         recyclerView = rootView.findViewById(R.id.listItemImageReview)

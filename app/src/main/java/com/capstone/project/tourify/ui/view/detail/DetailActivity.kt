@@ -60,7 +60,6 @@ class DetailActivity : AppCompatActivity() {
         })
 
     }
-
     private fun setupToolbar() {
         setSupportActionBar(binding.materialBarDetail)
         supportActionBar?.apply {

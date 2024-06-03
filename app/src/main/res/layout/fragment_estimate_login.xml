@@ -48,7 +48,7 @@
             android:layout_height="40dp"
             android:layout_margin="20dp"
             android:background="@drawable/button_login_border"
-            android:text="Login"
+            android:text="@string/string_login"
             android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
             app:layout_constraintStart_toStartOf="parent"

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
-import com.capstone.project.tourify.databinding.FragmentProfileBinding
 import com.capstone.project.tourify.databinding.FragmentProfileLoginBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem

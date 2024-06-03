@@ -2,18 +2,24 @@ package com.capstone.project.tourify.ui.view.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
 import com.capstone.project.tourify.ui.customview.CustomEmailInputLayout
 import com.capstone.project.tourify.ui.customview.CustomPasswordInputLayout
+import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import com.google.android.material.textfield.TextInputEditText
 
@@ -26,11 +32,39 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var edtEmail: TextInputEditText
     private lateinit var edtPassword: TextInputEditText
 
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedPref = getSharedPreferences("LOGIN", MODE_PRIVATE)
+
+        binding.loginButton.setOnClickListener {
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
+
+            // Simple check for demonstration purposes
+            if (email == "admin@gmail.com" && password == "password") {
+                // Save login state
+                with(sharedPref.edit()) {
+                    putBoolean("isLoggedIn", true)
+                    apply()
+                }
+
+                // Show a success message
+                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+
+                // Redirect to MainActivity
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "Invalid credentials!", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.notHaveAccountTextView.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -49,7 +83,6 @@ class LoginActivity : AppCompatActivity() {
 
         playAnimation()
         setupView()
-
     }
 
     private fun setupView() {

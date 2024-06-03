@@ -7,7 +7,60 @@
     android:background="?attr/colorPrimary"
     tools:context=".ui.view.favorite.FavoriteFragment">
 
+
+    <LinearLayout
+        android:id="@+id/pre_login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/materialBarEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:titleTextAppearance="@style/TextTitle.AppBar"
+            app:titleTextColor="@color/black"
+            tools:title="Estimate"
+            android:paddingStart="20dp"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/sign_in_unlock"
+            style="@style/TextCard.Favorite"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/sign_in_desc_unlock"
+            style="@style/TextTitle.Description"
+            android:textSize="14sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLogin"
+            style="@style/TextCard.Favorite"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/button_login_border"
+            android:text="@string/string_login"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/post_login_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Estimasi Biaya"
+            android:text="@string/string_favorite"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Title"
+            android:text="@string/title_detail"
             app:layout_constraintStart_toEndOf="@+id/cardPoster"
             app:layout_constraintTop_toTopOf="@+id/cardPoster" />
 
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Price"
+            android:text="@string/string_price"
             app:layout_constraintBottom_toBottomOf="@+id/cardPoster"
             app:layout_constraintStart_toEndOf="@+id/cardPoster" />
 

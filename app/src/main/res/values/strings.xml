@@ -54,4 +54,17 @@
 
     Fasilitas lainnya termasuk area parkir, area istirahat, dan kios-kios penjualan suvenir dan cinderamata. Dengan suasana santai di tengah kota Bandung yang ramai, The Great Asia Africa menjadi destinasi menarik bagi pengunjung yang ingin memahami lebih dalam tentang sejarah dan hubungan antara Asia dan Afrika.</string>
     <string name="string_write_a_review">Write</string>
+    <string name="category">Category</string>
+    <string name="article_title">Article Title</string>
+    <string name="article_description">Article Description</string>
+    <string name="info_aplikasi">Info Aplikasi</string>
+    <string name="example_email">example@gmail.com</string>
+    <string name="my_profile">My Profile</string>
+    <string name="home">Home</string>
+    <string name="finance">Finance</string>
+    <string name="profile">Profile</string>
+    <string name="cost">Cost:</string>
+    <string name="adventure_finance">Adventure Finance</string>
+    <string name="sign_in_unlock">Sign In or Register to Unlock All Features</string>
+    <string name="sign_in_desc_unlock">Continue your experience by logging in or registering account.</string>
 </resources>

@@ -36,13 +36,40 @@
                 app:layout_constraintTop_toBottomOf="@+id/titleFragment"
                 app:layout_constraintBottom_toBottomOf="parent">
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonLogin"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="100dp"
+                    android:background="@drawable/button_login_border"
+                    android:text="@string/string_login"
+                    style="@style/TextCard.Favorite"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="gone"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonRegister"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button_border"
+                    android:text="@string/string_register"
+                    style="@style/TextCard.Favorite"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonLogin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/buttonLogin"
+                    app:layout_constraintTop_toTopOf="@+id/buttonLogin"
+                    android:visibility="gone"/>
+
                 <TextView
                     android:id="@+id/tvUsername"
                     style="@style/TextTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="80dp"
-                    android:text="Username"
+                    android:text="@string/string_username"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +79,7 @@
                     style="@style/TextTitle.Description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Example@gmail.com"
+                    android:text="@string/example_email"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvUsername"
@@ -64,7 +91,7 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_login_border"
-                    android:text="Edit Profile"
+                    android:text="@string/string_edit_profile"
                     style="@style/TextCard.Favorite"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -75,9 +102,10 @@
                     android:id="@+id/rvSetting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="185dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonEdit" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView

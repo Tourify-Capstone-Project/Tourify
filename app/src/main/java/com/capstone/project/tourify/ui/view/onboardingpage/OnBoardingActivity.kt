@@ -21,6 +21,7 @@ class OnBoardingActivity : AppCompatActivity() {
         binding = ActivityOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
         setupView()
@@ -42,7 +43,7 @@ class OnBoardingActivity : AppCompatActivity() {
 
     private fun setupButton() {
         binding.button.setOnClickListener {
-            val intent = Intent(this, DetailActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
