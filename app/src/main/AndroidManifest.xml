@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tourify"
         tools:targetApi="31">
+
         <activity
-            android:name=".ui.view.detail.DetailActivity"
+            android:name=".ui.view.kategori.KategoriActivity"
             android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
@@ -34,7 +35,7 @@
             android:name=".ui.view.about.AboutActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.kategori.KategoriActivity"
+            android:name=".ui.view.detail.DetailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.onboardingpage.OnBoardingActivity"

@@ -50,20 +50,20 @@ class HomePageFragment : Fragment() {
         )
 
         val recommendedItems = listOf(
-            RecommendedItem("The Great Asia Africa", R.drawable.coba),
-            RecommendedItem("The Great Asia Africano numero uno", R.drawable.coba),
-            RecommendedItem("The Great Asia Africa", R.drawable.coba),
-            RecommendedItem("The Great Asia Africa", R.drawable.coba),
-            RecommendedItem("The Great Asia Africa", R.drawable.coba)
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africano numero uno", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image)
         )
 
         val articleItems = listOf(
             ArticleItem(
                 "Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya",
                 "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya",
-                R.drawable.coba
+                R.drawable.no_image
             ),
-            ArticleItem("Title 2", "Description 2", R.drawable.coba)
+            ArticleItem("Title 2", "Description 2", R.drawable.no_image)
         )
 
         val settingCategoryHomeAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->

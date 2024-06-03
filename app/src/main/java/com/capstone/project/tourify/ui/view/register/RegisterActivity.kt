@@ -1,24 +1,36 @@
 package com.capstone.project.tourify.ui.view.register
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.remote.pref.UserPreference
+import com.capstone.project.tourify.data.remote.retrofit.AuthApiConfig
+import com.capstone.project.tourify.data.repository.AuthRepository
 import com.capstone.project.tourify.databinding.ActivityRegisterBinding
 import com.capstone.project.tourify.ui.customview.CustomEmailInputLayout
 import com.capstone.project.tourify.ui.customview.CustomPasswordInputLayout
 import com.capstone.project.tourify.ui.view.login.LoginActivity
+import com.capstone.project.tourify.ui.viewmodel.register.RegisterViewModel
+import com.capstone.project.tourify.ui.viewmodelfactory.AuthViewModelFactory
 import com.google.android.material.textfield.TextInputEditText
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
+
+    private val RegisterViewModel: RegisterViewModel by viewModels {
+        AuthViewModelFactory(
+            AuthRepository(
+                AuthApiConfig.getAuthApiService(getUserToken()),
+                UserPreference.getInstance(this)
+            )
+        )
+    }
 
     private lateinit var emailInputLayout: CustomEmailInputLayout
     private lateinit var passwordInputLayout: CustomPasswordInputLayout
@@ -43,69 +55,61 @@ class RegisterActivity : AppCompatActivity() {
             finish()
         }
 
-        playAnimation()
-        setupView()
-    }
+        binding.RegisterButton.setOnClickListener {
+            val name = binding.edRegisterUsername.text.toString()
+            val email = binding.edRegisterEmail.text.toString()
+            val password = binding.edRegisterPassword.text.toString()
 
-    private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
+            RegisterViewModel.register(name, email, password)
         }
-        supportActionBar?.hide()
+
+        RegisterViewModel.isLoading.observe(this) { isLoading ->
+            showLoading(isLoading)
+        }
+
+        RegisterViewModel.registrationStatus.observe(this) { status ->
+            when (status) {
+                is RegisterViewModel.RegistrationStatus.Loading -> {
+                }
+
+                is RegisterViewModel.RegistrationStatus.Success -> {
+                    showDialog(status.message)
+                }
+
+                is RegisterViewModel.RegistrationStatus.Error -> {
+                    showDialog(status.message)
+                }
+            }
+        }
+
     }
 
-    private fun playAnimation() {
-        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -10f, 10f).apply {
-            duration = 6000
-            repeatCount = ObjectAnimator.INFINITE
-            repeatMode = ObjectAnimator.REVERSE
-        }.start()
-
-        val usernameTextView =
-            ObjectAnimator.ofFloat(binding.usernameTextView, View.ALPHA, 0F, 1F).setDuration(500)
-        val usernameEditTextLayout =
-            ObjectAnimator.ofFloat(binding.usernameEditTextLayout, View.ALPHA, 0F, 1F).setDuration(500)
-        val edRegisterUsername =
-            ObjectAnimator.ofFloat(binding.edRegisterUsername, View.ALPHA, 0F, 1F).setDuration(500)
-        val emailTextView =
-            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 0f, 1f).setDuration(500)
-        val emailEditTextLayout =
-            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 0f, 1f).setDuration(500)
-        val edRegisterEmail =
-            ObjectAnimator.ofFloat(binding.edRegisterEmail, View.ALPHA, 0f, 1f).setDuration(500)
-        val passwordTextView =
-            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 0f, 1f).setDuration(500)
-        val edRegisterPassword =
-            ObjectAnimator.ofFloat(binding.edRegisterPassword, View.ALPHA, 0f, 1f).setDuration(500)
-        val passwordEditTextLayout =
-            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 0f, 1f)
-                .setDuration(500)
-        val iHaveAccount =
-            ObjectAnimator.ofFloat(binding.iHaveAccountTextView, View.ALPHA, 0f, 1f)
-                .setDuration(500)
-        val register = ObjectAnimator.ofFloat(binding.registerButton, View.ALPHA, 0f, 1f).setDuration(500)
-
-        AnimatorSet().apply {
-            playSequentially(
-                usernameTextView,
-                usernameEditTextLayout,
-                edRegisterUsername,
-                emailTextView,
-                emailEditTextLayout,
-                edRegisterEmail,
-                passwordTextView,
-                edRegisterPassword,
-                passwordEditTextLayout,
-                iHaveAccount,
-                register
-            )
-            startDelay = 100
-        }.start()
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
+    private fun showDialog(message: String) {
+        AlertDialog.Builder(this).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton(getString(R.string.string_next)) { _, _ ->
+                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+            create()
+            show()
+        }
+    }
+
+    private fun getUserToken(): String {
+        val sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(KEY_USER_TOKEN, "") ?: ""
+    }
+
+    companion object {
+        const val PREF_NAME = "UserPreferences"
+        const val KEY_USER_TOKEN = "userToken"
+    }
+
 }
