@@ -5,7 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityOnBoardingBinding
 import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.detail.DetailActivity
@@ -18,6 +20,8 @@ class OnBoardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
         setupView()
         setupButton()
@@ -38,7 +42,7 @@ class OnBoardingActivity : AppCompatActivity() {
 
     private fun setupButton() {
         binding.button.setOnClickListener {
-            val intent = Intent(this, DetailActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }

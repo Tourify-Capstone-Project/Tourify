@@ -1,20 +1,28 @@
 package com.capstone.project.tourify.ui.view.login
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.local.room.UserModel
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
 import com.capstone.project.tourify.ui.customview.CustomEmailInputLayout
 import com.capstone.project.tourify.ui.customview.CustomPasswordInputLayout
+import com.capstone.project.tourify.ui.view.MainActivity
+import com.capstone.project.tourify.ui.view.register.RegisterActivity
+import com.capstone.project.tourify.ui.viewmodel.login.LoginViewModel
+import com.capstone.project.tourify.ui.viewmodelfactory.AuthViewModelFactory
+import com.capstone.project.tourify.utils.wrapEspressoIdlingResource
 import com.google.android.material.textfield.TextInputEditText
 
 class LoginActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<LoginViewModel> {
+        AuthViewModelFactory.getInstance(this)
+    }
 
     private lateinit var binding: ActivityLoginBinding
 
@@ -37,65 +45,66 @@ class LoginActivity : AppCompatActivity() {
         emailInputLayout.setEditText(edtEmail)
         passwordInputLayout.setEditText(edtPassword)
 
-
-        playAnimation()
-        setupView()
-
-    }
-
-    private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
+        binding.notHaveAccountTextView.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
         }
-        supportActionBar?.hide()
+
+        setupAction()
+
+
     }
 
-    private fun playAnimation() {
-        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -10f, 10f).apply {
-            duration = 6000
-            repeatCount = ObjectAnimator.INFINITE
-            repeatMode = ObjectAnimator.REVERSE
-        }.start()
+    private fun setupAction() {
+        binding.loginButton.setOnClickListener {
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
 
-        val emailTextView =
-            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 0f, 1f).setDuration(500)
-        val emailEditTextLayout =
-            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 0f, 1f).setDuration(500)
-        val edLoginEmail =
-            ObjectAnimator.ofFloat(binding.edLoginEmail, View.ALPHA, 0f, 1f).setDuration(500)
-        val passwordTextView =
-            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 0f, 1f).setDuration(500)
-        val edLoginPassword =
-            ObjectAnimator.ofFloat(binding.edLoginPassword, View.ALPHA, 0f, 1f).setDuration(500)
-        val passwordEditTextLayout =
-            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 0f, 1f)
-                .setDuration(500)
-        val notHaveAccount =
-            ObjectAnimator.ofFloat(binding.notHaveAccountTextView, View.ALPHA, 0f, 1f)
-                .setDuration(500)
-        val forgotPassword =
-            ObjectAnimator.ofFloat(binding.forgotPassword, View.ALPHA, 0F, 1F).setDuration(500)
-        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 0f, 1f).setDuration(500)
+            viewModel.login(email, password)
 
-        AnimatorSet().apply {
-            playSequentially(
-                emailTextView,
-                emailEditTextLayout,
-                edLoginEmail,
-                passwordTextView,
-                edLoginPassword,
-                passwordEditTextLayout,
-                forgotPassword,
-                notHaveAccount,
-                login
-            )
-            startDelay = 100
-        }.start()
+            viewModel.isLoading.observe(this) { isLoading ->
+                showLoading(isLoading)
+            }
+
+            viewModel.loginResult.observe(this) { response ->
+                wrapEspressoIdlingResource {
+                    if (!response.error!!) {
+                        val token = response.loginResult?.token
+                        if (token != null) {
+                            val userModel = UserModel(email, token, true)
+                            viewModel.saveSession(userModel)
+
+                            AlertDialog.Builder(this).apply {
+                                setTitle(getString(R.string.string_yeaay))
+                                setMessage(getString(R.string.string_success))
+                                setPositiveButton(getString(R.string.string_next)) { _, _ ->
+                                    val intent =
+                                        Intent(this@LoginActivity, MainActivity::class.java)
+                                    intent.flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                create()
+                                show()
+                            }
+                        }
+                    } else {
+                        AlertDialog.Builder(this).apply {
+                            setTitle(getString(R.string.string_error))
+                            setMessage(getString(R.string.login_failed))
+                            setPositiveButton(getString(R.string.String_ok)) { _, _ -> }
+                            create()
+                            show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

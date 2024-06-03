@@ -46,13 +46,21 @@
         app:queryHint="@string/string_search_category" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/itemRowCategory"
+        android:id="@+id/listItemTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_search"
+        tools:listitem="@layout/list_item_tabs_detail" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginVertical="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_search" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/listItemTabs" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

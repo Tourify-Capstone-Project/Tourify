@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.FragmentHomePageBinding
@@ -14,27 +15,14 @@ import com.capstone.project.tourify.ui.adapter.CategoryHomeAdapter
 import com.capstone.project.tourify.ui.adapter.CategoryItem
 import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
 import com.capstone.project.tourify.ui.adapter.RecommendedItem
+import com.capstone.project.tourify.ui.adapter.SettingAdapter
+import com.capstone.project.tourify.ui.adapter.SettingItem
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomePageFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomePageFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -52,7 +40,6 @@ class HomePageFragment : Fragment() {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Contoh data
         val categoryItems = listOf(
             CategoryItem("Bahari", R.drawable.bahari),
             CategoryItem("Village \nTourism", R.drawable.village_tourism),
@@ -63,34 +50,72 @@ class HomePageFragment : Fragment() {
         )
 
         val recommendedItems = listOf(
-            RecommendedItem("The Great Asia Africa", R.drawable.coba),
-            RecommendedItem("The Great Asia Africano numero uno", R.drawable.coba),
-            RecommendedItem("The Great Asia Africa", R.drawable.coba),
-            RecommendedItem("The Great Asia Africa", R.drawable.coba),
-            RecommendedItem("The Great Asia Africa", R.drawable.coba)
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africano numero uno", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
+            RecommendedItem("The Great Asia Africa", R.drawable.no_image)
         )
 
         val articleItems = listOf(
-            ArticleItem("Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya", "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya", R.drawable.coba),
-            ArticleItem("Title 2", "Description 2", R.drawable.coba)
-            // Tambahkan artikel lainnya di sini
+            ArticleItem(
+                "Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya",
+                "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya",
+                R.drawable.no_image
+            ),
+            ArticleItem("Title 2", "Description 2", R.drawable.no_image)
         )
 
-        // Inisialisasi Adapter dan set ke RecyclerView untuk kategori
-        categoryAdapter = CategoryHomeAdapter(categoryItems)
+        val settingCategoryHomeAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->
+            handleCatergoryHomeAdapterItemClick(categoryItem)
+        }
+
+        categoryAdapter = settingCategoryHomeAdapter
         binding.rvCategory.adapter = categoryAdapter
-        binding.rvCategory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvCategory.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        // Inisialisasi Adapter dan set ke RecyclerView untuk rekomendasi
-        recommendedAdapter = RecommendedAdapter(recommendedItems)
+
+        recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
+            handleRecommendedItemClick(recommendedItems)
+        }
+
         binding.rvRecommend.adapter = recommendedAdapter
-        binding.rvRecommend.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvRecommend.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        // Inisialisasi Adapter dan set ke RecyclerView untuk artikel
         articleAdapter = ArticleAdapter(articleItems)
         binding.rvArticle.adapter = articleAdapter
         binding.rvArticle.layoutManager = LinearLayoutManager(context)
         return view
+    }
+
+    private fun handleCatergoryHomeAdapterItemClick(categoryItem: CategoryItem) {
+        when (categoryItem.title) {
+            "Bahari" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_home_to_categoryActivity)
+            }
+
+            "Village \nTourism" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_home_to_categoryActivity)
+            }
+
+            "Cagar \nAlam" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_home_to_categoryActivity)
+            }
+        }
+    }
+
+    private fun handleRecommendedItemClick(settingItem: RecommendedItem) {
+        when (settingItem.title) {
+            "The Great Asia Africa" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_home_to_detailActivity)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -98,23 +123,4 @@ class HomePageFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomePageFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomePageFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
