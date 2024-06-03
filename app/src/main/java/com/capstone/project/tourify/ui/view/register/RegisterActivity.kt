@@ -1,5 +1,9 @@
 package com.capstone.project.tourify.ui.view.register
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.content.Intent
+import android.os.Build
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -40,6 +44,12 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.iHaveAccountTextView.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         emailInputLayout = findViewById(R.id.emailEditTextLayout)
         passwordInputLayout = findViewById(R.id.passwordEditTextLayout)

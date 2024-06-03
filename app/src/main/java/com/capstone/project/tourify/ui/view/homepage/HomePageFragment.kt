@@ -23,6 +23,7 @@ class HomePageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+
         }
     }
 
@@ -58,6 +59,11 @@ class HomePageFragment : Fragment() {
         )
 
         val articleItems = listOf(
+            ArticleItem("Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya", "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya", R.drawable.no_image),
+            ArticleItem("Title 2", "Description 2", R.drawable.no_image)
+        )
+
+        categoryAdapter = CategoryHomeAdapter(categoryItems)
             ArticleItem(
                 "Artikel Abal-Abal Hanya Orang Kuat Iman Yang Dapat Membukanya",
                 "Description artikel ini sangat membatu untuk anda yang sedang bermalas-malasan seperti saya",
@@ -71,9 +77,15 @@ class HomePageFragment : Fragment() {
         }
 
         categoryAdapter = settingCategoryHomeAdapter
+
         binding.rvCategory.adapter = categoryAdapter
         binding.rvCategory.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+
+        recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
+            handleRecommendedItemClick(recommendedItems)
+        }
 
 
         recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
@@ -123,4 +135,12 @@ class HomePageFragment : Fragment() {
         _binding = null
     }
 
+    private fun handleRecommendedItemClick(settingItem: RecommendedItem) {
+        when (settingItem.title) {
+            "The Great Asia Africa" -> {
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_nav_home_to_detailActivity)
+            }
+        }
+    }
 }

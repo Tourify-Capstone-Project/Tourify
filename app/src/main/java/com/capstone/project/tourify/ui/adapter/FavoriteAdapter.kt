@@ -15,12 +15,12 @@ class FavoriteAdapter(private val data: List<String>) : RecyclerView.Adapter<Fav
         val imageTitle: ImageView = view.findViewById(R.id.imagePoster)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_fav, parent, false)
-        return FavoriteAdapter.ViewHolder(view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: FavoriteAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textViewTitle.text = data[position]
         holder.imageTitle.setImageResource(R.drawable.no_image)
     }

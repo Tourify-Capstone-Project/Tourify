@@ -38,7 +38,7 @@
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Article Title"
+            android:text="@string/article_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardArticlePoster"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +54,7 @@
             android:layout_marginBottom="10dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Article Description"
+            android:text="@string/article_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardArticlePoster"

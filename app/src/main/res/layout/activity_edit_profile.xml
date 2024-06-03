@@ -37,6 +37,7 @@
         android:layout_marginTop="24dp"
         android:clipToOutline="true"
         android:scaleType="centerCrop"
+        android:src="@drawable/no_profile"
         android:src="@drawable/no_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

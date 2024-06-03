@@ -9,6 +9,7 @@
     android:background="@drawable/gradasi"
     tools:context=".ui.view.register.RegisterActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

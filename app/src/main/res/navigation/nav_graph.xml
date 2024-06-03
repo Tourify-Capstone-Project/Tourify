@@ -9,10 +9,7 @@
         android:id="@+id/nav_home"
         android:name="com.capstone.project.tourify.ui.view.homepage.HomePageFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home_page">
-        <action
-            android:id="@+id/action_nav_home_to_categoryActivity"
-            app:destination="@id/kategoriActivity" />
+        tools:layout="@layout/fragment_home_page" >
         <action
             android:id="@+id/action_nav_home_to_detailActivity"
             app:destination="@id/detailActivity" />
@@ -31,7 +28,7 @@
         android:id="@+id/nav_profile"
         android:name="com.capstone.project.tourify.ui.view.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile">
+        tools:layout="@layout/fragment_profile" >n
         <action
             android:id="@+id/action_nav_profile_to_editProfileActivity"
             app:destination="@id/editProfileActivity" />

@@ -47,7 +47,6 @@
         Letraset sheets containing Lorem Ipsum passages,
         and more recently with desktop publishing software
         like Aldus PageMaker including versions of Lorem Ipsum.</string>
-
     <string name="overview_text">The Great Asia Africa: A Historical and Cultural Destination on Jalan Asia Afrika, Bandung\n\n
 The Great Asia Africa, located on Jalan Asia Afrika in Bandung, is a unique destination that allows visitors to explore the rich history, art, and culture of two diverse continents. This site offers a profound insight into the diplomatic journey and international relations between Asia and Africa.\n\n
 **Attractions and Facilities**\n\n
@@ -59,6 +58,19 @@ Various kiosks along the site sell unique souvenirs and memorabilia from Asia an
 </string>
 
     <string name="string_write_a_review">Write</string>
+    <string name="category">Category</string>
+    <string name="article_title">Article Title</string>
+    <string name="article_description">Article Description</string>
+    <string name="info_aplikasi">Info Aplikasi</string>
+    <string name="example_email">example@gmail.com</string>
+    <string name="my_profile">My Profile</string>
+    <string name="home">Home</string>
+    <string name="finance">Finance</string>
+    <string name="profile">Profile</string>
+    <string name="cost">Cost:</string>
+    <string name="adventure_finance">Adventure Finance</string>
+    <string name="sign_in_unlock">Sign In or Register to Unlock All Features</string>
+    <string name="sign_in_desc_unlock">Continue your experience by logging in or registering account.</string>
     <string name="string_welcome">Welcome</string>
     <string name="string_please_login_with_your_information">Please input with your information</string>
     <string name="string_or_login_with">Or Login with</string>

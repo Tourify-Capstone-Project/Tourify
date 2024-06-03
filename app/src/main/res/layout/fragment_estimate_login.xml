@@ -5,15 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context=".ui.view.favorite.FavoriteFragment">
-
+    tools:context=".ui.view.estimasi.EstimateLoginFragment">
 
     <LinearLayout
-        android:id="@+id/pre_login_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/materialBarEditProfile"
@@ -32,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@string/sign_in_unlock"
+            android:text="Sign In or Register to Unlock All Features"
             style="@style/TextCard.Favorite"
             android:textSize="18sp"/>
 
@@ -40,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:text="@string/sign_in_desc_unlock"
+            android:text="Continue your experience by logging in or registering account."
             style="@style/TextTitle.Description"
             android:textSize="14sp"/>
 
@@ -59,33 +56,4 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/post_login_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/titleFragment"
-            style="@style/TextTitle.AppBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/string_favorite"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFavorite"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleFragment"
-            tools:listitem="@layout/item_fav" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -24,7 +24,6 @@ class DetailActivity : AppCompatActivity() {
         setupViewPager()
         setupRecyclerView()
     }
-
     private fun setupToolbar() {
         setSupportActionBar(binding.materialBarDetail)
         supportActionBar?.apply {

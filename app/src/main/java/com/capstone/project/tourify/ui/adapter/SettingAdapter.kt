@@ -38,5 +38,4 @@ class SettingAdapter(
 
     override fun getItemCount(): Int = data.size
 }
-
 data class SettingItem(val title: String, val imageResId: Int)
