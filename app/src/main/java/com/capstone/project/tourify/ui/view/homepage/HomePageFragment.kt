@@ -74,12 +74,9 @@ class HomePageFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
 
-
         recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
             handleRecommendedItemClick(recommendedItems)
         }
-
-
 
         binding.rvRecommend.adapter = recommendedAdapter
         binding.rvRecommend.layoutManager =
@@ -106,11 +103,10 @@ class HomePageFragment : Fragment() {
     }
 
     private fun handleCategoryItemClick(settingItem: CategoryItem) {
-        when (settingItem.title) {
-            "Bahari" -> {
-                Navigation.findNavController(requireView())
-                    .navigate(R.id.action_nav_home_to_kategoriActivity)
-            }
+        val bundle = Bundle().apply {
+            putString("CATEGORY_TITLE", settingItem.title)
         }
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_nav_home_to_kategoriActivity, bundle)
     }
 }

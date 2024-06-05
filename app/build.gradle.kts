@@ -68,6 +68,7 @@ dependencies {
     //glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.firebase.auth)
+    implementation(libs.googleid)
     annotationProcessor(libs.compiler)
 
     //espresso

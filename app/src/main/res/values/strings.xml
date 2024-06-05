@@ -74,6 +74,7 @@ Various kiosks along the site sell unique souvenirs and memorabilia from Asia an
     <string name="string_welcome">Welcome</string>
     <string name="string_please_login_with_your_information">Please input with your information</string>
     <string name="string_or_login_with">Or Login with</string>
+    <string name="string_or_signup_with">Or SignUp with</string>
     <string name="string_join_us">Join US</string>
     <string name="string_description">Description</string>
     <string name="string_photo_gallery">Photo Gallery</string>

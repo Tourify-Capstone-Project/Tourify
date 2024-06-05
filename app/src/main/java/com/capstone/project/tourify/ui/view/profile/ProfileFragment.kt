@@ -2,6 +2,7 @@ package com.capstone.project.tourify.ui.view.profile
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.FragmentProfileBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
+import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
 import com.capstone.project.tourify.ui.view.onboardingpage.OnBoardingActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
@@ -92,6 +94,10 @@ class ProfileFragment : Fragment() {
             "About Us" -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                 .navigate(R.id.action_nav_profile_to_aboutActivity)
 
+            "Language" -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+            }
+
             "Logout" -> logout()
         }
     }
@@ -100,7 +106,7 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             userPreference.logout()
             // Navigate back to OnBoardingActivity
-            val intent = Intent(requireContext(), OnBoardingActivity::class.java)
+            val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
             requireActivity().finish() // Finish the activity to prevent the user from navigating back to it using the back button
         }
