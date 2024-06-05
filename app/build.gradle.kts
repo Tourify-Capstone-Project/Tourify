@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleAndroidLibrariesMapsplatformSecretsGradlePlugin)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -17,7 +18,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "HOME_URL", "\"https://story-api.dicoding.dev/v1/\"")
+        buildConfigField("String", "HOME_URL", "\"https://test-backend-aofyvgrola-et.a.run.app/\"")
     }
 
     buildTypes {
@@ -66,6 +67,7 @@ dependencies {
 
     //glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.firebase.auth)
     annotationProcessor(libs.compiler)
 
     //espresso
@@ -75,6 +77,10 @@ dependencies {
 
     //maps
     implementation(libs.play.services.maps)
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

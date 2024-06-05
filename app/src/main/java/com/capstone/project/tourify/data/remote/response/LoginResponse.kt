@@ -1,27 +1,36 @@
 package com.capstone.project.tourify.data.remote.response
 
-import com.google.gson.annotations.SerializedName
-
-class LoginResponse (
-
-    @field:SerializedName("loginResult")
-    val loginResult: ResultLogin? = null,
-
-    @field:SerializedName("error")
-    val error: Boolean? = null,
-
-    @field:SerializedName("message")
-    val message: String? = null
+data class User(
+    val uid: String,
+    val email: String,
+    val emailVerified: Boolean,
+    val displayName: String,
+    val isAnonymous: Boolean,
+    val providerData: List<ProviderData>,
+    val stsTokenManager: StsTokenManager,
+    val createdAt: String,
+    val lastLoginAt: String,
+    val apiKey: String,
+    val appName: String
 )
 
-data class ResultLogin(
+data class ProviderData(
+    val providerId: String,
+    val uid: String,
+    val displayName: String,
+    val email: String,
+    val phoneNumber: String?,
+    val photoURL: String?
+)
 
-    @field:SerializedName("name")
-    val name: String? = null,
+data class StsTokenManager(
+    val refreshToken: String,
+    val accessToken: String,
+    val expirationTime: Long
+)
 
-    @field:SerializedName("userId")
-    val userId: String? = null,
-
-    @field:SerializedName("token")
-    val token: String? = null
+data class LoginResponse(
+    val message: String,
+    val user: User,
+    val token: String
 )
