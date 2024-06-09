@@ -11,16 +11,15 @@ class AuthRepository(
     private val userPreference: UserPreference
 ) {
 
-    suspend fun register(name: String, email: String, password: String): RegisterResponse {
-        return authApiService.register(name, email, password)
+    suspend fun signUp(username: String, email: String, password: String): RegisterResponse {
+        return authApiService.signUp(username, email, password)
     }
 
     suspend fun login(email: String, password: String): LoginResponse {
         val response = authApiService.login(email, password)
-        if (!response.error!!) {
-            response.loginResult?.token?.let { token ->
-                userPreference.saveSession(UserModel(email, token, true))
-            }
+        if (!response.message.isNullOrEmpty() && response.token.isNotEmpty()) {
+            val userModel = UserModel(email, password, response.token, true)
+            userPreference.saveSession(userModel)
         }
         return response
     }
@@ -30,7 +29,9 @@ class AuthRepository(
     }
 
     companion object {
-        fun getInstance(authApiService: AuthApiService, userPreference: UserPreference) =
-            AuthRepository(authApiService, userPreference)
+        fun getInstance(
+            userPreference: UserPreference,
+            apiService: AuthApiService
+        ) = AuthRepository(apiService, userPreference)
     }
 }

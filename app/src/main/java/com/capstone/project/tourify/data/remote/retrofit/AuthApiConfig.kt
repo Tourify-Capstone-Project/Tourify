@@ -16,9 +16,11 @@ class AuthApiConfig {
             val authInterceptor = Interceptor { chain ->
                 val req = chain.request()
                 val requestHeaders = req.newBuilder()
-                    .addHeader("Authorization", "Bearer $token")
-                    .build()
-                chain.proceed(requestHeaders)
+                if (!token.isNullOrEmpty()) { // Tambahkan pengecekan untuk token
+                    requestHeaders.addHeader("Authorization", "Bearer $token")
+                }
+                val newRequest = requestHeaders.build()
+                chain.proceed(newRequest)
             }
             val client = OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)

@@ -8,7 +8,7 @@ import com.capstone.project.tourify.di.AuthInjection
 import com.capstone.project.tourify.ui.viewmodel.login.LoginViewModel
 import com.capstone.project.tourify.ui.viewmodel.register.RegisterViewModel
 
-class AuthViewModelFactory (private val repository: AuthRepository) : ViewModelProvider.Factory {
+class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -16,14 +16,17 @@ class AuthViewModelFactory (private val repository: AuthRepository) : ViewModelP
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
             }
+
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
             }
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
 
     companion object {
-        fun getInstance(context: Context) = AuthViewModelFactory(AuthInjection.provideAuthRepository(context))
+        fun getInstance(context: Context) =
+            AuthViewModelFactory(AuthInjection.provideAuthRepository(context))
     }
 }
