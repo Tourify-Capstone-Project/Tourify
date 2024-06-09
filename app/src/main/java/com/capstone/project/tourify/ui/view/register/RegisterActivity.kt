@@ -216,6 +216,7 @@ class RegisterActivity : AppCompatActivity() {
             email = user.email ?: "",
             password = "",
             token = user.uid,
+            displayName = user.displayName ?: "",
             isLogin = true
         )
         userPreference.saveSession(userModel)

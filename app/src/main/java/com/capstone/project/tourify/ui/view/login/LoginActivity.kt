@@ -179,6 +179,7 @@ class LoginActivity : AppCompatActivity() {
             email = user.email ?: "",
             password = "", // Password is not available for Google sign-in
             token = user.uid, // Using UID as a token
+            displayName = user.displayName ?: "",
             isLogin = true
         )
         userPreference.saveSession(userModel)

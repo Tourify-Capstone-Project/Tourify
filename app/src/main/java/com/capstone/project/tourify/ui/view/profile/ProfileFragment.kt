@@ -89,6 +89,17 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        userPreference = UserPreference.getInstance(requireContext())
+
+        lifecycleScope.launch {
+            val user = userPreference.getSession().first()
+            binding.tvUsername.text = user.displayName // Menampilkan displayName dari UserModel
+        }
+    }
+
     private fun handleSettingItemClick(settingItem: SettingItem) {
         when (settingItem.title) {
             "About Us" -> Navigation.findNavController(requireActivity(), R.id.viewPager)
