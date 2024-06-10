@@ -5,8 +5,8 @@
     style="?attr/colorPrimaryVariant"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:scaleType="centerCrop"
     android:layout_margin="5dp"
     android:background="?attr/colorPrimary"
     android:contentDescription="@string/title_detail"
-    tools:src="@tools:sample/avatars"/>
+    android:scaleType="centerCrop"
+    tools:src="@tools:sample/avatars" />

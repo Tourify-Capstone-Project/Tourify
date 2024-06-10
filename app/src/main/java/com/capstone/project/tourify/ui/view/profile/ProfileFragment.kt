@@ -2,7 +2,6 @@ package com.capstone.project.tourify.ui.view.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
 import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
-import com.capstone.project.tourify.ui.view.onboardingpage.OnBoardingActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -89,14 +87,21 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        userPreference = UserPreference.getInstance(requireContext())
+
+        lifecycleScope.launch {
+            val user = userPreference.getSession().first()
+            binding.tvUsername.text = user.displayName // Menampilkan displayName dari UserModel
+        }
+    }
+
     private fun handleSettingItemClick(settingItem: SettingItem) {
         when (settingItem.title) {
             "About Us" -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                 .navigate(R.id.action_nav_profile_to_aboutActivity)
-
-            "Language" -> {
-                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
-            }
 
             "Logout" -> logout()
         }

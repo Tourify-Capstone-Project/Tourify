@@ -15,7 +15,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.capstone.project.tourify.R
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.retrofit.AuthApiConfig
 import com.capstone.project.tourify.data.repository.AuthRepository
@@ -216,6 +216,7 @@ class RegisterActivity : AppCompatActivity() {
             email = user.email ?: "",
             password = "",
             token = user.uid,
+            displayName = user.displayName ?: "",
             isLogin = true
         )
         userPreference.saveSession(userModel)
@@ -224,7 +225,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun updateUI(currentUser: FirebaseUser?) {
         if (currentUser != null) {
             lifecycleScope.launch {
-                    val userPreference = UserPreference.getInstance(this@RegisterActivity)
+                val userPreference = UserPreference.getInstance(this@RegisterActivity)
                 userPreference.getSession().collect { session ->
                     if (session.isLogin) {
                         startActivity(Intent(this@RegisterActivity, MainActivity::class.java))

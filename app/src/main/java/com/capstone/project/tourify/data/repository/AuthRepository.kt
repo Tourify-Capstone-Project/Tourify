@@ -1,6 +1,6 @@
 package com.capstone.project.tourify.data.repository
 
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.response.LoginResponse
 import com.capstone.project.tourify.data.remote.response.RegisterResponse
@@ -18,7 +18,8 @@ class AuthRepository(
     suspend fun login(email: String, password: String): LoginResponse {
         val response = authApiService.login(email, password)
         if (!response.message.isNullOrEmpty() && response.token.isNotEmpty()) {
-            val userModel = UserModel(email, response.user.displayName, response.token, true)
+            val userModel =
+                UserModel(email, password, response.token, response.user.displayName, true)
             userPreference.saveSession(userModel)
         }
         return response

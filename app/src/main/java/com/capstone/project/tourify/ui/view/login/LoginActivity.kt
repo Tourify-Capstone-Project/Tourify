@@ -14,7 +14,7 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.capstone.project.tourify.R
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
 import com.capstone.project.tourify.di.AuthInjection
@@ -74,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel.isLoading.observe(this) { isLoading ->
+        viewModel.isLoading.observe(this) {
             // Handle loading state
         }
 
@@ -177,8 +177,9 @@ class LoginActivity : AppCompatActivity() {
         val userPreference = UserPreference.getInstance(this)
         val userModel = UserModel(
             email = user.email ?: "",
-            password = "",
-            token = user.uid,
+            password = "", // Password is not available for Google sign-in
+            token = user.uid, // Using UID as a token
+            displayName = user.displayName ?: "",
             isLogin = true
         )
         userPreference.saveSession(userModel)

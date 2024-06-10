@@ -42,4 +42,4 @@ class CategoryHomeAdapter(
     override fun getItemCount(): Int = data.size
 }
 
-data class CategoryItem(val title: String, val imageResId: Int)
+data class CategoryItem(val title: String, val imageResId: Int, val id: String)
