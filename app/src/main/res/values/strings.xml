@@ -23,7 +23,7 @@
     <string name="title_detail">The Great Asia Africa</string>
     <string name="string_rating">4.4</string>
     <string name="string_review">(137 review)</string>
-    <string name="string_price">Rp 44.000</string>
+    <string name="string_price">44.000</string>
     <string name="string_kategori">Kategori</string>
     <string name="string_favorite">Favorite</string>
     <string name="title_kategori">Mount Rinjani</string>
@@ -85,4 +85,5 @@ Various kiosks along the site sell unique souvenirs and memorabilia from Asia an
     <string name="login_failed">Login Failed</string>
     <string name="String_ok">Oke</string>
     <string name="your_web_client_id">237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com</string>
+    <string name="str_rp">Rp.</string>
 </resources>
