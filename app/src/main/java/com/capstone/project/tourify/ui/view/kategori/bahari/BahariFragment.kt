@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentBahariBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
@@ -34,9 +33,7 @@ class BahariFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList()) { category ->
-            // Handle item click here
-        }
+        adapter = CategoryAdapter(emptyList())
 
         setupRecyclerView()
 

@@ -1,15 +1,16 @@
 package com.capstone.project.tourify.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.databinding.ListItemKategoriBinding
+import com.capstone.project.tourify.ui.view.detail.DetailActivity
 
 class CategoryAdapter(
-    private var categoryList: List<CategoryEntity>,
-    private val onItemClick: (CategoryEntity) -> Unit
+    private var categoryList: List<CategoryEntity>
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,7 +45,13 @@ class CategoryAdapter(
             binding.ratingText.text = category.rating
             binding.priceCategory.text = category.price
 
-            itemView.setOnClickListener { onItemClick(category) }
+            itemView.setOnClickListener {
+                val context = binding.root.context
+                val intent = Intent(context, DetailActivity::class.java).apply {
+                    putExtra("tourism_id", category.placeId)
+                }
+                context.startActivity(intent)
+            }
         }
     }
 }

@@ -35,9 +35,9 @@ class CultureFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList()) { category ->
-            // Handle item click here
-        }
+        adapter = CategoryAdapter(emptyList())
+
+        setupRecyclerView()
 
         setupRecyclerView()
 

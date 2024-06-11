@@ -33,15 +33,14 @@ class CagarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList()) { category ->
-            // Handle item click here
-        }
+        adapter = CategoryAdapter(emptyList())
 
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgryla6bw54fikev61qdftdgpxbkctfry089").observe(viewLifecycleOwner, {
-            adapter.updateCategories(it)
-        })
+        categoryViewModel.getCategoriesByType("ctgryla6bw54fikev61qdftdgpxbkctfry089")
+            .observe(viewLifecycleOwner, {
+                adapter.updateCategories(it)
+            })
 
         categoryViewModel.refreshCategories("ctgryla6bw54fikev61qdftdgpxbkctfry089")
     }

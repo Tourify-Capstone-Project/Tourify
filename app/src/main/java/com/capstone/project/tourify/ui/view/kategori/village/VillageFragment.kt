@@ -35,15 +35,14 @@ class VillageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList()) { category ->
-            // Handle item click here
-        }
+        adapter = CategoryAdapter(emptyList())
 
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgryeu9qus02crsy52mxao1xqciihtfry089").observe(viewLifecycleOwner, {
-            adapter.updateCategories(it)
-        })
+        categoryViewModel.getCategoriesByType("ctgryeu9qus02crsy52mxao1xqciihtfry089")
+            .observe(viewLifecycleOwner, {
+                adapter.updateCategories(it)
+            })
 
         categoryViewModel.refreshCategories("ctgryeu9qus02crsy52mxao1xqciihtfry089")
     }

@@ -35,15 +35,15 @@ class TamanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList()) { category ->
-            // Handle item click here
-        }
+        adapter = CategoryAdapter(emptyList())
 
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgryeb3hb4el990rapy8v7x0ia84gtfry089").observe(viewLifecycleOwner, {
-            adapter.updateCategories(it)
-        })
+
+        categoryViewModel.getCategoriesByType("ctgryeb3hb4el990rapy8v7x0ia84gtfry089")
+            .observe(viewLifecycleOwner, {
+                adapter.updateCategories(it)
+            })
 
         categoryViewModel.refreshCategories("ctgryeb3hb4el990rapy8v7x0ia84gtfry089")
     }
