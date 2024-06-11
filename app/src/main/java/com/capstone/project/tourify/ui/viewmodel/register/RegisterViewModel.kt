@@ -25,12 +25,12 @@ class RegisterViewModel(private val userRepository: AuthRepository) : ViewModel(
         data class Error(val message: String) : RegistrationStatus()
     }
 
-    fun register(name: String, email: String, password: String) {
+    fun register(username: String, email: String, password: String) {
         _isLoading.value = true
         viewModelScope.launch {
             _registrationStatus.value = RegistrationStatus.Loading
             try {
-                val response = userRepository.register(name, email, password)
+                val response = userRepository.signUp(username, email, password)
                 if (response.error == false) {
                     _registrationStatus.value =
                         RegistrationStatus.Success(response.message ?: "User Created!")

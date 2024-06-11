@@ -7,7 +7,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -18,7 +19,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
     suspend fun saveSession(user: UserModel) {
         dataStore.edit { preferences ->
             preferences[EMAIL_KEY] = user.email
+            preferences[PASSWORD_KEY] = user.password
             preferences[TOKEN_KEY] = user.token
+            preferences[USERNAME_KEY] = user.displayName
             preferences[IS_LOGIN_KEY] = true
         }
     }
@@ -27,7 +30,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         return dataStore.data.map { preferences ->
             UserModel(
                 preferences[EMAIL_KEY] ?: "",
+                preferences[PASSWORD_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
+                preferences[USERNAME_KEY] ?: "",
                 preferences[IS_LOGIN_KEY] ?: false
             )
         }
@@ -37,6 +42,8 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         dataStore.edit { preferences ->
             preferences.clear()
         }
+
+        FirebaseAuth.getInstance().signOut()
     }
 
     companion object {
@@ -44,7 +51,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private var INSTANCE: UserPreference? = null
 
         private val EMAIL_KEY = stringPreferencesKey("email")
+        private val PASSWORD_KEY = stringPreferencesKey("password")
         private val TOKEN_KEY = stringPreferencesKey("token")
+        private val USERNAME_KEY = stringPreferencesKey("username")
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
 
         fun getInstance(context: Context): UserPreference {

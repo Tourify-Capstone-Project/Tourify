@@ -2,65 +2,48 @@ package com.capstone.project.tourify.ui.view.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.capstone.project.tourify.R
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.ActivityLoginBinding
-import com.capstone.project.tourify.ui.customview.CustomEmailInputLayout
-import com.capstone.project.tourify.ui.customview.CustomPasswordInputLayout
+import com.capstone.project.tourify.di.AuthInjection
 import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
-import com.capstone.project.tourify.ui.viewmodel.login.LoginViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.AuthViewModelFactory
-import com.capstone.project.tourify.utils.wrapEspressoIdlingResource
-import com.google.android.material.textfield.TextInputEditText
+import com.capstone.project.tourify.ui.viewmodel.login.LoginViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<LoginViewModel> {
-        AuthViewModelFactory.getInstance(this)
-    }
-
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var viewModel: LoginViewModel
 
-    private lateinit var emailInputLayout: CustomEmailInputLayout
-    private lateinit var passwordInputLayout: CustomPasswordInputLayout
-    private lateinit var edtEmail: TextInputEditText
-    private lateinit var edtPassword: TextInputEditText
-
-    private lateinit var userPreference: UserPreference
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userPreference = UserPreference.getInstance(applicationContext)
+        val authRepository = AuthInjection.provideAuthRepository(this)
+        val viewModelFactory = AuthViewModelFactory(authRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
 
-        binding.notHaveAccountTextView.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        auth = FirebaseAuth.getInstance()
 
-        emailInputLayout = findViewById(R.id.emailEditTextLayout)
-        passwordInputLayout = findViewById(R.id.passwordEditTextLayout)
-        edtEmail = findViewById(R.id.edLoginEmail)
-        edtPassword = findViewById(R.id.edLoginPassword)
+        // Menghubungkan custom view dengan elemen di layout
+        binding.emailEditTextLayout.setEditText(binding.edLoginEmail)
+        binding.passwordEditTextLayout.setEditText(binding.edLoginPassword)
 
-        emailInputLayout.setEditText(edtEmail)
-        passwordInputLayout.setEditText(edtPassword)
-
-        binding.notHaveAccountTextView.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-            finish()
+        binding.signWithGoogle.setOnClickListener {
+            signIn()
         }
 
         setupAction()
@@ -68,43 +51,84 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
-            val email = binding.edLoginEmail.text.toString()
-            val password = binding.edLoginPassword.text.toString()
+            val email = binding.edLoginEmail.text.toString().trim()
+            val password = binding.edLoginPassword.text.toString().trim()
 
-            // Trigger API call for login
-            viewModel.login(email, password)
-
-            viewModel.isLoading.observe(this) { isLoading ->
-                showLoading(isLoading)
+            if (validateEmailAndPassword(email, password)) {
+                viewModel.login(email, password)
             }
+        }
 
-            viewModel.loginResult.observe(this) { response ->
-                wrapEspressoIdlingResource {
-                    if (!response.error!!) {
-                        val token = response.loginResult?.token
-                        if (token != null) {
-                            val userModel = UserModel(email, token, true)
+        binding.notHaveAccountTextView.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
-                            lifecycleScope.launch {
-                                userPreference.saveSession(userModel)
+        viewModel.isLoading.observe(this) {
+            // Handle loading state
+        }
 
-                                Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
+        viewModel.loginResult.observe(this) { response ->
+            if (response.message == "Login successful") {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-                                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                                finish()
-                            }
-                        }
-                    } else {
-                        Toast.makeText(this@LoginActivity, "Invalid credentials!", Toast.LENGTH_SHORT).show()
+    private fun validateEmailAndPassword(email: String, password: String): Boolean {
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Email dan password harus diisi", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Format email tidak valid", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+    private fun signIn() {
+        // Implementasi sign-in dengan Google
+    }
+
+    private suspend fun saveUserSession(user: FirebaseUser) {
+        val userPreference = UserPreference.getInstance(this)
+        val userModel = UserModel(
+            email = user.email ?: "",
+            password = "",
+            token = user.uid,
+            displayName = user.displayName ?: "",
+            isLogin = true
+        )
+        userPreference.saveSession(userModel)
+    }
+
+    private fun updateUI(currentUser: FirebaseUser?) {
+        if (currentUser != null) {
+            lifecycleScope.launch {
+                val userPreference = UserPreference.getInstance(this@LoginActivity)
+                userPreference.getSession().collect { session ->
+                    if (session.isLogin) {
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
                     }
                 }
             }
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        updateUI(currentUser)
+    }
+
+    companion object {
+        const val TAG = "LoginActivity"
     }
 }

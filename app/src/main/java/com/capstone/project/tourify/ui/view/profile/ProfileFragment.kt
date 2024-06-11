@@ -14,8 +14,8 @@ import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.FragmentProfileBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
+import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
-import com.capstone.project.tourify.ui.view.onboardingpage.OnBoardingActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -87,6 +87,17 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        userPreference = UserPreference.getInstance(requireContext())
+
+        lifecycleScope.launch {
+            val user = userPreference.getSession().first()
+            binding.tvUsername.text = user.displayName // Menampilkan displayName dari UserModel
+        }
+    }
+
     private fun handleSettingItemClick(settingItem: SettingItem) {
         when (settingItem.title) {
             "About Us" -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
@@ -100,7 +111,7 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             userPreference.logout()
             // Navigate back to OnBoardingActivity
-            val intent = Intent(requireContext(), OnBoardingActivity::class.java)
+            val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
             requireActivity().finish() // Finish the activity to prevent the user from navigating back to it using the back button
         }

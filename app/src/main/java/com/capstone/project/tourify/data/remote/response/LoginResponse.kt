@@ -2,26 +2,37 @@ package com.capstone.project.tourify.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-class LoginResponse (
-
-    @field:SerializedName("loginResult")
-    val loginResult: ResultLogin? = null,
-
-    @field:SerializedName("error")
-    val error: Boolean? = null,
-
-    @field:SerializedName("message")
-    val message: String? = null
+data class User(
+    @SerializedName("uid") val uid: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("emailVerified") val emailVerified: Boolean,
+    @SerializedName("displayName") val displayName: String,
+    @SerializedName("isAnonymous") val isAnonymous: Boolean,
+    @SerializedName("providerData") val providerData: List<ProviderData>,
+    @SerializedName("stsTokenManager") val stsTokenManager: StsTokenManager,
+    @SerializedName("createdAt") val createdAt: String,
+    @SerializedName("lastLoginAt") val lastLoginAt: String,
+    @SerializedName("apiKey") val apiKey: String,
+    @SerializedName("appName") val appName: String
 )
 
-data class ResultLogin(
+data class ProviderData(
+    @SerializedName("providerId") val providerId: String,
+    @SerializedName("uid") val uid: String,
+    @SerializedName("displayName") val displayName: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("phoneNumber") val phoneNumber: String?,
+    @SerializedName("photoURL") val photoURL: String?
+)
 
-    @field:SerializedName("name")
-    val name: String? = null,
+data class StsTokenManager(
+    @SerializedName("refreshToken") val refreshToken: String,
+    @SerializedName("accessToken") val accessToken: String,
+    @SerializedName("expirationTime") val expirationTime: Long
+)
 
-    @field:SerializedName("userId")
-    val userId: String? = null,
-
-    @field:SerializedName("token")
-    val token: String? = null
+data class LoginResponse(
+    @SerializedName("message") val message: String,
+    @SerializedName("user") val user: User,
+    @SerializedName("token") val token: String
 )

@@ -6,20 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.FragmentPhotoGalleryBinding
+import com.capstone.project.tourify.data.remote.response.AdditionalImagesItem
 import com.capstone.project.tourify.ui.adapter.ImageDetailAdapter
-
 
 class PhotoGalleryFragment : Fragment() {
 
     private var _binding: FragmentPhotoGalleryBinding? = null
     private val binding get() = _binding!!
-
+    private var additionalImages: List<AdditionalImagesItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            additionalImages = it.getParcelableArrayList("additionalImages")
         }
     }
 
@@ -30,17 +30,12 @@ class PhotoGalleryFragment : Fragment() {
         _binding = FragmentPhotoGalleryBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val images = listOf(
-            R.drawable.pengandaran,
-            R.drawable.rinjani,
-            R.drawable.tangkubangperahu,
-            R.drawable.ancol,
-            R.drawable.saya
-        )
-
         val layoutManager = GridLayoutManager(requireContext(), 2)
         binding.listItemImageDetail.layoutManager = layoutManager
-        binding.listItemImageDetail.adapter = ImageDetailAdapter(requireContext(), images)
+        additionalImages?.let { images ->
+            val imageUrls = images.map { it.urlImage }
+            binding.listItemImageDetail.adapter = ImageDetailAdapter(requireContext(), imageUrls)
+        }
 
         return view
     }
