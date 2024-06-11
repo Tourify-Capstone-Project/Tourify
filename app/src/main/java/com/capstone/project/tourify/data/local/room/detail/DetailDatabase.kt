@@ -1,4 +1,4 @@
-package com.capstone.project.tourify.data.local.room
+package com.capstone.project.tourify.data.local.room.detail
 
 import android.content.Context
 import androidx.room.Database
