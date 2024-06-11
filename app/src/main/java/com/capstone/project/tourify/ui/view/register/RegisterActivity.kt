@@ -15,7 +15,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.capstone.project.tourify.R
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.retrofit.AuthApiConfig
 import com.capstone.project.tourify.data.repository.AuthRepository

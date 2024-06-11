@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.capstone.project.tourify.data.local.room.UserModel
 import com.capstone.project.tourify.data.remote.response.LoginResponse
 import com.capstone.project.tourify.data.repository.AuthRepository
-import com.capstone.project.tourify.utils.EspressoIdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

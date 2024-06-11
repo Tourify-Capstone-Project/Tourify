@@ -1,6 +1,6 @@
 package com.capstone.project.tourify.data.repository
 
-import com.capstone.project.tourify.data.local.room.UserModel
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.response.LoginResponse
 import com.capstone.project.tourify.data.remote.response.RegisterResponse
