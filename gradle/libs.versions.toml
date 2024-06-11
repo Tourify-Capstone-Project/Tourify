@@ -25,6 +25,8 @@ firebaseAuth = "23.0.0"
 googleid = "1.1.0"
 roomCompiler = "2.5.2"
 roomKtx = "2.5.2"
+pagingRuntimeKtx = "3.1.0"
+roomPaging = "2.4.0-rc01"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
@@ -54,6 +56,8 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomPaging" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
