@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,12 +53,28 @@ class HomePageFragment : Fragment() {
 
     private fun setupAdapterCategory() {
         val categoryItems = listOf(
-            CategoryItem("Bahari", R.drawable.bahari,"ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
-            CategoryItem("Village \nTourism", R.drawable.village_tourism, "ctgryeu9qus02crsy52mxao1xqciihtfry089"),
-            CategoryItem("Cagar \nAlam", R.drawable.cagar_alam, "ctgryla6bw54fikev61qdftdgpxbkctfry089"),
-            CategoryItem("Taman \nNasional", R.drawable.taman_nasional, "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"),
+            CategoryItem("Bahari", R.drawable.bahari, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
+            CategoryItem(
+                "Village \nTourism",
+                R.drawable.village_tourism,
+                "ctgryeu9qus02crsy52mxao1xqciihtfry089"
+            ),
+            CategoryItem(
+                "Cagar \nAlam",
+                R.drawable.cagar_alam,
+                "ctgryla6bw54fikev61qdftdgpxbkctfry089"
+            ),
+            CategoryItem(
+                "Taman \nNasional",
+                R.drawable.taman_nasional,
+                "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"
+            ),
             CategoryItem("Culture", R.drawable.culture, "ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089"),
-            CategoryItem("Culinary \nDestination", R.drawable.culinary, "ctgry7hc1oq4or1ymwddw2bu8uan5ntfry089")
+            CategoryItem(
+                "Culinary \nDestination",
+                R.drawable.culinary,
+                "ctgry7hc1oq4or1ymwddw2bu8uan5ntfry089"
+            )
         )
 
         categoryAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->
@@ -85,14 +100,9 @@ class HomePageFragment : Fragment() {
             handleRecommendedItemClick(recommendedItem)
         }
 
-        binding.rvCategory.adapter = categoryAdapter
-        binding.rvCategory.layoutManager =
+        binding.rvRecommend.adapter = recommendedAdapter
+        binding.rvRecommend.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-
-        recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
-            handleRecommendedItemClick(recommendedItems)
-        }
     }
 
     private fun setupRecyclerView() {
@@ -123,7 +133,7 @@ class HomePageFragment : Fragment() {
     }
 
     private fun observeHeadlineNews() {
-        viewModel.getHeadlineNews.observe(viewLifecycleOwner, Observer { pagingData ->
+        viewModel.getHeadlineNews.observe(viewLifecycleOwner, { pagingData ->
             articleAdapter.submitData(lifecycle, pagingData)
         })
     }

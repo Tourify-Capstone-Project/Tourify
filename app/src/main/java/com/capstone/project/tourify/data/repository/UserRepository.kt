@@ -1,7 +1,6 @@
 package com.capstone.project.tourify.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -16,13 +15,12 @@ import com.capstone.project.tourify.data.local.room.CategoryDao
 import com.capstone.project.tourify.data.local.room.DetailDao
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
-import com.capstone.project.tourify.data.remote.retrofit.ApiService
 
 class UserRepository(
     private val apiService: ApiService,
     private val categoryDao: CategoryDao,
     private val detailDao: DetailDao,
-    private val articleDatabase: ArticleDatabas
+    private val articleDatabase: ArticleDatabase
 ) {
 
     // Category Methods
@@ -69,6 +67,7 @@ class UserRepository(
     suspend fun saveDetail(detail: DetailResponse) {
         detailDao.insertDetail(detail)
     }
+
     fun getArticles(): LiveData<PagingData<ArticlesResponseItem>> {
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
@@ -85,7 +84,9 @@ class UserRepository(
     companion object {
         fun getInstance(
             apiService: ApiService,
+            categoryDao: CategoryDao,
+            detailDao: DetailDao,
             articleDatabase: ArticleDatabase
-        ) = UserRepository(apiService, articleDatabase)
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase)
     }
 }
