@@ -27,6 +27,8 @@ class OverviewFragment : Fragment() {
         arguments?.getString("placeDesc")?.let { placeDesc ->
             Log.d("OverviewFragment", "placeDesc: $placeDesc")
             binding.textOverview.text = placeDesc
+        } ?: run {
+            Log.d("OverviewFragment", "No placeDesc found in arguments")
         }
     }
 

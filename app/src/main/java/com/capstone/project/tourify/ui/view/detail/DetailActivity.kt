@@ -1,6 +1,7 @@
 package com.capstone.project.tourify.ui.view.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -30,7 +31,6 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
-        setupViewPager()
         setupRecyclerView()
 
         val tourismId = intent.getStringExtra("tourism_id") ?: return
@@ -38,8 +38,9 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.getDetail(tourismId)
         detailViewModel.detail.observe(this, Observer { detail ->
             detail?.let {
+                Log.d("DetailActivity", "Detail Response: $detail")
                 updateUI(it)
-                sectionsPagerAdapter.updateDetail(it)
+                setupViewPager(it)
             }
         })
     }
@@ -80,8 +81,10 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupViewPager() {
-        sectionsPagerAdapter = SectionPagerAdapter(this)
+    private fun setupViewPager(detail: DetailResponse) {
+        sectionsPagerAdapter = SectionPagerAdapter(this).apply {
+            updateDetail(detail)
+        }
         binding.viewPager.adapter = sectionsPagerAdapter
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
