@@ -12,7 +12,7 @@
         android:layout_margin="5dp">
 
         <TextView
-            android:id="@+id/text_overview"
+            android:id="@+id/textOverview"
             style="@style/TextTitle.Description"
             android:padding="10dp"
             android:layout_width="match_parent"

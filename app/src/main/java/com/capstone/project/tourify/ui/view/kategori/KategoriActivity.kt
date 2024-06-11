@@ -6,26 +6,35 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityKategoriBinding
-import com.capstone.project.tourify.ui.adapter.CategoryAdapter
-import com.capstone.project.tourify.ui.adapter.SectionPagerAdapter
-import com.capstone.project.tourify.ui.adapter.SectionPagerKategoriAdapter
 import com.capstone.project.tourify.ui.adapter.TabsAdapter
+import com.capstone.project.tourify.ui.adapter.SectionPagerKategoriAdapter
 
 @Suppress("DEPRECATION")
 class KategoriActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityKategoriBinding
-
     private lateinit var tabsAdapter: TabsAdapter
+    private val tabs = listOf(
+        "Bahari", "Village \nTourism", "Cagar \nAlam", "Taman \nNasional", "Culture", "Culinary \nDestination"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityKategoriBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupToolbar()
-        setupViewPager()
         setupRecyclerView()
+        setupViewPager()
 
+        val categoryTitle = intent.getStringExtra("CATEGORY_TITLE")
+        categoryTitle?.let { title ->
+            val position = tabs.indexOfFirst { it.equals(title, ignoreCase = true) }
+            if (position != -1) {
+                binding.viewPager.currentItem = position
+                tabsAdapter.setSelectedPosition(position)
+            }
+        }
     }
 
     private fun setupViewPager() {
@@ -41,7 +50,6 @@ class KategoriActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val tabs = listOf("Bahari", "Village \nTourism", "Cagar \nAlam", "Taman \nNation", "Culture", "Culinary \nDestination")
         tabsAdapter = TabsAdapter(tabs) { position ->
             binding.viewPager.currentItem = position
         }

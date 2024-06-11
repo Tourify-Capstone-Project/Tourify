@@ -51,10 +51,10 @@
                 android:layout_marginTop="5dp"
                 android:contentDescription="@string/appBar_Detail"
                 android:scaleType="centerCrop"
-                android:src="@drawable/rinjani"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/no_image" />
 
 
             <TextView
@@ -90,14 +90,24 @@
                 app:layout_constraintTop_toBottomOf="@id/titleDetail" />
 
             <TextView
-                android:id="@+id/priceDetail"
+                android:id="@+id/rPPriceDetail"
                 style="@style/TextTitle.Price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/string_price"
+                android:text="@string/str_rp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleDetail" />
+
+            <TextView
+                android:id="@+id/priceDetail"
+                style="@style/TextTitle.Price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/string_price"
+                app:layout_constraintStart_toEndOf="@id/rPPriceDetail"
                 app:layout_constraintTop_toBottomOf="@id/titleDetail" />
 
             <TextView
@@ -116,27 +126,27 @@
                 android:id="@+id/viewMargin"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewUser"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reviewUser" />
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listItemTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_margin="5dp"
-                tools:listitem="@layout/list_item_tabs_detail"
+                android:layout_marginTop="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/viewMargin" />
+                app:layout_constraintTop_toBottomOf="@id/viewMargin"
+                tools:listitem="@layout/list_item_tabs_detail" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@id/listItemTabs"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/listItemTabs" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.capstone.project.tourify" />
+                  <option name="mobileSdkAppId" value="1:237378734832:android:f76b006342b9ad87271035" />
+                  <option name="projectId" value="tourify-app-4e4fd" />
+                  <option name="projectNumber" value="237378734832" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

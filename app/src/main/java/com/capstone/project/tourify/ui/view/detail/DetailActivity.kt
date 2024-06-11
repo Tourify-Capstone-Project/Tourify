@@ -1,19 +1,29 @@
 package com.capstone.project.tourify.ui.view.detail
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.remote.response.DetailResponse
 import com.capstone.project.tourify.databinding.ActivityDetailBinding
 import com.capstone.project.tourify.ui.adapter.SectionPagerAdapter
 import com.capstone.project.tourify.ui.adapter.TabsAdapter
+import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import com.capstone.project.tourify.ui.viewmodel.detail.DetailViewModel
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
-
     private lateinit var tabsAdapter: TabsAdapter
+    private val detailViewModel: DetailViewModel by viewModels {
+        ViewModelFactory.getInstance(this)
+    }
+    private lateinit var sectionsPagerAdapter: SectionPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +31,30 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
-        setupViewPager()
         setupRecyclerView()
+
+        val tourismId = intent.getStringExtra("tourism_id") ?: return
+
+        detailViewModel.getDetail(tourismId)
+        detailViewModel.detail.observe(this, Observer { detail ->
+            detail?.let {
+                Log.d("DetailActivity", "Detail Response: $detail")
+                updateUI(it)
+                setupViewPager(it)
+            }
+        })
     }
+
+    private fun updateUI(detail: DetailResponse) {
+        Glide.with(this)
+            .load(detail.placePhotoUrl)
+            .into(binding.detailImageMain)
+
+        binding.titleDetail.text = detail.placeName
+        binding.priceDetail.text = detail.price
+        binding.rating.text = detail.rating
+    }
+
     private fun setupToolbar() {
         setSupportActionBar(binding.materialBarDetail)
         supportActionBar?.apply {
@@ -50,8 +81,10 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupViewPager() {
-        val sectionsPagerAdapter = SectionPagerAdapter(this)
+    private fun setupViewPager(detail: DetailResponse) {
+        sectionsPagerAdapter = SectionPagerAdapter(this).apply {
+            updateDetail(detail)
+        }
         binding.viewPager.adapter = sectionsPagerAdapter
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

@@ -7,3 +7,4 @@ data class UserModel(
     val displayName: String,
     val isLogin: Boolean = false
 )
+

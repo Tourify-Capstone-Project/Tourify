@@ -16,6 +16,7 @@
             android:id="@+id/imagePoster"
             android:layout_width="match_parent"
             android:layout_height="90dp"
+            android:contentDescription="@string/appBar_Detail"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,10 +29,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textSize="12sp"
             android:text="@string/title_detail"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imagePoster" />
 
         <TextView
@@ -51,10 +52,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:drawableStart="@drawable/star"
             android:drawablePadding="5dp"
-            android:textSize="11sp"
             android:text="@string/string_rating"
+            android:textSize="11sp"
+            app:drawableStartCompat="@drawable/star"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvPrice" />
     </androidx.constraintlayout.widget.ConstraintLayout>

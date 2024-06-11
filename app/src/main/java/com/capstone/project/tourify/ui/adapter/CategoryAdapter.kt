@@ -1,45 +1,57 @@
 package com.capstone.project.tourify.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.capstone.project.tourify.R
+import com.bumptech.glide.Glide
+import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.databinding.ListItemKategoriBinding
+import com.capstone.project.tourify.ui.view.detail.DetailActivity
 
-class CategoryAdapter(private val categoryList: List<Category>) :
-    RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(
+    private var categoryList: List<CategoryEntity>
+) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item_kategori, parent, false)
-        return ViewHolder(view)
+        val binding = ListItemKategoriBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = categoryList[position]
-        holder.imageView.setImageResource(category.imageResource)
-        holder.title.text = category.title
-        holder.rating.text = category.rating.toString()
-        holder.price.text = category.price
+        holder.bind(category)
     }
 
     override fun getItemCount(): Int {
         return categoryList.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
-        val title: TextView = itemView.findViewById(R.id.titleCategory)
-        val rating: TextView = itemView.findViewById(R.id.ratingText)
-        val price: TextView = itemView.findViewById(R.id.priceCategory)
+    fun updateCategories(newCategories: List<CategoryEntity>) {
+        categoryList = newCategories
+        notifyDataSetChanged()
+    }
+
+    inner class ViewHolder(private val binding: ListItemKategoriBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(category: CategoryEntity) {
+            Glide.with(binding.imageView.context)
+                .load(category.placePhotoUrl)
+                .into(binding.imageView)
+            binding.titleCategory.text = category.placeName
+            binding.ratingText.text = category.rating
+            binding.priceCategory.text = category.price
+
+            itemView.setOnClickListener {
+                val context = binding.root.context
+                val intent = Intent(context, DetailActivity::class.java).apply {
+                    putExtra("tourism_id", category.placeId)
+                }
+                context.startActivity(intent)
+            }
+        }
     }
 }
-
-data class Category(
-    val title: String,
-    val rating: Double,
-    val price: String,
-    val imageResource: Int
-)

@@ -16,7 +16,6 @@ import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
 import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
-import com.capstone.project.tourify.ui.view.onboardingpage.OnBoardingActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first

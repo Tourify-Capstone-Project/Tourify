@@ -23,7 +23,7 @@
     <string name="title_detail">The Great Asia Africa</string>
     <string name="string_rating">4.4</string>
     <string name="string_review">(137 review)</string>
-    <string name="string_price">Rp 44.000</string>
+    <string name="string_price">44.000</string>
     <string name="string_kategori">Kategori</string>
     <string name="string_favorite">Favorite</string>
     <string name="title_kategori">Mount Rinjani</string>
@@ -47,15 +47,7 @@
         Letraset sheets containing Lorem Ipsum passages,
         and more recently with desktop publishing software
         like Aldus PageMaker including versions of Lorem Ipsum.</string>
-    <string name="overview_text">The Great Asia Africa: A Historical and Cultural Destination on Jalan Asia Afrika, Bandung\n\n
-The Great Asia Africa, located on Jalan Asia Afrika in Bandung, is a unique destination that allows visitors to explore the rich history, art, and culture of two diverse continents. This site offers a profound insight into the diplomatic journey and international relations between Asia and Africa.\n\n
-**Attractions and Facilities**\n\n
-Visitors can explore museums and galleries showcasing artifacts, documents, and artworks that illustrate the journey of the Asia-Africa Conference of 1955. This conference was a significant event in global history, bringing together leaders from Asian and African countries to discuss cooperation and solidarity.\n\n
-The site also features beautiful gardens and open spaces, providing a serene atmosphere amidst the bustling city of Bandung. Visitors can enjoy the lush green scenery, relax, and spend quality time with family and friends.\n\n
-Regularly scheduled cultural performances highlight the history and traditions of Asia and Africa. These performances include traditional dances, music, and dramas that bring the rich cultures of these continents to life.\n\n
-The Great Asia Africa offers ample parking and comfortable rest areas to ensure a pleasant visit. These rest areas are equipped with shaded seating and other amenities for maximum comfort.\n\n
-Various kiosks along the site sell unique souvenirs and memorabilia from Asia and Africa. Visitors can purchase distinctive items as keepsakes or gifts for loved ones.\n
-</string>
+    <string name="overview_text">The Great Asia Africa: A Historical and Cultural Destination on Jalan Asia Afrika, Bandung\n\n The Great Asia Africa, located on Jalan Asia Afrika in Bandung, is a unique destination that allows visitors to explore the rich history, art, and culture of two diverse continents. This site offers a profound insight into the diplomatic journey and international relations between Asia and Africa.\n\n </string>
 
     <string name="string_write_a_review">Write</string>
     <string name="category">Category</string>
@@ -74,6 +66,7 @@ Various kiosks along the site sell unique souvenirs and memorabilia from Asia an
     <string name="string_welcome">Welcome</string>
     <string name="string_please_login_with_your_information">Please input with your information</string>
     <string name="string_or_login_with">Or Login with</string>
+    <string name="string_or_signup_with">Or SignUp with</string>
     <string name="string_join_us">Join US</string>
     <string name="string_description">Description</string>
     <string name="string_photo_gallery">Photo Gallery</string>
@@ -85,4 +78,5 @@ Various kiosks along the site sell unique souvenirs and memorabilia from Asia an
     <string name="String_ok">Oke</string>
     <string name="your_web_client_id">237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com</string>
     <string name="retry">Coba lagi</string>
+    <string name="str_rp">Rp.</string>
 </resources>
