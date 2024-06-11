@@ -22,6 +22,7 @@ class DetailActivity : AppCompatActivity() {
     private val detailViewModel: DetailViewModel by viewModels {
         ViewModelFactory.getInstance(this)
     }
+    private lateinit var sectionsPagerAdapter: SectionPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.detail.observe(this, Observer { detail ->
             detail?.let {
                 updateUI(it)
+                sectionsPagerAdapter.updateDetail(it)
             }
         })
     }
@@ -79,7 +81,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        val sectionsPagerAdapter = SectionPagerAdapter(this)
+        sectionsPagerAdapter = SectionPagerAdapter(this)
         binding.viewPager.adapter = sectionsPagerAdapter
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

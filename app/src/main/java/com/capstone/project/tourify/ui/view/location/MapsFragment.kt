@@ -1,13 +1,11 @@
 package com.capstone.project.tourify.ui.view.location
 
 import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.capstone.project.tourify.R
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -17,24 +15,25 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsFragment : Fragment() {
 
+    private var placeGmapsUrl: String? = null
+
     private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        placeGmapsUrl?.let {
+            val location = getLocationFromGmapsUrl(it)
+            googleMap.addMarker(MarkerOptions().position(location).title("Marker"))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            placeGmapsUrl = it.getString("placeGmapsUrl")
+        }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_maps, container, false)
@@ -44,5 +43,13 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+    }
+
+    private fun getLocationFromGmapsUrl(gmapsUrl: String): LatLng {
+        val uri = android.net.Uri.parse(gmapsUrl)
+        val latLng = uri.getQueryParameter("q")?.split(",")
+        val lat = latLng?.get(0)?.toDoubleOrNull() ?: 0.0
+        val lng = latLng?.get(1)?.toDoubleOrNull() ?: 0.0
+        return LatLng(lat, lng)
     }
 }
