@@ -17,6 +17,7 @@ import com.capstone.project.tourify.ui.adapter.SettingItem
 import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -100,7 +101,7 @@ class ProfileFragment : Fragment() {
 
     private fun handleSettingItemClick(settingItem: SettingItem) {
         when (settingItem.title) {
-            "About Us" -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            "About Us" -> Navigation.findNavController(requireActivity(), R.id.viewPager)
                 .navigate(R.id.action_nav_profile_to_aboutActivity)
 
             "Logout" -> logout()

@@ -7,6 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
 class ApiConfig {
     companion object {
         private var HOME_URL = BuildConfig.HOME_URL
@@ -32,6 +33,5 @@ class ApiConfig {
                 .build()
             return retrofit.create(ApiService::class.java)
         }
-
     }
 }

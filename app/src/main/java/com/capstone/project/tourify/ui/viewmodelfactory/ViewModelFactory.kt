@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.capstone.project.tourify.data.repository.UserRepository
 import com.capstone.project.tourify.di.Injection
+import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import com.capstone.project.tourify.ui.viewmodel.category.CategoryViewModel
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
 import com.capstone.project.tourify.ui.viewmodel.detail.DetailViewModel
@@ -18,6 +19,11 @@ class ViewModelFactory(private val repository: UserRepository) :
             modelClass.isAssignableFrom(CategoryViewModel::class.java) -> {
                 CategoryViewModel(repository) as T
             }
+            
+            modelClass.isAssignableFrom(ArticleViewModel::class.java) -> {
+                ArticleViewModel(repository) as T
+            }
+
             modelClass.isAssignableFrom(CulinaryViewModel::class.java) -> {
                 CulinaryViewModel(repository) as T
             }

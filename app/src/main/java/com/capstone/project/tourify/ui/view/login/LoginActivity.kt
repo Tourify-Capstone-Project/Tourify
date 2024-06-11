@@ -35,7 +35,6 @@ class LoginActivity : AppCompatActivity() {
         val authRepository = AuthInjection.provideAuthRepository(this)
         val viewModelFactory = AuthViewModelFactory(authRepository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
-
         auth = FirebaseAuth.getInstance()
 
         // Menghubungkan custom view dengan elemen di layout
@@ -71,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginResult.observe(this) { response ->
             if (response.message == "Login successful") {
+
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -131,4 +131,5 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         const val TAG = "LoginActivity"
     }
+
 }

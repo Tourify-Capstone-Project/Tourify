@@ -1,35 +1,59 @@
 package com.capstone.project.tourify.ui.adapter
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
+import com.capstone.project.tourify.databinding.ItemArticleBinding
 
-class ArticleAdapter(private val data: List<ArticleItem>) : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
+class ArticleAdapter: PagingDataAdapter<ArticlesResponseItem, ArticleAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textViewTitle: TextView = view.findViewById(R.id.tvArticleTitle)
-        val textViewDesc: TextView = view.findViewById(R.id.tvArticleDesc)
-        val imageTitle: ImageView = view.findViewById(R.id.imageArticlePoster)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemArticleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MyViewHolder(binding)
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false)
-        return ViewHolder(view)
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val news = getItem(position)
+        if (news != null) {
+            holder.bind(news)
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
-        holder.textViewTitle.text = item.title
-        holder.textViewDesc.text = item.description
-        holder.imageTitle.setImageResource(item.imageResId)
+    class MyViewHolder(val binding: ItemArticleBinding) : RecyclerView.ViewHolder(
+        binding.root
+    ) {
+        fun bind(news: ArticlesResponseItem) {
+            binding.tvArticleTitle.text = news.articleTitle
+            binding.tvArticleDesc.text = news.articleDesc
+            Glide.with(itemView.context)
+                .load(news.articlePhotoUrl)
+                .apply(RequestOptions.placeholderOf(R.drawable.no_image))
+                .into(binding.imageArticlePoster)
+            itemView.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(news.articleUrl)
+                itemView.context.startActivity(intent)
+            }
+        }
     }
 
-    override fun getItemCount(): Int = data.size
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ArticlesResponseItem>() {
+            override fun areItemsTheSame(oldItem: ArticlesResponseItem, newItem: ArticlesResponseItem): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: ArticlesResponseItem, newItem: ArticlesResponseItem): Boolean {
+                return oldItem.articleId == newItem.articleId
+            }
+        }
+    }
 }
-
-data class ArticleItem(val title: String, val description: String, val imageResId: Int)

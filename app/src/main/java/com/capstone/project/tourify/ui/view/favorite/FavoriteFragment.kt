@@ -5,12 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-<<<<<<< HEAD
-import androidx.appcompat.app.AppCompatActivity
-=======
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
->>>>>>> ccf092942bcba012ac97033ecbca804f677b028d
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.FragmentFavoriteBinding
@@ -66,21 +62,6 @@ class FavoriteFragment : Fragment() {
                 val intent = Intent(activity, LoginActivity::class.java)
                 startActivity(intent)
             }
-        }
-<<<<<<< HEAD
-
-        setupToolbar()
-
-        return view
-=======
->>>>>>> ccf092942bcba012ac97033ecbca804f677b028d
-    }
-
-    private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.materialBarEditProfile)
-        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            setDisplayShowTitleEnabled(true)
-            title = getString(R.string.string_favorite)
         }
     }
 

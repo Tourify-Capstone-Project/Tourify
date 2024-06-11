@@ -243,6 +243,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val TAG = "MainActivity"
         const val PREF_NAME = "UserPreferences"
         const val KEY_USER_TOKEN = "userToken"
     }
