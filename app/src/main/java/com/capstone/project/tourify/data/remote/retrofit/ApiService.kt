@@ -9,7 +9,7 @@ import retrofit2.http.Path
 import retrofit2.http.*
 
 interface ApiService {
-  
+
       @GET("home")
     suspend fun getArticles(
         @Query("page") page: Int = 1,
@@ -19,7 +19,8 @@ interface ApiService {
     @GET("category/{category}")
     suspend fun getCategory(
         @Path("category") category: String
-    ): List<CategoryResponseItem>  // Mengubah dari CategoryResponse ke List<CategoryResponseItem>
+    ): List<CategoryResponseItem>
+
 
     @GET("destination/{tourism_id}")
     suspend fun getDetail(
