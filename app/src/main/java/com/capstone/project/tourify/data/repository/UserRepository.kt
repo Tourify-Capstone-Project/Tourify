@@ -9,10 +9,10 @@ import androidx.paging.liveData
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
-import com.dicoding.picodiploma.loginwithanimation.data.ArticleRemoteMediator
 import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.data.local.room.category.CategoryDao
 import com.capstone.project.tourify.data.local.room.detail.DetailDao
+import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 

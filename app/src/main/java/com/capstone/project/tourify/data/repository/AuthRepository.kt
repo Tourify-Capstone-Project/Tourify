@@ -17,7 +17,7 @@ class AuthRepository(
 
     suspend fun login(email: String, password: String): LoginResponse {
         val response = authApiService.login(email, password)
-        if (!response.message.isNullOrEmpty() && response.token.isNotEmpty()) {
+        if (response.message.isNotEmpty() && response.token.isNotEmpty()) {
           
             val userModel =
                 UserModel(email, password, response.token, response.user.displayName, true)
