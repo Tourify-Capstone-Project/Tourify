@@ -21,6 +21,12 @@ import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
 import com.capstone.project.tourify.ui.adapter.RecommendedItem
 import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import java.io.FileInputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.channels.FileChannel
 
 class HomePageFragment : Fragment() {
 
@@ -31,6 +37,8 @@ class HomePageFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
+    private lateinit var tflite: Interpreter
+
     private lateinit var categoryAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var articleAdapter: ArticleAdapter
@@ -40,7 +48,21 @@ class HomePageFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
+
+        tflite = Interpreter(loadModelFile())
+
         return binding.root
+    }
+
+    private fun loadModelFile(): ByteBuffer {
+        val fileDescriptor = requireContext().assets.openFd("tourify_model.tflite")
+        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+        val fileChannel = inputStream.channel
+        val startOffset = fileDescriptor.startOffset
+        val declaredLength = fileDescriptor.declaredLength
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength).apply {
+            order(ByteOrder.nativeOrder())
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,11 +77,27 @@ class HomePageFragment : Fragment() {
     private fun setupAdapterCategory() {
         val categoryItems = listOf(
             CategoryItem("Bahari", R.drawable.bahari, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
-            CategoryItem("Village \nTourism", R.drawable.village_tourism, "ctgryeu9qus02crsy52mxao1xqciihtfry089"),
-            CategoryItem("Cagar \nAlam", R.drawable.cagar_alam, "ctgryla6bw54fikev61qdftdgpxbkctfry089"),
-            CategoryItem("Taman \nNasional", R.drawable.taman_nasional, "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"),
+            CategoryItem(
+                "Village \nTourism",
+                R.drawable.village_tourism,
+                "ctgryeu9qus02crsy52mxao1xqciihtfry089"
+            ),
+            CategoryItem(
+                "Cagar \nAlam",
+                R.drawable.cagar_alam,
+                "ctgryla6bw54fikev61qdftdgpxbkctfry089"
+            ),
+            CategoryItem(
+                "Taman \nNasional",
+                R.drawable.taman_nasional,
+                "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"
+            ),
             CategoryItem("Culture", R.drawable.culture, "ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089"),
-            CategoryItem("Culinary \nDestination", R.drawable.culinary, "ctgry7hc1oq4or1ymwddw2bu8uan5ntfry089")
+            CategoryItem(
+                "Culinary \nDestination",
+                R.drawable.culinary,
+                "ctgry7hc1oq4or1ymwddw2bu8uan5ntfry089"
+            )
         )
 
         categoryAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->
@@ -81,7 +119,7 @@ class HomePageFragment : Fragment() {
             RecommendedItem("The Great Asia Africa", R.drawable.no_image)
         )
 
-        recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItem ->
+        recommendedAdapter = RecommendedAdapter(recommendedItems, tflite) { recommendedItem ->
             handleRecommendedItemClick(recommendedItem)
         }
 

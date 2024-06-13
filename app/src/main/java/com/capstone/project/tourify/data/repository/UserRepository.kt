@@ -17,8 +17,9 @@ import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.pagging.CategoryRemoteMediator
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
-import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class UserRepository(
     private val apiService: ApiService,
@@ -30,7 +31,7 @@ class UserRepository(
 
     // Category Methods
     @OptIn(ExperimentalPagingApi::class)
-    fun getCategoriesByType(category: String): LiveData<PagingData<CategoryEntity>> {
+    fun getCategoriesByType(category: String): Flow<PagingData<CategoryEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 5,
@@ -38,7 +39,7 @@ class UserRepository(
             ),
             remoteMediator = CategoryRemoteMediator(categoryDatabase, apiService, category),
             pagingSourceFactory = { categoryDao.getCategoriesByType(category) }
-        ).liveData.map { pagingData ->
+        ).flow.map { pagingData ->
             pagingData.map { categoryResponseItem ->
                 CategoryEntity(
                     placeId = categoryResponseItem.placeId,
@@ -56,25 +57,14 @@ class UserRepository(
         }
     }
 
+
     suspend fun refreshCategories(category: String): List<CategoryEntity> {
-        val response: List<CategoryResponseItem> = apiService.getCategory(category)
-        val categories = response.map {
-            CategoryEntity(
-                placeId = it.placeId,
-                placeName = it.placeName,
-                placeDesc = it.placeDesc,
-                placeAddress = it.placeAddress,
-                placePhotoUrl = it.placePhotoUrl,
-                placeGmapsUrl = it.placeGmapsUrl,
-                city = it.city,
-                price = it.price,
-                rating = it.rating,
-                category = it.category
-            )
-        }
+        val response = apiService.getCategory(category)
+        val categories = response.map { it.toEntity() }
         categoryDao.insertAll(categories)
         return categories
     }
+
 
     suspend fun insertCategories(categories: List<CategoryEntity>) {
         categoryDao.insertAll(categories)

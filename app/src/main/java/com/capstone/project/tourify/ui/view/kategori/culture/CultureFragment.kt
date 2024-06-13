@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import com.capstone.project.tourify.databinding.FragmentCultureBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
 import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 
 
@@ -26,6 +28,8 @@ class CultureFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,32 +38,59 @@ class CultureFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        categoryadapter = CategoryAdapter()
-
-        setupRecyclerView()
-
-        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
-            .observe(viewLifecycleOwner, Observer { pagingData ->
-                categoryadapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
-            })
-
-        categoryViewModel.refreshCategories("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
-    }
-
-    private fun setupRecyclerView() {
-        binding.itemRowCategory.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@CultureFragment.categoryadapter.withLoadStateFooter(
-                footer = LoadingStateAdapter { this@CultureFragment.categoryadapter.retry() }
-            )
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        categoryadapter = CategoryAdapter()
+//
+//        setupRecyclerView()
+//
+//<<<<<<< HEAD
+//        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
+//            .observe(viewLifecycleOwner, Observer { pagingData ->
+//                categoryadapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
+//            })
+//=======
+//        setupRecyclerView()
+//
+//        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
+//>>>>>>> e0f0ca43ca94223575f1eab8f391b15c5123c7a8
+//
+//        categoryViewModel.categories.observe(viewLifecycleOwner) { categories ->
+//            adapter.updateCategories(categories)
+//        }
+//
+//        categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
+//            adapter.updateCategories(filteredCategories)
+//        }
+//
+//        sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
+//            categoryViewModel.filterCategories(query)
+//        }
+//    }
+//
+//    private fun setupRecyclerView() {
+//        binding.itemRowCategory.apply {
+//            layoutManager = LinearLayoutManager(requireContext())
+//            adapter = this@CultureFragment.categoryadapter.withLoadStateFooter(
+//                footer = LoadingStateAdapter { this@CultureFragment.categoryadapter.retry() }
+//            )
+//        }
+//    }
+//
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        _binding = null
+//    }
+//<<<<<<< HEAD
+//=======
+//
+//    private fun setupRecyclerView() {
+//        adapter = CategoryAdapter(emptyList())
+//        binding.itemRowCategory.apply {
+//            layoutManager = LinearLayoutManager(requireContext())
+//            adapter = this@CultureFragment.adapter
+//        }
+//    }
+//>>>>>>> e0f0ca43ca94223575f1eab8f391b15c5123c7a8
 }

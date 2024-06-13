@@ -11,7 +11,7 @@ import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.databinding.ListItemKategoriBinding
 import com.capstone.project.tourify.ui.view.detail.DetailActivity
 
-class CategoryAdapter: PagingDataAdapter<CategoryEntity, CategoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class CategoryAdapter : PagingDataAdapter<CategoryEntity, CategoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ListItemKategoriBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,21 +19,21 @@ class CategoryAdapter: PagingDataAdapter<CategoryEntity, CategoryAdapter.MyViewH
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val place = getItem(position)
-        if (place != null) {
-            holder.bind(place)
+        val category = getItem(position)
+        category?.let {
+            holder.bind(it)
         }
     }
 
-    class MyViewHolder(val binding: ListItemKategoriBinding) : RecyclerView.ViewHolder(
-        binding.root
-    ) {
+    class MyViewHolder(private val binding: ListItemKategoriBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(category: CategoryEntity) {
             Glide.with(binding.imageView.context)
                 .load(category.placePhotoUrl)
                 .into(binding.imageView)
+
             binding.titleCategory.text = category.placeName
-            binding.ratingText.text = category.rating
+            binding.ratingText.text = category.rating.toString()
             binding.priceCategory.text = category.price
 
             itemView.setOnClickListener {
@@ -47,13 +47,13 @@ class CategoryAdapter: PagingDataAdapter<CategoryEntity, CategoryAdapter.MyViewH
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryEntity>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryEntity>() {
             override fun areItemsTheSame(oldItem: CategoryEntity, newItem: CategoryEntity): Boolean {
-                return oldItem == newItem
+                return oldItem.placeId == newItem.placeId
             }
 
             override fun areContentsTheSame(oldItem: CategoryEntity, newItem: CategoryEntity): Boolean {
-                return oldItem.placeId == newItem.placeId
+                return oldItem == newItem
             }
         }
     }

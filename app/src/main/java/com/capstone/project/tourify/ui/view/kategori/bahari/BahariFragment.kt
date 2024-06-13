@@ -4,31 +4,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentBahariBinding
-import com.capstone.project.tourify.databinding.FragmentCagarBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
-import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class BahariFragment : Fragment() {
 
     private var _binding: FragmentBahariBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var categoryadapter: CategoryAdapter
-    private val categoryViewModel: CulinaryViewModel by viewModels {
+    private lateinit var categoryAdapter: CategoryAdapter
+    private val categoryViewModel: CulinaryViewModel by activityViewModels {
         ViewModelFactory.getInstance(requireContext())
     }
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBahariBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,27 +39,46 @@ class BahariFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoryadapter = CategoryAdapter()
+        categoryAdapter = CategoryAdapter()
 
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgryla6bw54fikev61qdftdgpxbkctfry089")
-            .observe(viewLifecycleOwner, Observer { pagingData ->
-                categoryadapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
-            })
+        lifecycleScope.launch {
+            categoryViewModel.getCategoriesByType("ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
+                .collectLatest { pagingData ->
+                    categoryAdapter.submitData(pagingData)
+                }
+        }
 
-        categoryViewModel.refreshCategories("ctgryla6bw54fikev61qdftdgpxbkctfry089")
+        sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
+            if (query.isNotBlank()) {
+                categoryViewModel.filterCategories(query, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
+            }
+        }
+
+        categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
+            lifecycleScope.launch {
+                categoryAdapter.submitData(filteredCategories)
+            }
+        }
+
+        lifecycleScope.launch {
+            categoryAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.progressIndicator.visibility = if (loadStates.refresh is LoadState.Loading) View.VISIBLE else View.GONE
+
+                val isEmpty = loadStates.refresh is LoadState.NotLoading && categoryAdapter.itemCount == 0
+                binding.tvLocationNotFound.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.itemRowCategory.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            }
+        }
     }
 
     private fun setupRecyclerView() {
         binding.itemRowCategory.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@BahariFragment.categoryadapter.withLoadStateFooter(
-                footer = LoadingStateAdapter { this@BahariFragment.categoryadapter.retry() }
-            )
+            adapter = categoryAdapter
         }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
