@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.data
+package com.capstone.project.tourify.data.pagging
 
 import androidx.datastore.core.IOException
 import androidx.paging.ExperimentalPagingApi
@@ -34,17 +34,13 @@ class ArticleRemoteMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
-                if (prevKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                if (nextKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }

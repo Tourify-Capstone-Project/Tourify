@@ -7,7 +7,7 @@ import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ListItemTabsDetailBinding
 
 class TabsAdapter(
-    private val tabs: List<String>,
+    private var tabs: List<String>,
     private val onTabClick: (Int) -> Unit
 ) : RecyclerView.Adapter<TabsAdapter.TabsViewHolder>() {
 
@@ -47,6 +47,11 @@ class TabsAdapter(
     }
 
     override fun getItemCount(): Int = tabs.size
+
+    fun updateCategories(newCategories: List<String>) {
+        tabs = newCategories
+        notifyDataSetChanged()
+    }
 
     fun setSelectedPosition(position: Int) {
         val previousPosition = selectedPosition

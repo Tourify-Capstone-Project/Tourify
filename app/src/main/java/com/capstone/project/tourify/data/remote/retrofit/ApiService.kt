@@ -20,7 +20,7 @@ interface ApiService {
         @Path("category") category: String,
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
-    ): List<CategoryResponseItem>  // Mengubah dari CategoryResponse ke List<CategoryResponseItem>
+    ): List<CategoryResponseItem>
 
     @GET("destination/{tourism_id}")
     suspend fun getDetail(

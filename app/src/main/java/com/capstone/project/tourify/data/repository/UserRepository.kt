@@ -9,16 +9,16 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.paging.liveData
 import com.capstone.project.tourify.data.local.entity.CategoryEntity
-import com.capstone.project.tourify.data.local.room.CategoryDao
-import com.capstone.project.tourify.data.local.room.CategoryDatabase
-import com.capstone.project.tourify.data.local.room.DetailDao
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
+import com.capstone.project.tourify.data.local.room.category.CategoryDao
+import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
+import com.capstone.project.tourify.data.local.room.detail.DetailDao
+import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.pagging.CategoryRemoteMediator
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
-import com.dicoding.picodiploma.loginwithanimation.data.ArticleRemoteMediator
 
 class UserRepository(
     private val apiService: ApiService,

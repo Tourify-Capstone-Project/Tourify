@@ -3,9 +3,8 @@ package com.capstone.project.tourify.di
 import android.content.Context
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.pref.UserPreference
-import com.capstone.project.tourify.data.remote.pref.dataStore
-import com.capstone.project.tourify.data.local.room.CategoryDatabase
-import com.capstone.project.tourify.data.local.room.DetailDatabase
+import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
+import com.capstone.project.tourify.data.local.room.detail.DetailDatabase
 import com.capstone.project.tourify.data.remote.retrofit.ApiConfig
 import com.capstone.project.tourify.data.repository.UserRepository
 import kotlinx.coroutines.flow.first
