@@ -1,14 +1,11 @@
-package com.capstone.project.tourify
-
 import android.content.Context
-import android.util.Log
 import org.tensorflow.lite.Interpreter
+import java.io.FileInputStream
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-import java.io.FileInputStream
-import java.io.IOException
 
 class RecommendationHelper(context: Context) {
 
@@ -20,7 +17,7 @@ class RecommendationHelper(context: Context) {
 
     @Throws(IOException::class)
     private fun loadModelFile(context: Context): MappedByteBuffer {
-        val fileDescriptor = context.assets.openFd("tourify_model.tflite")
+        val fileDescriptor = context.assets.openFd("recommendation_model.tflite")
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
         val startOffset = fileDescriptor.startOffset
@@ -28,15 +25,15 @@ class RecommendationHelper(context: Context) {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
     }
 
-    fun runInference(input: FloatArray): FloatArray {
-        val inputBuffer = ByteBuffer.allocateDirect(4 * input.size).order(ByteOrder.nativeOrder())
-        for (value in input) {
-            inputBuffer.putFloat(value)
-        }
+    fun runInference(user_id: Int, tourism_id: Int): Float {
+        val inputBuffer = ByteBuffer.allocateDirect(4 * 2).order(ByteOrder.nativeOrder())
+        inputBuffer.putFloat(user_id.toFloat())
+        inputBuffer.putFloat(tourism_id.toFloat())
 
-        val output = Array(1) { FloatArray(1) } // Sesuaikan ukuran array output berdasarkan model Anda
-        interpreter.run(inputBuffer, output)
-        Log.d("TensorFlowLite", "Output: ${output[0][0]}")
-        return output[0]
+        val outputBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder())
+        interpreter.run(inputBuffer, outputBuffer)
+
+        outputBuffer.rewind()
+        return outputBuffer.float
     }
 }
