@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentCagarBinding
 import com.capstone.project.tourify.databinding.FragmentCultureBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 
 
@@ -23,6 +25,8 @@ class CultureFragment : Fragment() {
     private val categoryViewModel: CulinaryViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,11 +45,19 @@ class CultureFragment : Fragment() {
 
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089").observe(viewLifecycleOwner, {
-            adapter.updateCategories(it)
-        })
+        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
 
-        categoryViewModel.refreshCategories("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
+        categoryViewModel.categories.observe(viewLifecycleOwner) { categories ->
+            adapter.updateCategories(categories)
+        }
+
+        categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
+            adapter.updateCategories(filteredCategories)
+        }
+
+        sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
+            categoryViewModel.filterCategories(query)
+        }
     }
 
     override fun onDestroyView() {
@@ -54,6 +66,7 @@ class CultureFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        adapter = CategoryAdapter(emptyList())
         binding.itemRowCategory.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@CultureFragment.adapter

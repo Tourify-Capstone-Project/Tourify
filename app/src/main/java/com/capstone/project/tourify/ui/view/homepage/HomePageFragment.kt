@@ -20,6 +20,12 @@ import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
 import com.capstone.project.tourify.ui.adapter.RecommendedItem
 import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import java.io.FileInputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.channels.FileChannel
 
 class HomePageFragment : Fragment() {
 
@@ -30,6 +36,8 @@ class HomePageFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
+    private lateinit var tflite: Interpreter
+
     private lateinit var categoryAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var articleAdapter: ArticleAdapter
@@ -39,7 +47,21 @@ class HomePageFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
+
+        tflite = Interpreter(loadModelFile())
+
         return binding.root
+    }
+
+    private fun loadModelFile(): ByteBuffer {
+        val fileDescriptor = requireContext().assets.openFd("tourify_model.tflite")
+        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+        val fileChannel = inputStream.channel
+        val startOffset = fileDescriptor.startOffset
+        val declaredLength = fileDescriptor.declaredLength
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength).apply {
+            order(ByteOrder.nativeOrder())
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,7 +118,7 @@ class HomePageFragment : Fragment() {
             RecommendedItem("The Great Asia Africa", R.drawable.no_image)
         )
 
-        recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItem ->
+        recommendedAdapter = RecommendedAdapter(recommendedItems, tflite) { recommendedItem ->
             handleRecommendedItemClick(recommendedItem)
         }
 

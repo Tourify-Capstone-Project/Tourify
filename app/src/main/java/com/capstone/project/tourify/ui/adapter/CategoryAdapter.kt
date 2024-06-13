@@ -36,7 +36,8 @@ class CategoryAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(private val binding: ListItemKategoriBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ListItemKategoriBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(category: CategoryEntity) {
             Glide.with(binding.imageView.context)
                 .load(category.placePhotoUrl)

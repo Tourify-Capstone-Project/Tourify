@@ -5,11 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentBahariBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 
 class BahariFragment : Fragment() {
@@ -21,6 +23,7 @@ class BahariFragment : Fragment() {
     private val categoryViewModel: CulinaryViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,15 +36,21 @@ class BahariFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList())
-
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgry0hdxzlz391ntutwchm7gfrtvptfry089").observe(viewLifecycleOwner, {
-            adapter.updateCategories(it)
-        })
+        categoryViewModel.getCategoriesByType("ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
 
-        categoryViewModel.refreshCategories("ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
+        categoryViewModel.categories.observe(viewLifecycleOwner) { categories ->
+            adapter.updateCategories(categories)
+        }
+
+        categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
+            adapter.updateCategories(filteredCategories)
+        }
+
+        sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
+            categoryViewModel.filterCategories(query)
+        }
     }
 
     override fun onDestroyView() {
@@ -50,6 +59,7 @@ class BahariFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        adapter = CategoryAdapter(emptyList())
         binding.itemRowCategory.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@BahariFragment.adapter

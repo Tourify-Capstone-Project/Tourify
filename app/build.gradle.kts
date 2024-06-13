@@ -42,6 +42,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        mlModelBinding = true
     }
 }
 
@@ -73,6 +74,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.googleid)
     implementation(libs.androidx.paging.common.android)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.tensorflow.lite.gpu)
     annotationProcessor(libs.compiler)
 
     //espresso
@@ -92,6 +95,10 @@ dependencies {
     //Room
     implementation(libs.androidx.room.ktx)
     ksp(libs.room.compiler)
+
+    //TensorflowLite
+    implementation (libs.tensorflow.lite)
+    implementation (libs.tensorflow.lite.support)
 
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.room.paging)

@@ -1,20 +1,26 @@
 package com.capstone.project.tourify.ui.view.kategori
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityKategoriBinding
-import com.capstone.project.tourify.ui.adapter.TabsAdapter
 import com.capstone.project.tourify.ui.adapter.SectionPagerKategoriAdapter
+import com.capstone.project.tourify.ui.adapter.TabsAdapter
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
+import androidx.appcompat.widget.SearchView
 
 @Suppress("DEPRECATION")
 class KategoriActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityKategoriBinding
     private lateinit var tabsAdapter: TabsAdapter
-    private val tabs = listOf(
+    private val sharedViewModel: SharedViewModel by viewModels()
+
+    private val tabs = mutableListOf(
         "Bahari", "Village \nTourism", "Cagar \nAlam", "Taman \nNasional", "Culture", "Culinary \nDestination"
     )
 
@@ -35,6 +41,19 @@ class KategoriActivity : AppCompatActivity() {
                 tabsAdapter.setSelectedPosition(position)
             }
         }
+
+        binding.listSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    sharedViewModel.setSearchQuery(it)
+                }
+                return true
+            }
+        })
     }
 
     private fun setupViewPager() {
@@ -55,8 +74,7 @@ class KategoriActivity : AppCompatActivity() {
         }
 
         binding.listItemTabs.apply {
-            layoutManager =
-                LinearLayoutManager(this@KategoriActivity, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(this@KategoriActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = tabsAdapter
         }
     }

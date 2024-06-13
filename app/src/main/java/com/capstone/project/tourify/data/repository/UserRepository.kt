@@ -9,11 +9,10 @@ import androidx.paging.liveData
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
-import com.dicoding.picodiploma.loginwithanimation.data.ArticleRemoteMediator
 import com.capstone.project.tourify.data.local.entity.CategoryEntity
-import com.capstone.project.tourify.data.local.room.CategoryDao
-import com.capstone.project.tourify.data.local.room.DetailDao
-import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
+import com.capstone.project.tourify.data.local.room.category.CategoryDao
+import com.capstone.project.tourify.data.local.room.detail.DetailDao
+import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 
 class UserRepository(
@@ -29,24 +28,12 @@ class UserRepository(
     }
 
     suspend fun refreshCategories(category: String): List<CategoryEntity> {
-        val response: List<CategoryResponseItem> = apiService.getCategory(category)
-        val categories = response.map {
-            CategoryEntity(
-                placeId = it.placeId,
-                placeName = it.placeName,
-                placeDesc = it.placeDesc,
-                placeAddress = it.placeAddress,
-                placePhotoUrl = it.placePhotoUrl,
-                placeGmapsUrl = it.placeGmapsUrl,
-                city = it.city,
-                price = it.price,
-                rating = it.rating,
-                category = it.category
-            )
-        }
+        val response = apiService.getCategory(category)
+        val categories = response.map { it.toEntity() }
         categoryDao.insertAll(categories)
         return categories
     }
+
 
     suspend fun insertCategories(categories: List<CategoryEntity>) {
         categoryDao.insertAll(categories)
