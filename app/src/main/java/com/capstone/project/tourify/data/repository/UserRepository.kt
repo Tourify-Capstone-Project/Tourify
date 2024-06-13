@@ -27,6 +27,7 @@ class UserRepository(
         return categoryDao.getCategoriesByType(category)
     }
 
+
     suspend fun refreshCategories(category: String): List<CategoryEntity> {
         val response = apiService.getCategory(category)
         val categories = response.map { it.toEntity() }
