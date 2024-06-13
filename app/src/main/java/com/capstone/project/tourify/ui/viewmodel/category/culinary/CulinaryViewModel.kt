@@ -23,21 +23,17 @@ class CulinaryViewModel(private val userRepository: UserRepository) : ViewModel(
 
     fun getCategoriesByType(category: String) {
         viewModelScope.launch {
-            val categoriesLiveData = userRepository.getCategoriesByType(category)
-            categoriesLiveData.observeForever { categoryList ->
+            userRepository.refreshCategories(category)
+            userRepository.getCategoriesByType(category).observeForever { categoryList ->
                 _categories.value = categoryList
                 _filteredCategories.value = categoryList
             }
         }
     }
 
-
     fun filterCategories(query: String) {
         val filteredList = _categories.value?.filter {
-            it.placeName.contains(query, ignoreCase = true) || it.placeId.contains(
-                query,
-                ignoreCase = true
-            )
+            it.placeName.contains(query, ignoreCase = true) || it.placeId.contains(query, ignoreCase = true)
         } ?: emptyList()
         _filteredCategories.value = filteredList
     }

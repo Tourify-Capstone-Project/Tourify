@@ -9,7 +9,7 @@ import retrofit2.http.*
 
 interface ApiService {
 
-      @GET("home")
+    @GET("home")
     suspend fun getArticles(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20

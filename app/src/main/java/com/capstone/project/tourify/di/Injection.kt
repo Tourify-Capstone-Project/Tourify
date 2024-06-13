@@ -15,7 +15,7 @@ object Injection {
         val userPreference = UserPreference.getInstance(context)
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.token)
-        
+
         val articleDatabase = ArticleDatabase.getDatabase(context)
 
         //Category

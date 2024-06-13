@@ -9,10 +9,9 @@ import com.capstone.project.tourify.data.local.entity.CategoryEntity
 
 @Dao
 interface CategoryDao {
+    @Query("SELECT * FROM categories WHERE category = :categoryType")
+    fun getCategoriesByType(categoryType: String): LiveData<List<CategoryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(categories: List<CategoryEntity>)
-
-    @Query("SELECT * FROM categories WHERE category = :category")
-    fun getCategoriesByType(category: String): LiveData<List<CategoryEntity>>
 }

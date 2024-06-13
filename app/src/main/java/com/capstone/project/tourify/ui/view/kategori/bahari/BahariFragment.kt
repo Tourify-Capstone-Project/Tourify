@@ -1,6 +1,7 @@
 package com.capstone.project.tourify.ui.view.kategori.bahari
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,14 +42,17 @@ class BahariFragment : Fragment() {
         categoryViewModel.getCategoriesByType("ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
 
         categoryViewModel.categories.observe(viewLifecycleOwner) { categories ->
+            Log.d("BahariFragment", "Categories: ${categories.size}")
             adapter.updateCategories(categories)
         }
 
         categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
+            Log.d("BahariFragment", "Filtered Categories: ${filteredCategories.size}")
             adapter.updateCategories(filteredCategories)
         }
 
         sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
+            Log.d("BahariFragment", "Search Query: $query")
             categoryViewModel.filterCategories(query)
         }
     }
