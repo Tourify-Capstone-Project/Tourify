@@ -19,22 +19,22 @@ class CategoryViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun getCategoriesByType(category: String) {
-        _isLoading.value = true
-        viewModelScope.launch {
-            try {
-                repository.getCategoriesByType(category).let { liveData ->
-                    liveData.observeForever { categoriesList ->
-                        _categories.value = categoriesList ?: emptyList()
-                    }
-                }
-            } catch (e: Exception) {
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
+//    fun getCategoriesByType(category: String) {
+//        _isLoading.value = true
+//        viewModelScope.launch {
+//            try {
+//                repository.getCategoriesByType(category).let { liveData ->
+//                    liveData.observeForever { categoriesList ->
+//                        _categories.value = categoriesList ?: emptyList()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                _error.value = e.message
+//            } finally {
+//                _isLoading.value = false
+//            }
+//        }
+//    }
 
     fun refreshCategories(category: String) {
         _isLoading.value = true

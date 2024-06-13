@@ -60,11 +60,12 @@
             <TextView
                 android:id="@+id/titleDetail"
                 style="@style/TextTitle.Detail"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/title_detail"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/detail_image_main" />
 

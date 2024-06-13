@@ -54,7 +54,7 @@ class HomePageFragment : Fragment() {
 
     private fun setupAdapterCategory() {
         val categoryItems = listOf(
-            CategoryItem("Bahari", R.drawable.bahari,"ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
+            CategoryItem("Bahari", R.drawable.bahari, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
             CategoryItem("Village \nTourism", R.drawable.village_tourism, "ctgryeu9qus02crsy52mxao1xqciihtfry089"),
             CategoryItem("Cagar \nAlam", R.drawable.cagar_alam, "ctgryla6bw54fikev61qdftdgpxbkctfry089"),
             CategoryItem("Taman \nNasional", R.drawable.taman_nasional, "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"),
@@ -85,14 +85,9 @@ class HomePageFragment : Fragment() {
             handleRecommendedItemClick(recommendedItem)
         }
 
-        binding.rvCategory.adapter = categoryAdapter
-        binding.rvCategory.layoutManager =
+        binding.rvRecommend.adapter = recommendedAdapter
+        binding.rvRecommend.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-
-        recommendedAdapter = RecommendedAdapter(recommendedItems) { recommendedItems ->
-            handleRecommendedItemClick(recommendedItems)
-        }
     }
 
     private fun setupRecyclerView() {
@@ -129,7 +124,9 @@ class HomePageFragment : Fragment() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+        _binding?.let {
+            it.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     private fun showErrorMessage(isError: Boolean, message: String) {

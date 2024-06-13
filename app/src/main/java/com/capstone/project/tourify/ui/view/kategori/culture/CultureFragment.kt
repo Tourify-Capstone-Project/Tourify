@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentCagarBinding
 import com.capstone.project.tourify.databinding.FragmentCultureBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
+import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 
@@ -19,7 +21,7 @@ class CultureFragment : Fragment() {
     private var _binding: FragmentCagarBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: CategoryAdapter
+    private lateinit var categoryadapter: CategoryAdapter
     private val categoryViewModel: CulinaryViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
@@ -35,28 +37,29 @@ class CultureFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList())
+        categoryadapter = CategoryAdapter()
 
         setupRecyclerView()
 
-        setupRecyclerView()
-
-        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089").observe(viewLifecycleOwner, {
-            adapter.updateCategories(it)
-        })
+        categoryViewModel.getCategoriesByType("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
+            .observe(viewLifecycleOwner, Observer { pagingData ->
+                categoryadapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
+            })
 
         categoryViewModel.refreshCategories("ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun setupRecyclerView() {
         binding.itemRowCategory.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@CultureFragment.adapter
+            adapter = this@CultureFragment.categoryadapter.withLoadStateFooter(
+                footer = LoadingStateAdapter { this@CultureFragment.categoryadapter.retry() }
+            )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

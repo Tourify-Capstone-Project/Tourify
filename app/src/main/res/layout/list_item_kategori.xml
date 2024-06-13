@@ -33,7 +33,7 @@
             <TextView
                 android:id="@+id/titleCategory"
                 style="@style/TextCard.RecommendationTitle"
-                android:layout_width="240dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="10dp"
@@ -41,6 +41,7 @@
                 android:maxLines="2"
                 android:text="@string/title_kategori"
                 card_view:layout_constraintBottom_toTopOf="@id/priceCategory"
+                card_view:layout_constraintEnd_toStartOf="@+id/rating"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
@@ -50,10 +51,9 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="5dp"
                 android:contentDescription="@string/string_rating"
                 android:src="@drawable/rating"
-                card_view:layout_constraintStart_toEndOf="@id/titleCategory"
+                card_view:layout_constraintEnd_toStartOf="@+id/ratingText"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -62,8 +62,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
+                android:layout_marginEnd="20dp"
                 android:text="@string/string_rating"
-                card_view:layout_constraintStart_toEndOf="@id/rating"
+                card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
             <TextView

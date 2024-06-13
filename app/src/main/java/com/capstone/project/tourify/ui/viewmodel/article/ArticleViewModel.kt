@@ -8,8 +8,8 @@ import androidx.paging.cachedIn
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.repository.UserRepository
 
-class ArticleViewModel(articlesRepository: UserRepository) : ViewModel() {
+class ArticleViewModel(private val articlesRepository: UserRepository, private val category: String = "") : ViewModel() {
 
     val getHeadlineNews: LiveData<PagingData<ArticlesResponseItem>> =
-        articlesRepository.getArticles().cachedIn(viewModelScope)
+        articlesRepository.getArticles(category).cachedIn(viewModelScope)
 }

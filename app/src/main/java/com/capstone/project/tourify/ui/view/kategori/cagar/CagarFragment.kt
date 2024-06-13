@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentCagarBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
+import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 
@@ -17,7 +19,7 @@ class CagarFragment : Fragment() {
     private var _binding: FragmentCagarBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: CategoryAdapter
+    private lateinit var categoryadapter: CategoryAdapter
     private val categoryViewModel: CulinaryViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
@@ -33,27 +35,29 @@ class CagarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList())
+        categoryadapter = CategoryAdapter()
 
         setupRecyclerView()
 
         categoryViewModel.getCategoriesByType("ctgryla6bw54fikev61qdftdgpxbkctfry089")
-            .observe(viewLifecycleOwner, {
-                adapter.updateCategories(it)
+            .observe(viewLifecycleOwner, Observer { pagingData ->
+                categoryadapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
             })
 
         categoryViewModel.refreshCategories("ctgryla6bw54fikev61qdftdgpxbkctfry089")
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun setupRecyclerView() {
         binding.itemRowCategory.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@CagarFragment.adapter
+            adapter = this@CagarFragment.categoryadapter.withLoadStateFooter(
+                footer = LoadingStateAdapter { this@CagarFragment.categoryadapter.retry() }
+            )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
