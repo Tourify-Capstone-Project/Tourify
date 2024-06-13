@@ -1,4 +1,3 @@
-// CategoryDatabase.kt
 package com.capstone.project.tourify.data.local.room
 
 import android.content.Context
