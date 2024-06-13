@@ -31,13 +31,6 @@ class CulinaryViewModel(private val userRepository: UserRepository) : ViewModel(
         }
     }
 
-    fun refreshCategories(category: String) {
-        viewModelScope.launch {
-            val refreshedCategories = userRepository.refreshCategories(category)
-            _categories.value = refreshedCategories
-            _filteredCategories.value = refreshedCategories
-        }
-    }
 
     fun filterCategories(query: String) {
         val filteredList = _categories.value?.filter {

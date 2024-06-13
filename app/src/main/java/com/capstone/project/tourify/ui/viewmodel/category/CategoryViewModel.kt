@@ -44,29 +44,4 @@ class CategoryViewModel(private val repository: UserRepository) : ViewModel() {
             }
         }
     }
-
-    fun refreshCategories(category: String = "") {
-        _isLoading.value = true
-        viewModelScope.launch {
-            try {
-                val categories = repository.refreshCategories(category)
-                _categories.value = categories
-                _filteredCategories.value = categories
-            } catch (e: Exception) {
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    fun filterCategories(query: String) {
-        val filteredList = _categories.value?.filter {
-            it.placeName.contains(query, ignoreCase = true) || it.placeId.contains(
-                query,
-                ignoreCase = true
-            )
-        } ?: emptyList()
-        _filteredCategories.value = filteredList
-    }
 }
