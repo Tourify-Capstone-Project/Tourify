@@ -63,7 +63,7 @@ class ProfileFragment : Fragment() {
             val user = userPreference.getSession().first()
             if (user.isLogin) {
                 settingItems.add(SettingItem("Logout", R.drawable.logout_light))
-                updateUIForLoggedInUser(user.displayName)
+                updateUIForLoggedInUser(user.displayName, user.email)
             } else {
                 updateUIForLoggedOutUser()
             }
@@ -77,12 +77,15 @@ class ProfileFragment : Fragment() {
             val data: Intent? = result.data
             val updatedUsername = data?.getStringExtra("updatedUsername")
             if (!updatedUsername.isNullOrBlank()) {
-                updateUIForLoggedInUser(updatedUsername!!)
+                lifecycleScope.launch {
+                    val user = userPreference.getSession().first()
+                    updateUIForLoggedInUser(updatedUsername, user.email)
+                }
             }
         }
     }
 
-    private fun updateUIForLoggedInUser(username: String) {
+    private fun updateUIForLoggedInUser(username: String, email: String) {
         binding.apply {
             buttonLogin.visibility = View.GONE
             buttonRegister.visibility = View.GONE
@@ -90,7 +93,7 @@ class ProfileFragment : Fragment() {
             tvEmail.visibility = View.VISIBLE
             buttonEdit.visibility = View.VISIBLE
             tvUsername.text = username
-            tvEmail.text = username
+            tvEmail.text = email  // Menampilkan email pengguna
         }
     }
 
