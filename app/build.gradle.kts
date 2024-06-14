@@ -20,7 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "HOME_URL", "\"https://test-backend-dot-test-deploy-23.et.r.appspot.com/\"")
+        buildConfigField("String", "HOME_URL", "\"https://test-deploy-23.et.r.appspot.com/\"")
     }
 
     buildTypes {

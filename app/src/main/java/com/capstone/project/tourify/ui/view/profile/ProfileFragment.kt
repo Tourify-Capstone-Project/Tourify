@@ -17,7 +17,6 @@ import com.capstone.project.tourify.ui.adapter.SettingItem
 import com.capstone.project.tourify.ui.view.MainActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -25,77 +24,90 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var settingAdapter: SettingAdapter
     private lateinit var userPreference: UserPreference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
         userPreference = UserPreference.getInstance(requireContext().applicationContext)
 
+        setupUI()
+
+        return view
+    }
+
+    private fun setupUI() {
         binding.buttonEdit.setOnClickListener(
             Navigation.createNavigateOnClickListener(R.id.action_nav_profile_to_editProfileActivity)
         )
 
-        val settingItems = mutableListOf<SettingItem>(
+        val settingItems = mutableListOf(
             SettingItem("About Us", R.drawable.info_light),
-            SettingItem("Language", R.drawable.global_search),
+            SettingItem("Language", R.drawable.global_search)
         )
 
         lifecycleScope.launch {
             val user = userPreference.getSession().first()
             if (user.isLogin) {
                 settingItems.add(SettingItem("Logout", R.drawable.logout_light))
-                binding.buttonLogin.visibility = View.GONE
-                binding.buttonRegister.visibility = View.GONE
-                binding.tvUsername.visibility = View.VISIBLE
-                binding.tvEmail.visibility = View.VISIBLE
-                binding.buttonEdit.visibility = View.VISIBLE
-                binding.tvUsername.text = user.email // Assuming the username is the email
-                binding.tvEmail.text = user.email
+                updateUIForLoggedInUser(user.email)
             } else {
-                binding.buttonLogin.visibility = View.VISIBLE
-                binding.buttonRegister.visibility = View.VISIBLE
-                binding.tvUsername.visibility = View.GONE
-                binding.tvEmail.visibility = View.GONE
-                binding.buttonEdit.visibility = View.GONE
-
-                // Set login button click listener
-                binding.buttonLogin.setOnClickListener {
-                    val intent = Intent(activity, LoginActivity::class.java)
-                    startActivity(intent)
-                }
-
-                binding.buttonRegister.setOnClickListener {
-                    val intent = Intent(activity, RegisterActivity::class.java)
-                    startActivity(intent)
-                }
+                updateUIForLoggedOutUser()
             }
 
-            settingAdapter = SettingAdapter(settingItems, this@ProfileFragment::handleSettingItemClick)
+            setupRecyclerView(settingItems)
+        }
+    }
 
-            with(binding.rvSetting) {
-                adapter = settingAdapter
-                layoutManager = LinearLayoutManager(context)
+    private fun updateUIForLoggedInUser(email: String) {
+        binding.apply {
+            buttonLogin.visibility = View.GONE
+            buttonRegister.visibility = View.GONE
+            tvUsername.visibility = View.VISIBLE
+            tvEmail.visibility = View.VISIBLE
+            buttonEdit.visibility = View.VISIBLE
+            tvUsername.text = email
+            tvEmail.text = email
+        }
+    }
+
+    private fun updateUIForLoggedOutUser() {
+        binding.apply {
+            buttonLogin.visibility = View.VISIBLE
+            buttonRegister.visibility = View.VISIBLE
+            tvUsername.visibility = View.GONE
+            tvEmail.visibility = View.GONE
+            buttonEdit.visibility = View.GONE
+
+            buttonLogin.setOnClickListener {
+                startActivity(Intent(activity, LoginActivity::class.java))
+            }
+
+            buttonRegister.setOnClickListener {
+                startActivity(Intent(activity, RegisterActivity::class.java))
             }
         }
+    }
 
-        return view
+    private fun setupRecyclerView(settingItems: List<SettingItem>) {
+        settingAdapter = SettingAdapter(settingItems, this::handleSettingItemClick)
+        binding.rvSetting.apply {
+            adapter = settingAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         userPreference = UserPreference.getInstance(requireContext())
-
         lifecycleScope.launch {
             val user = userPreference.getSession().first()
-            binding.tvUsername.text = user.displayName // Menampilkan displayName dari UserModel
+            binding.tvUsername.text = user.displayName
         }
     }
 
@@ -103,7 +115,6 @@ class ProfileFragment : Fragment() {
         when (settingItem.title) {
             "About Us" -> Navigation.findNavController(requireActivity(), R.id.viewPager)
                 .navigate(R.id.action_nav_profile_to_aboutActivity)
-
             "Logout" -> logout()
         }
     }
@@ -111,10 +122,8 @@ class ProfileFragment : Fragment() {
     private fun logout() {
         lifecycleScope.launch {
             userPreference.logout()
-            // Navigate back to OnBoardingActivity
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish() // Finish the activity to prevent the user from navigating back to it using the back button
+            startActivity(Intent(requireContext(), MainActivity::class.java))
+            requireActivity().finish()
         }
     }
 

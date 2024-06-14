@@ -76,23 +76,35 @@ class HomePageFragment : Fragment() {
 
     private fun setupAdapterCategory() {
         val categoryItems = listOf(
-            CategoryItem("Bahari", R.drawable.bahari, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
+            CategoryItem("Bahari",
+                R.drawable.bahari,
+                "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"
+            ),
+
             CategoryItem(
                 "Village \nTourism",
                 R.drawable.village_tourism,
                 "ctgryeu9qus02crsy52mxao1xqciihtfry089"
             ),
+
             CategoryItem(
                 "Cagar \nAlam",
                 R.drawable.cagar_alam,
                 "ctgryla6bw54fikev61qdftdgpxbkctfry089"
             ),
+
             CategoryItem(
                 "Taman \nNasional",
                 R.drawable.taman_nasional,
                 "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"
             ),
-            CategoryItem("Culture", R.drawable.culture, "ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089"),
+
+            CategoryItem(
+                "Culture",
+                R.drawable.culture,
+                "ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089"
+            ),
+
             CategoryItem(
                 "Culinary \nDestination",
                 R.drawable.culinary,
