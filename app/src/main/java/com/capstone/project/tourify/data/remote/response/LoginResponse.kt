@@ -7,6 +7,7 @@ data class User(
     @SerializedName("email") val email: String,
     @SerializedName("emailVerified") val emailVerified: Boolean,
     @SerializedName("displayName") val displayName: String,
+    @SerializedName("profilePictureUrl") val profilePictureUrl: String,
     @SerializedName("isAnonymous") val isAnonymous: Boolean,
     @SerializedName("providerData") val providerData: List<ProviderData>,
     @SerializedName("stsTokenManager") val stsTokenManager: StsTokenManager,

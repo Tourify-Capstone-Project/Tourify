@@ -22,6 +22,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[PASSWORD_KEY] = user.password
             preferences[TOKEN_KEY] = user.token
             preferences[USERNAME_KEY] = user.displayName
+            preferences[PROFILE_PICTURE_URL_KEY] = user.profilePictureUrl ?: ""
             preferences[IS_LOGIN_KEY] = true
         }
     }
@@ -33,6 +34,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
                 preferences[PASSWORD_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
                 preferences[USERNAME_KEY] ?: "",
+                preferences[PROFILE_PICTURE_URL_KEY] ?: "",
                 preferences[IS_LOGIN_KEY] ?: false
             )
         }
@@ -54,6 +56,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private val PASSWORD_KEY = stringPreferencesKey("password")
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val USERNAME_KEY = stringPreferencesKey("username")
+        private val PROFILE_PICTURE_URL_KEY = stringPreferencesKey("profile_picture_url")
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
 
         fun getInstance(context: Context): UserPreference {

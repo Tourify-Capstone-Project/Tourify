@@ -72,6 +72,7 @@ dependencies {
 
     //firebase
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-storage:20.0.0")
     implementation(libs.googleid)
     implementation(libs.androidx.paging.common.android)
     implementation(libs.tensorflow.lite.metadata)

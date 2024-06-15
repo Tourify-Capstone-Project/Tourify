@@ -1,5 +1,6 @@
 package com.capstone.project.tourify.ui.view.editprofile
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,15 +8,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.Manifest
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.bumptech.glide.Glide
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.databinding.ActivityEditProfileBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -25,8 +32,10 @@ class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageRef: StorageReference
 
-    private var imageUri: Uri? = null // variabel untuk menyimpan URI gambar dari kamera
+    private var imageUri: Uri? = null // variable to store image URI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +43,8 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        storage = Firebase.storage
+        storageRef = storage.reference
 
         setupToolbar()
 
@@ -41,12 +52,16 @@ class EditProfileActivity : AppCompatActivity() {
         currentUser?.let { user ->
             val username = user.displayName
             binding.edEditProfileUsername.setText(username)
+            user.photoUrl?.let { photoUri ->
+                Glide.with(this)
+                    .load(photoUri)
+                    .into(binding.imgUser)
+            }
         }
 
         binding.btnEdit.setOnClickListener {
             val updatedUsername = binding.edEditProfileUsername.text.toString()
-
-            updateUsernameInFirebase(updatedUsername)
+            updateProfileInFirebase(updatedUsername)
         }
 
         binding.btnAddPhoto.setOnClickListener {
@@ -55,51 +70,17 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun showImagePicker() {
-        if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // Izin kamera belum diberikan, minta izin secara dinamis
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // Request camera permission if not granted
             requestCameraPermission()
         } else {
             val options = arrayOf<CharSequence>("Ambil Foto", "Pilih dari Galeri")
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Pilih Aksi")
-            builder.setItems(options) { dialog, which ->
+            builder.setItems(options) { _, which ->
                 when (which) {
-                    0 -> {
-                        // Ambil Foto (Kamera)
-                        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                            takePictureIntent.resolveActivity(packageManager)?.also {
-                                val photoFile: File? = try {
-                                    createImageFile()
-                                } catch (ex: IOException) {
-                                    Log.e(TAG, "Error creating image file: ${ex.message}")
-                                    null
-                                }
-                                photoFile?.also {
-                                    val photoURI: Uri = FileProvider.getUriForFile(
-                                        this,
-                                        "${packageName}.fileprovider",
-                                        it
-                                    )
-                                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                                    imageUri = photoURI
-                                    startActivityForResult(takePictureIntent, TAKE_PHOTO)
-                                }
-                            }
-                        }
-                    }
-
-                    1 -> {
-                        // Pilih dari Galeri
-                        Intent(Intent.ACTION_GET_CONTENT).also { pickPhotoIntent ->
-                            pickPhotoIntent.type = "image/*"
-                            startActivityForResult(
-                                Intent.createChooser(
-                                    pickPhotoIntent,
-                                    "Pilih Gambar"
-                                ), PICK_IMAGE
-                            )
-                        }
-                    }
+                    0 -> dispatchTakePictureIntent()
+                    1 -> dispatchPickPictureIntent()
                 }
             }
             builder.show()
@@ -107,99 +88,123 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun requestCameraPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            AlertDialog.Builder(this, R.style.AlertDialogTheme)
-                .setTitle("Izin Diperlukan")
-                .setMessage("Aplikasi ini memerlukan izin kamera untuk mengambil foto.")
-                .setPositiveButton(getString(R.string.izinkan)) { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.CAMERA),
-                        CAMERA_PERMISSION_CODE
-                    )
-                }
-                .setNegativeButton(getString(R.string.batal)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .create()
-                .show()
-        } else {
-            AlertDialog.Builder(this, R.style.AlertDialogTheme)
-                .setTitle("Izin Diperlukan")
-                .setMessage("Aplikasi ini memerlukan izin kamera untuk mengambil foto.")
-                .setPositiveButton(getString(R.string.izinkan)) { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.CAMERA),
-                        CAMERA_PERMISSION_CODE
-                    )
-                }
-                .setNegativeButton(getString(R.string.batal)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .create()
-                .show()
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.CAMERA),
+            CAMERA_PERMISSION_CODE
+        )
+    }
+
+    private fun createImageFile(): File? {
+        return try {
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val storageDir: File? = getExternalFilesDir("Pictures")
+            File.createTempFile(
+                "JPEG_${timeStamp}_", ".jpg", storageDir
+            ).apply {
+                imageUri = FileProvider.getUriForFile(
+                    this@EditProfileActivity,
+                    "${packageName}.fileprovider",
+                    this
+                )
+            }
+        } catch (ex: IOException) {
+            Log.e(TAG, "Error creating image file: ${ex.message}")
+            null
         }
     }
-    private fun createImageFile(): File {
-        val timeStamp: String =
-            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val storageDir: File? = getExternalFilesDir("Pictures")
-        return File.createTempFile(
-            "JPEG_${timeStamp}_",
-            ".jpg",
-            storageDir
-        ).apply {
-            imageUri = FileProvider.getUriForFile(
-                this@EditProfileActivity,
-                "${packageName}.fileprovider",
-                this
-            )
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                createImageFile()?.also { file ->
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        this,
+                        "${packageName}.fileprovider",
+                        file
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, TAKE_PHOTO)
+                }
+            }
+        }
+    }
+
+    private fun dispatchPickPictureIntent() {
+        Intent(Intent.ACTION_GET_CONTENT).also { pickPhotoIntent ->
+            pickPhotoIntent.type = "image/*"
+            startActivityForResult(Intent.createChooser(pickPhotoIntent, "Pilih Gambar"), PICK_IMAGE)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 PICK_IMAGE -> {
-                    val selectedImageUri = data?.data
-                    binding.imgUser.setImageURI(selectedImageUri)
-                    imageUri = selectedImageUri
+                    imageUri = data?.data
+                    binding.imgUser.setImageURI(imageUri)
                 }
-
                 TAKE_PHOTO -> {
-                    imageUri?.let { uri ->
-                        binding.imgUser.setImageURI(uri)
-                    }
+                    binding.imgUser.setImageURI(imageUri)
                 }
             }
         }
     }
 
-
-    private fun updateUsernameInFirebase(updatedUsername: String) {
+    private fun updateProfileInFirebase(updatedUsername: String) {
         val currentUser = auth.currentUser
         currentUser?.let { user ->
-            // Update username in Firebase Authentication
             val profileUpdates = userProfileChangeRequest {
                 displayName = updatedUsername
             }
-
-            user.updateProfile(profileUpdates)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "User profile updated.")
+            user.updateProfile(profileUpdates).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "User profile updated.")
+                    imageUri?.let { uri ->
+                        uploadProfilePicture(uri, user, updatedUsername)
+                    } ?: run {
                         val resultIntent = Intent()
                         resultIntent.putExtra("updatedUsername", updatedUsername)
                         setResult(Activity.RESULT_OK, resultIntent)
                         finish()
-                    } else {
-                        Log.w(TAG, "Failed to update profile", task.exception)
+                    }
+                } else {
+                    Log.w(TAG, "Failed to update profile", task.exception)
+                }
+            }
+        }
+    }
+
+    private fun uploadProfilePicture(uri: Uri, user: FirebaseUser, updatedUsername: String) {
+        val filePath = "user-profile-img/${user.uid}/${uri.lastPathSegment}"
+        Log.d(TAG, "Uploading to path: $filePath with UID: ${user.uid}")
+
+        val profilePicRef = storageRef.child(filePath)
+        profilePicRef.putFile(uri)
+            .addOnSuccessListener {
+                profilePicRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    val profileUpdatesWithPhoto = userProfileChangeRequest {
+                        photoUri = downloadUri
+                    }
+                    user.updateProfile(profileUpdatesWithPhoto).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "User profile photo updated.")
+                            val resultIntent = Intent().apply {
+                                putExtra("updatedUsername", updatedUsername)
+                                putExtra("photoUrl", downloadUri.toString())
+                            }
+                            setResult(Activity.RESULT_OK, resultIntent)
+                            finish()
+                        } else {
+                            Log.w(TAG, "Failed to update profile photo", task.exception)
+                        }
                     }
                 }
-        }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error uploading profile picture", e)
+            }
     }
 
     private fun setupToolbar() {

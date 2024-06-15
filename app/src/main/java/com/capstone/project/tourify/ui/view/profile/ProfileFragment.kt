@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.FragmentProfileBinding
@@ -63,7 +64,7 @@ class ProfileFragment : Fragment() {
             val user = userPreference.getSession().first()
             if (user.isLogin) {
                 settingItems.add(SettingItem("Logout", R.drawable.logout_light))
-                updateUIForLoggedInUser(user.displayName, user.email)
+                updateUIForLoggedInUser(user.displayName, user.email, user.profilePictureUrl)
             } else {
                 updateUIForLoggedOutUser()
             }
@@ -76,16 +77,17 @@ class ProfileFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             val updatedUsername = data?.getStringExtra("updatedUsername")
+            val photoUrl = data?.getStringExtra("photoUrl")
             if (!updatedUsername.isNullOrBlank()) {
                 lifecycleScope.launch {
                     val user = userPreference.getSession().first()
-                    updateUIForLoggedInUser(updatedUsername, user.email)
+                    updateUIForLoggedInUser(updatedUsername, user.email, photoUrl)
                 }
             }
         }
     }
 
-    private fun updateUIForLoggedInUser(username: String, email: String) {
+    private fun updateUIForLoggedInUser(username: String, email: String, photoUrl: String?) {
         binding.apply {
             buttonLogin.visibility = View.GONE
             buttonRegister.visibility = View.GONE
@@ -93,7 +95,16 @@ class ProfileFragment : Fragment() {
             tvEmail.visibility = View.VISIBLE
             buttonEdit.visibility = View.VISIBLE
             tvUsername.text = username
-            tvEmail.text = email  // Menampilkan email pengguna
+            tvEmail.text = email
+
+            // Load profile photo if available
+            if (!photoUrl.isNullOrBlank()) {
+                Glide.with(this@ProfileFragment)
+                    .load(photoUrl)
+                    .into(imageProfile)  // imgProfile is your ImageView for profile photo
+            } else {
+                imageProfile.setImageResource(R.drawable.no_profile)
+            }
         }
     }
 
@@ -104,6 +115,7 @@ class ProfileFragment : Fragment() {
             tvUsername.visibility = View.GONE
             tvEmail.visibility = View.GONE
             buttonEdit.visibility = View.GONE
+            imageProfile.visibility = View.VISIBLE
 
             buttonLogin.setOnClickListener {
                 startActivity(Intent(activity, LoginActivity::class.java))

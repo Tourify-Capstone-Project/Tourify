@@ -3,6 +3,7 @@ package com.capstone.project.tourify.data.remote.retrofit
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
+import com.capstone.project.tourify.data.remote.response.ProfileResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.*
@@ -26,4 +27,7 @@ interface ApiService {
     suspend fun getDetail(
         @Path("tourism_id") tourismId: String,
     ): DetailResponse
+
+    @GET("profile")
+    suspend fun getProfile(): ProfileResponse
 }

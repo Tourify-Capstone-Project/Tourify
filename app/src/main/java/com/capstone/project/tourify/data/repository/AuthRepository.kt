@@ -18,9 +18,14 @@ class AuthRepository(
     suspend fun login(email: String, password: String): LoginResponse {
         val response = authApiService.login(email, password)
         if (response.message.isNotEmpty() && response.token.isNotEmpty()) {
-          
-            val userModel =
-                UserModel(email, password, response.token, response.user.displayName, true)
+            val userModel = UserModel(
+                email = email,
+                password = password,
+                token = response.token,
+                displayName = response.user.displayName,
+                profilePictureUrl = response.user.profilePictureUrl,
+                isLogin = true
+            )
 
             userPreference.saveSession(userModel)
         }
