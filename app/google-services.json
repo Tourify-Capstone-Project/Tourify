@@ -12,7 +12,28 @@
           "package_name": "com.capstone.project.tourify"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "237378734832-1od2ev5ngc7h7atr49v96ekcl4ur2lsl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.capstone.project.tourify",
+            "certificate_hash": "6e55fad4220107bd568d1218c836ec50ea1b0455"
+          }
+        },
+        {
+          "client_id": "237378734832-lom1ti6a0dqhjf07ik3q2u2pqao79urb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.capstone.project.tourify",
+            "certificate_hash": "0d6afef9110972309b373d522b7fdee8d06bab7c"
+          }
+        },
+        {
+          "client_id": "237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC3kc0JyE2b_aiyp9hNCGuqZOv64hPMRao"
@@ -20,26 +41,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:237378734832:android:cff683c2d06a0a86271035",
-        "android_client_info": {
-          "package_name": "com.company.tourify"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC3kc0JyE2b_aiyp9hNCGuqZOv64hPMRao"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

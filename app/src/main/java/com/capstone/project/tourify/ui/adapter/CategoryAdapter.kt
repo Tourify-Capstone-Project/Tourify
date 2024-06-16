@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.databinding.ListItemKategoriBinding
 import com.capstone.project.tourify.ui.view.detail.DetailActivity
+import androidx.recyclerview.widget.DiffUtil
 
 class CategoryAdapter(
     private var categoryList: List<CategoryEntity>
@@ -32,8 +33,10 @@ class CategoryAdapter(
     }
 
     fun updateCategories(newCategories: List<CategoryEntity>) {
+        val diffCallback = CategoryDiffCallback(categoryList, newCategories)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         categoryList = newCategories
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(private val binding: ListItemKategoriBinding) :
@@ -53,6 +56,24 @@ class CategoryAdapter(
                 }
                 context.startActivity(intent)
             }
+        }
+    }
+
+    class CategoryDiffCallback(
+        private val oldList: List<CategoryEntity>,
+        private val newList: List<CategoryEntity>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].placeId == newList[newItemPosition].placeId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
     }
 }

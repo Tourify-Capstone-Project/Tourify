@@ -5,6 +5,8 @@ import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.detail.DetailDatabase
+import com.capstone.project.tourify.data.local.room.favorite.FavoriteDatabase
+import com.capstone.project.tourify.data.local.room.finance.FinanceDatabase
 import com.capstone.project.tourify.data.remote.retrofit.ApiConfig
 import com.capstone.project.tourify.data.repository.UserRepository
 import kotlinx.coroutines.flow.first
@@ -26,6 +28,14 @@ object Injection {
         val detailDatabase = DetailDatabase.getDatabase(context)
         val detailDao = detailDatabase.detailDao()
 
-        return UserRepository(apiService, categoryDao, detailDao, articleDatabase)
+        // Favorite
+        val favoriteDatabase = FavoriteDatabase.getDatabase(context)
+        val favoriteDao = favoriteDatabase.favoriteDao()
+
+        // Finance
+        val financeDatabase = FinanceDatabase.getDatabase(context)
+        val financeDao = financeDatabase.financeDao()
+
+        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, financeDao)
     }
 }

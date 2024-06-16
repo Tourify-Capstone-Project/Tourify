@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 
-@Database(entities = [CategoryEntity::class], version = 1, exportSchema = false)
+@Database(entities = [CategoryEntity::class], version = 2, exportSchema = false)
 abstract class CategoryDatabase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao

@@ -72,6 +72,7 @@ dependencies {
 
     //firebase
     implementation(libs.firebase.auth)
+
     implementation(libs.googleid)
     implementation(libs.androidx.paging.common.android)
     implementation(libs.tensorflow.lite.metadata)

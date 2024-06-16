@@ -2,7 +2,7 @@ package com.capstone.project.tourify.data.remote.response
 
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.google.gson.annotations.SerializedName
 
 @Parcelize

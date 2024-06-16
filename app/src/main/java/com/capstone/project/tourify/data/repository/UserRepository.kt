@@ -9,17 +9,26 @@ import androidx.paging.liveData
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
+import com.capstone.project.tourify.data.local.entity.category.toEntity
 import com.capstone.project.tourify.data.local.room.category.CategoryDao
 import com.capstone.project.tourify.data.local.room.detail.DetailDao
+import com.capstone.project.tourify.data.local.room.favorite.FavoriteDao
+import com.capstone.project.tourify.data.local.room.finance.FinanceDao
 import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.remote.response.DetailResponse
+import com.capstone.project.tourify.data.remote.response.FavoriteResponse
+import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import retrofit2.Response
 
 class UserRepository(
     private val apiService: ApiService,
     private val categoryDao: CategoryDao,
     private val detailDao: DetailDao,
-    private val articleDatabase: ArticleDatabase
+    private val articleDatabase: ArticleDatabase,
+    private val favoriteDao: FavoriteDao,
+    private val financeDao: FinanceDao
 ) {
 
     // Category Methods
@@ -33,7 +42,6 @@ class UserRepository(
         categoryDao.insertAll(categories)
     }
 
-
     suspend fun insertCategories(categories: List<CategoryEntity>) {
         categoryDao.insertAll(categories)
     }
@@ -41,17 +49,16 @@ class UserRepository(
     // Detail Methods
     suspend fun getDetail(tourismId: String): DetailResponse? {
         return try {
-            val detail = apiService.getDetail(tourismId)
-            detailDao.insertDetail(detail)
-            detail
+            val response = apiService.getDetail(tourismId)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
-    }
-
-    suspend fun saveDetail(detail: DetailResponse) {
-        detailDao.insertDetail(detail)
     }
 
     fun getArticles(): LiveData<PagingData<ArticlesResponseItem>> {
@@ -67,12 +74,73 @@ class UserRepository(
         ).liveData
     }
 
-    companion object {
+    suspend fun searchDestinations(query: String): List<CategoryEntity> {
+        val response = apiService.searchDestinations(query)
+        return response.map { it.toEntity() }
+    }
+
+
+    suspend fun getAllFavorites(): List<FavoriteEntity> {
+        return favoriteDao.getAllFavorites()
+    }
+
+    suspend fun addFavorite(favorite: FavoriteEntity) {
+        detailDao.insertFavorite(favorite)
+    }
+
+    suspend fun removeFavoriteById(id: String) {
+        detailDao.removeFavoriteById(id)
+    }
+
+    suspend fun getFavoriteById(id: String): FavoriteEntity? {
+        return detailDao.getFavoriteById(id)
+    }
+
+
+    suspend fun getFavoriteDestinations(): FavoriteResponse? {
+        return try {
+            val response = apiService.getFavoriteDestinations()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun addFavoriteToRemote(tourismId: String): Response<DetailResponse> {
+        return apiService.addFavorite(tourismId)
+    }
+
+    suspend fun removeFavoriteFromRemote(tourismId: String): Response<DetailResponse> {
+        return apiService.removeFavorite(tourismId)
+    }
+
+    suspend fun getFinanceDestinations(): FinanceResponse? {
+        return try {
+            val response = apiService.getFinanceDestinations()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+        companion object {
         fun getInstance(
             apiService: ApiService,
             categoryDao: CategoryDao,
             detailDao: DetailDao,
-            articleDatabase: ArticleDatabase
-        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase)
+            articleDatabase: ArticleDatabase,
+            favoriteDao: FavoriteDao,
+            financeDao: FinanceDao
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, financeDao)
     }
 }
