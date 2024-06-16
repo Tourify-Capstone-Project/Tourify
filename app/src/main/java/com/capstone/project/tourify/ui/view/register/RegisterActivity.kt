@@ -199,7 +199,7 @@ class RegisterActivity : AppCompatActivity() {
                     val user: FirebaseUser? = auth.currentUser
                     user?.let {
                         lifecycleScope.launch {
-                            saveUserSession(it, it.photoUrl?.toString())
+                            saveUserSession(it)
                         }
                     }
                     updateUI(user)
@@ -210,14 +210,13 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-    private suspend fun saveUserSession(user: FirebaseUser, profilePictureUrl: String?) {
+    private suspend fun saveUserSession(user: FirebaseUser) {
         val userPreference = UserPreference.getInstance(this)
         val userModel = UserModel(
             email = user.email ?: "",
             password = "",
             token = user.uid,
             displayName = user.displayName ?: "",
-            profilePictureUrl = profilePictureUrl ?: "",
             isLogin = true
         )
         userPreference.saveSession(userModel)

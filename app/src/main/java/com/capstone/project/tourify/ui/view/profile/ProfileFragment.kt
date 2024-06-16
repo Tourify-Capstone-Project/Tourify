@@ -3,6 +3,7 @@ package com.capstone.project.tourify.ui.view.profile
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import com.capstone.project.tourify.ui.view.login.LoginActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class ProfileFragment : Fragment() {
 
@@ -49,9 +51,14 @@ class ProfileFragment : Fragment() {
         binding.buttonEdit.setOnClickListener {
             val intent = Intent(requireContext(), EditProfileActivity::class.java)
             lifecycleScope.launch {
-                val user = userPreference.getSession().first()
-                intent.putExtra("username", user.displayName)
-                resultLauncher.launch(intent)
+                try {
+                    val user = userPreference.getSession().first()
+                    Log.d("ProfileFragment", "Passing username: ${user.displayName}")
+                    intent.putExtra("username", user.displayName)
+                    resultLauncher.launch(intent)
+                } catch (e: Exception) {
+                    handleException(e)
+                }
             }
         }
 
@@ -61,15 +68,36 @@ class ProfileFragment : Fragment() {
         )
 
         lifecycleScope.launch {
-            val user = userPreference.getSession().first()
-            if (user.isLogin) {
-                settingItems.add(SettingItem("Logout", R.drawable.logout_light))
-                updateUIForLoggedInUser(user.displayName, user.email, user.profilePictureUrl)
-            } else {
-                updateUIForLoggedOutUser()
-            }
+            try {
+                val user = userPreference.getSession().first()
+                if (user.isLogin) {
+                    settingItems.add(SettingItem("Logout", R.drawable.logout_light))
+                    updateUIForLoggedInUser(user.displayName, user.email)
+                } else {
+                    updateUIForLoggedOutUser()
+                }
 
-            setupRecyclerView(settingItems)
+                setupRecyclerView(settingItems)
+            } catch (e: Exception) {
+                handleException(e)
+            }
+        }
+    }
+    private fun handleException(e: Exception) {
+        if (e is HttpException) {
+            when (e.code()) {
+                401 -> {
+                    // Handle HTTP 401 error
+                    Log.e("ProfileFragment", "Unauthorized error: ${e.message}")
+                    // You might want to redirect the user to the login screen
+                }
+                // Handle other HTTP errors if needed
+                else -> {
+                    Log.e("ProfileFragment", "HTTP error: ${e.message}")
+                }
+            }
+        } else {
+            Log.e("ProfileFragment", "Unexpected error: ${e.message}")
         }
     }
 
@@ -81,13 +109,13 @@ class ProfileFragment : Fragment() {
             if (!updatedUsername.isNullOrBlank()) {
                 lifecycleScope.launch {
                     val user = userPreference.getSession().first()
-                    updateUIForLoggedInUser(updatedUsername, user.email, photoUrl)
+                    updateUIForLoggedInUser(updatedUsername, user.email)
                 }
             }
         }
     }
 
-    private fun updateUIForLoggedInUser(username: String, email: String, photoUrl: String?) {
+    private fun updateUIForLoggedInUser(username: String, email: String) {
         binding.apply {
             buttonLogin.visibility = View.GONE
             buttonRegister.visibility = View.GONE
@@ -96,15 +124,6 @@ class ProfileFragment : Fragment() {
             buttonEdit.visibility = View.VISIBLE
             tvUsername.text = username
             tvEmail.text = email
-
-            // Load profile photo if available
-            if (!photoUrl.isNullOrBlank()) {
-                Glide.with(this@ProfileFragment)
-                    .load(photoUrl)
-                    .into(imageProfile)  // imgProfile is your ImageView for profile photo
-            } else {
-                imageProfile.setImageResource(R.drawable.no_profile)
-            }
         }
     }
 

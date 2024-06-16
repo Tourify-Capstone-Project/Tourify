@@ -15,6 +15,7 @@ import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.detail.DetailDao
 import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.pagging.CategoryRemoteMediator
+import com.capstone.project.tourify.data.pagging.DestinationRemoteMediator
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
@@ -96,6 +97,34 @@ class UserRepository(
             remoteMediator = ArticleRemoteMediator(articleDatabase, apiService, category),
             pagingSourceFactory = { articleDatabase.articleDao().getAllArticle() }
         ).liveData
+    }
+
+    // Destination Methods
+    @OptIn(ExperimentalPagingApi::class)
+    fun searchDestinations(category: String): Flow<PagingData<CategoryEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                enablePlaceholders = false
+            ),
+            remoteMediator = DestinationRemoteMediator(categoryDatabase, apiService, category),
+            pagingSourceFactory = { categoryDao.getAllPlace() }
+        ).flow.map { pagingData ->
+            pagingData.map { categoryResponseItem ->
+                CategoryEntity(
+                    placeId = categoryResponseItem.placeId,
+                    placeName = categoryResponseItem.placeName,
+                    placeDesc = categoryResponseItem.placeDesc,
+                    placeAddress = categoryResponseItem.placeAddress,
+                    placePhotoUrl = categoryResponseItem.placePhotoUrl,
+                    placeGmapsUrl = categoryResponseItem.placeGmapsUrl,
+                    city = categoryResponseItem.city,
+                    price = categoryResponseItem.price,
+                    rating = categoryResponseItem.rating,
+                    category = categoryResponseItem.category
+                )
+            }
+        }
     }
 
     companion object {
