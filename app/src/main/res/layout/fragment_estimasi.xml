@@ -111,6 +111,7 @@
                     android:text="@string/cost" />
 
                 <TextView
+                    android:id="@+id/totalCost"
                     style="@style/TextTitle.Description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

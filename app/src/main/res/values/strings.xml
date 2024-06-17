@@ -79,6 +79,9 @@
     <string name="your_web_client_id">237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com</string>
     <string name="retry">Coba lagi</string>
     <string name="str_rp">Rp.</string>
+    <string name="str_forgot_password">Forgot Password</string>
+    <string name="reset_password">Enter your email to reset your password</string>
+    <string name="str_back_page_login">Back Page <font color="#4F4FC2">Login</font></string>
     <string name="destination_not_found">Destination not found</string>
     <string name="izinkan">Izinkan</string>
     <string name="batal">Batal</string>

@@ -106,6 +106,8 @@ class RegisterActivity : AppCompatActivity() {
                 is RegisterViewModel.RegistrationStatus.Error -> {
                     showDialog(status.message)
                 }
+
+                else -> {}
             }
         }
 

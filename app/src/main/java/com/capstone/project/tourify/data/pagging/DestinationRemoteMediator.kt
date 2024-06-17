@@ -5,7 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.capstone.project.tourify.data.local.entity.toEntity
+import com.capstone.project.tourify.data.local.entity.category.toEntity
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeys
 import com.capstone.project.tourify.data.remote.response.AllDestinationResponseItem

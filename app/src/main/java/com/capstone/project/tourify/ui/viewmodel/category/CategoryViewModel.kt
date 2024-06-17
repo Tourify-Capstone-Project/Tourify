@@ -3,14 +3,10 @@ package com.capstone.project.tourify.ui.viewmodel.category
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import androidx.paging.filter
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.data.repository.UserRepository
-import kotlinx.coroutines.launch
 
 class CategoryViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -45,20 +41,20 @@ class CategoryViewModel(private val repository: UserRepository) : ViewModel() {
 //        }
 //    }
 
-    fun refreshCategories(category: String) {
-        _isLoading.value = true
-        viewModelScope.launch {
-            try {
-                val categories = repository.refreshCategories(category)
-                _categories.value = PagingData.from(categories)
-                _filteredCategories.value = PagingData.from(categories)
-            } catch (e: Exception) {
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
+//    fun refreshCategories(category: String) {
+//        _isLoading.value = true
+//        viewModelScope.launch {
+//            try {
+//                val categories = repository.refreshCategories(category)
+//                _categories.value = PagingData.from(categories)
+//                _filteredCategories.value = PagingData.from(categories)
+//            } catch (e: Exception) {
+//                _error.value = e.message
+//            } finally {
+//                _isLoading.value = false
+//            }
+//        }
+//    }
 
     fun filterCategories(query: String) {
         val filteredList = _categories.value?.filter {

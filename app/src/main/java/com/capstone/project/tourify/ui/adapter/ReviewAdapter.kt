@@ -9,7 +9,7 @@ import com.capstone.project.tourify.R
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ReviewAdapter(private val dataList: List<ReviewItem>) :
-RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+    RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =

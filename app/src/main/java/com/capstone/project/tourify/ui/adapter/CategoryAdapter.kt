@@ -7,7 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.databinding.ListItemKategoriBinding
 import com.capstone.project.tourify.ui.view.detail.DetailActivity
 

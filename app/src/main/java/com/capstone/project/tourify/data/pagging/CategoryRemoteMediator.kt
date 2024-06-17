@@ -5,7 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeys
 import com.capstone.project.tourify.data.remote.retrofit.ApiService

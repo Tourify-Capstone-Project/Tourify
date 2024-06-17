@@ -1,4 +1,4 @@
-package com.capstone.project.tourify.data.local.entity
+package com.capstone.project.tourify.data.local.entity.category
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.data.remote.response.AllDestinationResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 
@@ -23,4 +23,5 @@ interface CategoryDao {
 
     @Query("DELETE FROM categories")
     suspend fun deleteAll()
+
 }

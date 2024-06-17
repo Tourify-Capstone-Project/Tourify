@@ -13,7 +13,6 @@ import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.databinding.FragmentHomePageBinding
 import com.capstone.project.tourify.ui.adapter.ArticleAdapter
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter

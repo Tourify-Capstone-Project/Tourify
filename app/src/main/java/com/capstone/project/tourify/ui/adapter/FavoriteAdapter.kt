@@ -1,29 +1,52 @@
 package com.capstone.project.tourify.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.capstone.project.tourify.R
+import com.bumptech.glide.Glide
+import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
+import com.capstone.project.tourify.databinding.ItemFavBinding
+import com.capstone.project.tourify.ui.view.detail.DetailActivity
 
-class FavoriteAdapter(private val data: List<String>) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textViewTitle: TextView = view.findViewById(R.id.tvTitle)
-        val imageTitle: ImageView = view.findViewById(R.id.imagePoster)
-    }
+class FavoriteAdapter(
+    private var favoriteList: List<FavoriteEntity>
+) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_fav, parent, false)
-        return ViewHolder(view)
+        val binding = ItemFavBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textViewTitle.text = data[position]
-        holder.imageTitle.setImageResource(R.drawable.no_image)
+        val favorite = favoriteList[position]
+        holder.bind(favorite)
     }
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int {
+        return favoriteList.size
+    }
+
+    inner class ViewHolder(private val binding: ItemFavBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(favorite: FavoriteEntity) {
+            Glide.with(binding.imagePoster.context)
+                .load(favorite.imageUrl)
+                .into(binding.imagePoster)
+            binding.tvTitle.text = favorite.name
+            binding.tvPrice.text = favorite.price
+
+            itemView.setOnClickListener {
+                val context = binding.root.context
+                val intent = Intent(context, DetailActivity::class.java).apply {
+                    putExtra("tourism_id", favorite.tourismId) // Ensure tourismId is the correct field
+                }
+                context.startActivity(intent)
+            }
+        }
+    }
 }

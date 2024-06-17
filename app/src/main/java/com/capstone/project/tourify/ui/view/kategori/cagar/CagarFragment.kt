@@ -62,7 +62,10 @@ class CagarFragment : Fragment() {
         sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
             lifecycleScope.launch {
                 if (query.isNotBlank()) {
-                    categoryViewModel.filterCategories(query, "ctgryla6bw54fikev61qdftdgpxbkctfry089").collectLatest { pagingData ->
+                    categoryViewModel.filterCategories(
+                        query,
+                        "ctgryla6bw54fikev61qdftdgpxbkctfry089"
+                    ).collectLatest { pagingData ->
                         categoryAdapter.submitData(pagingData)
                     }
                 } else {
@@ -75,18 +78,21 @@ class CagarFragment : Fragment() {
 
     private fun loadInitialData() {
         lifecycleScope.launch {
-            categoryViewModel.getCategoriesByType("ctgryla6bw54fikev61qdftdgpxbkctfry089").collectLatest { pagingData ->
-                categoryAdapter.submitData(pagingData)
-            }
+            categoryViewModel.getCategoriesByType("ctgryla6bw54fikev61qdftdgpxbkctfry089")
+                .collectLatest { pagingData ->
+                    categoryAdapter.submitData(pagingData)
+                }
         }
     }
 
     private fun handleLoadState() {
         lifecycleScope.launch {
             categoryAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.progressIndicator.visibility = if (loadStates.refresh is LoadState.Loading) View.VISIBLE else View.GONE
+                binding.progressIndicator.visibility =
+                    if (loadStates.refresh is LoadState.Loading) View.VISIBLE else View.GONE
 
-                val isEmpty = loadStates.refresh is LoadState.NotLoading && categoryAdapter.itemCount == 0
+                val isEmpty =
+                    loadStates.refresh is LoadState.NotLoading && categoryAdapter.itemCount == 0
                 binding.tvLocationNotFound.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 binding.itemRowCategory.visibility = if (isEmpty) View.GONE else View.VISIBLE
             }

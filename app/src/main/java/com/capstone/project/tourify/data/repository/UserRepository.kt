@@ -8,17 +8,24 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.paging.liveData
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
+import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
+import com.capstone.project.tourify.data.remote.retrofit.ApiService
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
 import com.capstone.project.tourify.data.local.room.category.CategoryDao
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.detail.DetailDao
+import com.capstone.project.tourify.data.local.room.favorite.FavoriteDao
+import com.capstone.project.tourify.data.local.room.finance.FinanceDao
 import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.pagging.CategoryRemoteMediator
 import com.capstone.project.tourify.data.pagging.DestinationRemoteMediator
-import com.capstone.project.tourify.data.remote.retrofit.ApiService
-import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
+import com.capstone.project.tourify.data.remote.response.FavoriteResponse
+import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import retrofit2.Response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -27,7 +34,9 @@ class UserRepository(
     private val categoryDao: CategoryDao,
     private val detailDao: DetailDao,
     private val articleDatabase: ArticleDatabase,
-    private val categoryDatabase: CategoryDatabase
+    private val favoriteDao: FavoriteDao,
+    private val categoryDatabase: CategoryDatabase,
+    private val financeDao: FinanceDao,
 ) {
 
     // Category Methods
@@ -58,14 +67,11 @@ class UserRepository(
         }
     }
 
-
-    suspend fun refreshCategories(category: String): List<CategoryEntity> {
+    suspend fun refreshCategories(category: String) {
         val response = apiService.getCategory(category)
         val categories = response.map { it.toEntity() }
         categoryDao.insertAll(categories)
-        return categories
     }
-
 
     suspend fun insertCategories(categories: List<CategoryEntity>) {
         categoryDao.insertAll(categories)
@@ -74,15 +80,17 @@ class UserRepository(
     // Detail Methods
     suspend fun getDetail(tourismId: String): DetailResponse? {
         return try {
-            val detail = apiService.getDetail(tourismId)
-            detailDao.insertDetail(detail)
-            detail
+            val response = apiService.getDetail(tourismId)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
     }
-
     suspend fun saveDetail(detail: DetailResponse) {
         detailDao.insertDetail(detail)
     }
@@ -99,7 +107,6 @@ class UserRepository(
         ).liveData
     }
 
-    // Destination Methods
     @OptIn(ExperimentalPagingApi::class)
     fun searchDestinations(category: String): Flow<PagingData<CategoryEntity>> {
         return Pager(
@@ -127,13 +134,69 @@ class UserRepository(
         }
     }
 
+
+    suspend fun getAllFavorites(): List<FavoriteEntity> {
+        return favoriteDao.getAllFavorites()
+    }
+
+    suspend fun addFavorite(favorite: FavoriteEntity) {
+        detailDao.insertFavorite(favorite)
+    }
+
+    suspend fun removeFavoriteById(id: String) {
+        detailDao.removeFavoriteById(id)
+    }
+
+    suspend fun getFavoriteById(id: String): FavoriteEntity? {
+        return detailDao.getFavoriteById(id)
+    }
+
+
+    suspend fun getFavoriteDestinations(): FavoriteResponse? {
+        return try {
+            val response = apiService.getFavoriteDestinations()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun addFavoriteToRemote(tourismId: String): Response<DetailResponse> {
+        return apiService.addFavorite(tourismId)
+    }
+
+    suspend fun removeFavoriteFromRemote(tourismId: String): Response<DetailResponse> {
+        return apiService.removeFavorite(tourismId)
+    }
+
+    suspend fun getFinanceDestinations(): FinanceResponse? {
+        return try {
+            val response = apiService.getFinanceDestinations()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     companion object {
         fun getInstance(
             apiService: ApiService,
             categoryDao: CategoryDao,
             detailDao: DetailDao,
             articleDatabase: ArticleDatabase,
+            favoriteDao: FavoriteDao,
             categoryDatabase: CategoryDatabase,
-        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, categoryDatabase)
+            financeDao: FinanceDao
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao)
     }
 }

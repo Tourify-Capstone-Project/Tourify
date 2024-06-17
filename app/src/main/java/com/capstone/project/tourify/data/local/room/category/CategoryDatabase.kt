@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeys
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeysDao
 
