@@ -5,6 +5,7 @@ import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.response.LoginResponse
 import com.capstone.project.tourify.data.remote.response.RegisterResponse
 import com.capstone.project.tourify.data.remote.retrofit.AuthApiService
+import kotlinx.coroutines.flow.Flow
 
 class AuthRepository(
     private val authApiService: AuthApiService,
@@ -18,9 +19,13 @@ class AuthRepository(
     suspend fun login(email: String, password: String): LoginResponse {
         val response = authApiService.login(email, password)
         if (response.message.isNotEmpty() && response.token.isNotEmpty()) {
-          
-            val userModel =
-                UserModel(email, password, response.token, response.user.displayName, true)
+            val userModel = UserModel(
+                email = email,
+                password = password,
+                token = response.token,
+                displayName = response.user.displayName,
+                isLogin = true
+            )
 
             userPreference.saveSession(userModel)
         }
@@ -31,6 +36,9 @@ class AuthRepository(
         userPreference.saveSession(userModel)
     }
 
+    fun getSession(): Flow<UserModel> {
+        return userPreference.getSession()
+    }
     companion object {
         fun getInstance(
             userPreference: UserPreference,

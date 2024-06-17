@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentBahariBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
@@ -43,25 +44,43 @@ class BahariFragment : Fragment() {
 
         setupRecyclerView()
 
-        lifecycleScope.launch {
-            categoryViewModel.getCategoriesByType("ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
-                .collectLatest { pagingData ->
-                    categoryAdapter.submitData(pagingData)
-                }
-        }
+        observeSearchQuery()
+        loadInitialData()
+        handleLoadState()
+    }
 
+    private fun setupRecyclerView() {
+        binding.itemRowCategory.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = categoryAdapter
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun observeSearchQuery() {
         sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
-            if (query.isNotBlank()) {
-                categoryViewModel.filterCategories(query, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089")
-            }
-        }
-
-        categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
             lifecycleScope.launch {
-                categoryAdapter.submitData(filteredCategories)
+                if (query.isNotBlank()) {
+                    categoryViewModel.filterCategories(query, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089").collectLatest { pagingData ->
+                        categoryAdapter.submitData(pagingData)
+                    }
+                } else {
+                    categoryAdapter.submitData(PagingData.empty()) // Clear current data
+                    loadInitialData()
+                }
             }
         }
+    }
 
+    private fun loadInitialData() {
+        lifecycleScope.launch {
+            categoryViewModel.getCategoriesByType("ctgry0hdxzlz391ntutwchm7gfrtvptfry089").collectLatest { pagingData ->
+                categoryAdapter.submitData(pagingData)
+            }
+        }
+    }
+
+    private fun handleLoadState() {
         lifecycleScope.launch {
             categoryAdapter.loadStateFlow.collectLatest { loadStates ->
                 binding.progressIndicator.visibility = if (loadStates.refresh is LoadState.Loading) View.VISIBLE else View.GONE
@@ -73,12 +92,6 @@ class BahariFragment : Fragment() {
         }
     }
 
-    private fun setupRecyclerView() {
-        binding.itemRowCategory.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = categoryAdapter
-        }
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

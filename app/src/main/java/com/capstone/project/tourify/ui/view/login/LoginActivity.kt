@@ -30,6 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class LoginActivity : AppCompatActivity() {
 
@@ -81,6 +82,23 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginResult.observe(this) { response ->
             if (response.message == "Login successful") {
+                // Dapatkan access token dari stsTokenManager
+                val accessToken = response.user.stsTokenManager.accessToken
+
+                // Simpan access token ke UserModel atau Preference
+                val userModel = UserModel(
+                    email = response.user.email,
+                    password = "",
+                    token = accessToken,  // Menyimpan access token di sini
+                    displayName = response.user.displayName ?: "",
+                    isLogin = true
+                )
+
+                // Simpan sesi pengguna
+                lifecycleScope.launch {
+                    val userPreference = UserPreference.getInstance(this@LoginActivity)
+                    userPreference.saveSession(userModel)
+                }
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -176,10 +194,12 @@ class LoginActivity : AppCompatActivity() {
 
     private suspend fun saveUserSession(user: FirebaseUser) {
         val userPreference = UserPreference.getInstance(this)
+        val tokenResult = user.getIdToken(false).await()
+        val accessToken = tokenResult.token ?: ""
         val userModel = UserModel(
             email = user.email ?: "",
             password = "",
-            token = user.uid,
+            token = accessToken,
             displayName = user.displayName ?: "",
             isLogin = true
         )

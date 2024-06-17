@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.local.entity.CategoryEntity
 import com.capstone.project.tourify.databinding.FragmentHomePageBinding
 import com.capstone.project.tourify.ui.adapter.ArticleAdapter
+import com.capstone.project.tourify.ui.adapter.CategoryAdapter
 import com.capstone.project.tourify.ui.adapter.CategoryHomeAdapter
 import com.capstone.project.tourify.ui.adapter.CategoryItem
 import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
@@ -21,8 +24,10 @@ import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
 import com.capstone.project.tourify.ui.adapter.RecommendedItem
 import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -38,10 +43,12 @@ class HomePageFragment : Fragment() {
     }
 
     private lateinit var tflite: Interpreter
-
-    private lateinit var categoryAdapter: CategoryHomeAdapter
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var categoryHomeAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
     private lateinit var articleAdapter: ArticleAdapter
+
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,13 +75,15 @@ class HomePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupAdapterCategory()
+        setupAdapterHomeCategory()
         setupAdapterRecommended()
-        setupRecyclerView()
+//      setupRecyclerView()
+        setupAdapterCategory()
         observeHeadlineNews()
+        setupSearchView()
     }
 
-    private fun setupAdapterCategory() {
+    private fun setupAdapterHomeCategory() {
         val categoryItems = listOf(
             CategoryItem("Bahari", R.drawable.bahari, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
             CategoryItem(
@@ -100,12 +109,12 @@ class HomePageFragment : Fragment() {
             )
         )
 
-        categoryAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->
+        categoryHomeAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->
             handleCategoryItemClick(categoryItem)
         }
 
         binding.rvCategory.apply {
-            adapter = categoryAdapter
+            adapter = categoryHomeAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
     }
@@ -127,38 +136,114 @@ class HomePageFragment : Fragment() {
         binding.rvRecommend.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
+//    private fun setupRecyclerView() {
+//        articleAdapter = ArticleAdapter()
+//        binding.rvArticle.apply {
+//            layoutManager = LinearLayoutManager(context)
+//            adapter = articleAdapter.withLoadStateFooter(
+//                footer = LoadingStateAdapter {
+//                    articleAdapter.retry()
+//                }
+//            )
+//            setHasFixedSize(true)
+//        }
+//
+//        articleAdapter.addLoadStateListener { loadState ->
+//            if (loadState.refresh is LoadState.Loading) {
+//                showLoading(true)
+//            } else {
+//                showLoading(false)
+//
+//                val errorState = loadState.append as? LoadState.Error
+//                    ?: loadState.prepend as? LoadState.Error
+//                errorState?.let {
+//                    showErrorMessage(true, it.error.localizedMessage ?: "Error")
+//                }
+//            }
+//        }
+//    }
 
-    private fun setupRecyclerView() {
-        articleAdapter = ArticleAdapter()
-        binding.rvArticle.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = articleAdapter.withLoadStateFooter(
-                footer = LoadingStateAdapter {
-                    articleAdapter.retry()
+    private fun setupSearchView() {
+        binding.listSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrBlank()) {
+                    performSearch(query)
                 }
-            )
-            setHasFixedSize(true)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (!newText.isNullOrBlank()) {
+                    searchJob?.cancel()
+                    searchJob = lifecycleScope.launch {
+                        delay(1000) // debounce timeOut
+                        performSearch(newText)
+                    }
+                } else {
+                    resetUI()
+                }
+                return true
+            }
+        })
+
+        binding.listSearch.setOnCloseListener {
+            resetUI()
+            true
+        }
+    }
+
+    private fun performSearch(query: String) {
+        searchJob?.cancel() // Cancel any ongoing search
+        searchJob = lifecycleScope.launch {
+            viewModel.searchDestinations(query)
+        }
+        showSearchResultsUI(true)
+    }
+
+    private fun observeHeadlineNews() {
+//        viewModel.getHeadlineNews.observe(viewLifecycleOwner) { pagingData ->
+//            articleAdapter.submitData(lifecycle, pagingData)
+//        }
+
+        lifecycleScope.launch {
+            viewModel.isSearching.collect { isSearching ->
+                if (isSearching) {
+                    showSearchResultsUI(true)
+                } else {
+                    showSearchResultsUI(false) // Show original UI when search is not active
+                }
+            }
         }
 
-        articleAdapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) {
-                showLoading(true)
-            } else {
-                showLoading(false)
-
-                val errorState = loadState.append as? LoadState.Error
-                    ?: loadState.prepend as? LoadState.Error
-                errorState?.let {
-                    showErrorMessage(true, it.error.localizedMessage ?: "Error")
-                }
+        lifecycleScope.launch {
+            viewModel.searchResults.collect { results ->
+                categoryAdapter.submitData(lifecycle, results)
             }
         }
     }
 
-    private fun observeHeadlineNews() {
-        viewModel.getHeadlineNews.observe(viewLifecycleOwner, Observer { pagingData ->
-            articleAdapter.submitData(lifecycle, pagingData)
-        })
+    private fun showSearchResultsUI(show: Boolean) {
+        if (show) {
+            binding.rvSearchResults.visibility = View.VISIBLE
+            binding.rvCategory.visibility = View.GONE
+            binding.rvRecommend.visibility = View.GONE
+            binding.rvArticle.visibility = View.GONE
+            binding.titleCategory.visibility = View.GONE
+            binding.titleRecommend.visibility = View.GONE
+            binding.titleArticle.visibility = View.GONE
+        } else {
+            resetUI()
+        }
+    }
+
+    private fun resetUI() {
+        binding.rvSearchResults.visibility = View.GONE
+        binding.rvCategory.visibility = View.VISIBLE
+        binding.rvRecommend.visibility = View.VISIBLE
+        binding.rvArticle.visibility = View.VISIBLE
+        binding.titleCategory.visibility = View.VISIBLE
+        binding.titleRecommend.visibility = View.VISIBLE
+        binding.titleArticle.visibility = View.VISIBLE
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -189,6 +274,14 @@ class HomePageFragment : Fragment() {
         }
         Navigation.findNavController(requireView())
             .navigate(R.id.action_nav_home_to_kategoriActivity, bundle)
+    }
+
+    private fun setupAdapterCategory() {
+        categoryAdapter = CategoryAdapter()
+        binding.rvSearchResults.apply {
+            adapter = categoryAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
     }
 
     override fun onDestroyView() {

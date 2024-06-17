@@ -5,27 +5,27 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.capstone.project.tourify.data.local.entity.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.toEntity
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeys
+import com.capstone.project.tourify.data.remote.response.AllDestinationResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
-import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import retrofit2.HttpException
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
-class CategoryRemoteMediator(
+class DestinationRemoteMediator(
     private val database: CategoryDatabase,
     private val apiService: ApiService,
     private val category: String
-) : RemoteMediator<Int, CategoryResponseItem>() {
+) : RemoteMediator<Int, AllDestinationResponseItem>() {
 
     private val categoryDao = database.categoryDao()
     private val remoteKeysDao = database.remoteKeysDao()
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, CategoryResponseItem>
+        state: PagingState<Int, AllDestinationResponseItem>
     ): MediatorResult {
         try {
             val loadKey = when (loadType) {
@@ -38,7 +38,7 @@ class CategoryRemoteMediator(
             }
 
             val page = loadKey ?: 1
-            val categories = apiService.getCategory(category, page, state.config.pageSize)
+            val categories = apiService.searchDestinations(category, page, state.config.pageSize)
             val endOfPaginationReached = categories.isEmpty()
 
             database.withTransaction {
@@ -64,10 +64,11 @@ class CategoryRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, CategoryResponseItem>): RemoteKeys? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, AllDestinationResponseItem>): RemoteKeys? {
         return state.pages
             .lastOrNull { it.data.isNotEmpty() }
             ?.data?.lastOrNull()
-            ?.let { category -> remoteKeysDao.getRemoteKeysId(category.placeId, category.category) }
+            ?.let { category -> remoteKeysDao.getRemoteKeys(category.placeId) }
     }
 }
+

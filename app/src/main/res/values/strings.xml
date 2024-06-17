@@ -80,4 +80,6 @@
     <string name="retry">Coba lagi</string>
     <string name="str_rp">Rp.</string>
     <string name="destination_not_found">Destination not found</string>
+    <string name="izinkan">Izinkan</string>
+    <string name="batal">Batal</string>
 </resources>

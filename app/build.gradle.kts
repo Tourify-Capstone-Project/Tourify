@@ -20,7 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "HOME_URL", "\"https://test-backend-dot-test-deploy-23.et.r.appspot.com/\"")
+        buildConfigField("String", "HOME_URL", "\"https://test-deploy-23.et.r.appspot.com/\"")
     }
 
     buildTypes {
@@ -72,6 +72,7 @@ dependencies {
 
     //firebase
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-storage:20.0.0")
     implementation(libs.googleid)
     implementation(libs.androidx.paging.common.android)
     implementation(libs.tensorflow.lite.metadata)
