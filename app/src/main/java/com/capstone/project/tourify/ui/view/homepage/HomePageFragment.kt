@@ -77,7 +77,7 @@ class HomePageFragment : Fragment() {
 
         setupAdapterHomeCategory()
         setupAdapterRecommended()
-//      setupRecyclerView()
+        setupRecyclerView()
         setupAdapterCategory()
         observeHeadlineNews()
         setupSearchView()
@@ -136,32 +136,33 @@ class HomePageFragment : Fragment() {
         binding.rvRecommend.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
-//    private fun setupRecyclerView() {
-//        articleAdapter = ArticleAdapter()
-//        binding.rvArticle.apply {
-//            layoutManager = LinearLayoutManager(context)
-//            adapter = articleAdapter.withLoadStateFooter(
-//                footer = LoadingStateAdapter {
-//                    articleAdapter.retry()
-//                }
-//            )
-//            setHasFixedSize(true)
-//        }
-//
-//        articleAdapter.addLoadStateListener { loadState ->
-//            if (loadState.refresh is LoadState.Loading) {
-//                showLoading(true)
-//            } else {
-//                showLoading(false)
-//
-//                val errorState = loadState.append as? LoadState.Error
-//                    ?: loadState.prepend as? LoadState.Error
-//                errorState?.let {
-//                    showErrorMessage(true, it.error.localizedMessage ?: "Error")
-//                }
-//            }
-//        }
-//    }
+    private fun setupRecyclerView() {
+        articleAdapter = ArticleAdapter()
+        binding.rvArticle.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = articleAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    articleAdapter.retry()
+                }
+            )
+            setHasFixedSize(true)
+        }
+
+        articleAdapter.addLoadStateListener { loadState ->
+            if (loadState.refresh is LoadState.Loading) {
+                showLoading(true)
+            } else {
+                showLoading(false)
+
+                val errorState = loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+                errorState?.let {
+                    showErrorMessage(true, it.error.localizedMessage ?: "Error")
+                }
+            }
+        }
+        binding.rvArticle.itemAnimator = null // Disable item animator to avoid inconsistency issues
+    }
 
     private fun setupSearchView() {
         binding.listSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -196,14 +197,16 @@ class HomePageFragment : Fragment() {
         searchJob?.cancel() // Cancel any ongoing search
         searchJob = lifecycleScope.launch {
             viewModel.searchDestinations(query)
+            // Notifikasi adapter bahwa data telah berubah
+            categoryAdapter.notifyDataSetChanged()
         }
         showSearchResultsUI(true)
     }
 
     private fun observeHeadlineNews() {
-//        viewModel.getHeadlineNews.observe(viewLifecycleOwner) { pagingData ->
-//            articleAdapter.submitData(lifecycle, pagingData)
-//        }
+        viewModel.getHeadlineNews.observe(viewLifecycleOwner) { pagingData ->
+            articleAdapter.submitData(lifecycle, pagingData)
+        }
 
         lifecycleScope.launch {
             viewModel.isSearching.collect { isSearching ->
