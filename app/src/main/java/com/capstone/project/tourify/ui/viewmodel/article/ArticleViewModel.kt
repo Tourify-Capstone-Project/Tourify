@@ -35,4 +35,6 @@ class ArticleViewModel(private val articlesRepository: UserRepository) : ViewMod
     fun getCategoriesByType(category: String): LiveData<List<CategoryEntity>> {
         return articlesRepository.getCategoriesByType(category)
     }
+
+
 }
