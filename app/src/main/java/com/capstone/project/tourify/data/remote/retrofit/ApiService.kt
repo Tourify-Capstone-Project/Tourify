@@ -4,6 +4,7 @@ import com.capstone.project.tourify.data.remote.response.AllDestinationResponseI
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
+
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
 import retrofit2.Response
@@ -21,7 +22,9 @@ interface ApiService {
 
     @GET("category/{category}")
     suspend fun getCategory(
-        @Path("category") category: String
+        @Path("category") category: String,
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
     ): List<CategoryResponseItem>
 
     @GET("destination/{tourism_id}")
@@ -38,14 +41,17 @@ interface ApiService {
     suspend fun removeFavorite(
         @Path("tourism_id") tourismId: String
     ): Response<DetailResponse>
-    @GET("all-destination")
-    suspend fun searchDestinations(
-        @Query("query") query: String
-    ): List<AllDestinationResponseItem>
 
     @GET("favorite-destination")
     suspend fun getFavoriteDestinations(): Response<FavoriteResponse>
 
     @GET("finance-destination")
     suspend fun getFinanceDestinations(): Response<FinanceResponse>
+
+    @GET("all-destination")
+    suspend fun searchDestinations(
+        @Query("query") query: String,
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
+    ): List<AllDestinationResponseItem>
 }

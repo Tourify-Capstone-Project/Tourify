@@ -18,6 +18,7 @@ object Injection {
         val user = runBlocking { userPreference.getSession().first() }
         val apiService = ApiConfig.getApiService(user.token)
 
+        //Article
         val articleDatabase = ArticleDatabase.getDatabase(context)
 
         //Category
@@ -36,6 +37,8 @@ object Injection {
         val financeDatabase = FinanceDatabase.getDatabase(context)
         val financeDao = financeDatabase.financeDao()
 
-        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, financeDao)
+        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao)
+
+
     }
 }

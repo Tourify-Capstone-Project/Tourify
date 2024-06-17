@@ -16,7 +16,7 @@ class AuthApiConfig {
             val authInterceptor = Interceptor { chain ->
                 val req = chain.request()
                 val requestHeaders = req.newBuilder()
-                if (!token.isNullOrEmpty()) { // Tambahkan pengecekan untuk token
+                if (!token.isNullOrEmpty()) {
                     requestHeaders.addHeader("Authorization", "Bearer $token")
                 }
                 val newRequest = requestHeaders.build()

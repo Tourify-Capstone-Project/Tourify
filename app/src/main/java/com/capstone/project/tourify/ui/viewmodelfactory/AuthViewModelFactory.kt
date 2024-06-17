@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.capstone.project.tourify.data.repository.AuthRepository
 import com.capstone.project.tourify.di.AuthInjection
 import com.capstone.project.tourify.ui.viewmodel.login.LoginViewModel
+import com.capstone.project.tourify.ui.viewmodel.profile.ProfileViewModel
 import com.capstone.project.tourify.ui.viewmodel.register.RegisterViewModel
 
 class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
@@ -19,6 +20,10 @@ class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelPr
 
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
+                ProfileViewModel(repository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

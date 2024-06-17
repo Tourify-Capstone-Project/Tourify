@@ -7,12 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.databinding.FragmentCagarBinding
 import com.capstone.project.tourify.ui.adapter.CategoryAdapter
+import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
 import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewModel
 import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class TamanFragment : Fragment() {
@@ -20,8 +27,8 @@ class TamanFragment : Fragment() {
     private var _binding: FragmentCagarBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: CategoryAdapter
-    private val categoryViewModel: CulinaryViewModel by viewModels {
+    private lateinit var categoryAdapter: CategoryAdapter
+    private val categoryViewModel: CulinaryViewModel by activityViewModels {
         ViewModelFactory.getInstance(requireContext())
     }
 
@@ -38,36 +45,66 @@ class TamanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CategoryAdapter(emptyList())
+        categoryAdapter = CategoryAdapter()
 
         setupRecyclerView()
 
-        categoryViewModel.getCategoriesByType("ctgryeb3hb4el990rapy8v7x0ia84gtfry089")
+        observeSearchQuery()
+        loadInitialData()
+        handleLoadState()
+    }
 
-        categoryViewModel.categories.observe(viewLifecycleOwner) { categories ->
-            adapter.updateCategories(categories)
+    private fun setupRecyclerView() {
+        binding.itemRowCategory.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = categoryAdapter
+            setHasFixedSize(true)
         }
+    }
 
-        categoryViewModel.filteredCategories.observe(viewLifecycleOwner) { filteredCategories ->
-            adapter.updateCategories(filteredCategories)
-        }
-
+    private fun observeSearchQuery() {
         sharedViewModel.searchQuery.observe(viewLifecycleOwner) { query ->
-            categoryViewModel.filterCategories(query)
+            lifecycleScope.launch {
+                if (query.isNotBlank()) {
+                    categoryViewModel.filterCategories(
+                        query,
+                        "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"
+                    ).collectLatest { pagingData ->
+                        categoryAdapter.submitData(pagingData)
+                    }
+                } else {
+                    categoryAdapter.submitData(PagingData.empty()) // Clear current data
+                    loadInitialData()
+                }
+            }
         }
+    }
 
+    private fun loadInitialData() {
+        lifecycleScope.launch {
+            categoryViewModel.getCategoriesByType("ctgryeb3hb4el990rapy8v7x0ia84gtfry089")
+                .collectLatest { pagingData ->
+                    categoryAdapter.submitData(pagingData)
+                }
+        }
+    }
+
+    private fun handleLoadState() {
+        lifecycleScope.launch {
+            categoryAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.progressIndicator.visibility =
+                    if (loadStates.refresh is LoadState.Loading) View.VISIBLE else View.GONE
+
+                val isEmpty =
+                    loadStates.refresh is LoadState.NotLoading && categoryAdapter.itemCount == 0
+                binding.tvLocationNotFound.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.itemRowCategory.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun setupRecyclerView() {
-        adapter = CategoryAdapter(emptyList())
-        binding.itemRowCategory.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@TamanFragment.adapter
-        }
     }
 }

@@ -3,7 +3,7 @@ package com.capstone.project.tourify.ui.view.kategori
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone.project.tourify.R
@@ -11,9 +11,7 @@ import com.capstone.project.tourify.databinding.ActivityKategoriBinding
 import com.capstone.project.tourify.ui.adapter.SectionPagerKategoriAdapter
 import com.capstone.project.tourify.ui.adapter.TabsAdapter
 import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
-import androidx.appcompat.widget.SearchView
 
-@Suppress("DEPRECATION")
 class KategoriActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityKategoriBinding

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.kategori.Culinary.CulinaryFragment">
+    tools:context=".ui.view.kategori.culinary.CulinaryFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itemRowCategory"
@@ -11,5 +11,21 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginVertical="10dp"/>
+
+    <ProgressBar
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvLocationNotFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/destination_not_found"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>

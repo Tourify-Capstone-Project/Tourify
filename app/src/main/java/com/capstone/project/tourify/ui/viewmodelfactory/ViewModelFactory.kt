@@ -29,6 +29,7 @@ class ViewModelFactory(private val repository: UserRepository) :
             modelClass.isAssignableFrom(CulinaryViewModel::class.java) -> {
                 CulinaryViewModel(repository) as T
             }
+
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T
             }

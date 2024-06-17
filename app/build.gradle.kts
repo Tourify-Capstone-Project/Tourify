@@ -73,6 +73,8 @@ dependencies {
     //firebase
     implementation(libs.firebase.auth)
 
+    implementation("com.google.firebase:firebase-storage:20.0.0")
+
     implementation(libs.googleid)
     implementation(libs.androidx.paging.common.android)
     implementation(libs.tensorflow.lite.metadata)
@@ -96,13 +98,14 @@ dependencies {
     //Room
     implementation(libs.androidx.room.ktx)
     ksp(libs.room.compiler)
+    
+    //pagging
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.room.paging)
 
     //TensorflowLite
     implementation (libs.tensorflow.lite)
     implementation (libs.tensorflow.lite.support)
-
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.room.paging)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
