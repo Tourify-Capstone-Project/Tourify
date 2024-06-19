@@ -11,6 +11,7 @@ import com.capstone.project.tourify.ui.viewmodel.category.culinary.CulinaryViewM
 import com.capstone.project.tourify.ui.viewmodel.detail.DetailViewModel
 import com.capstone.project.tourify.ui.viewmodel.favorite.FavoriteViewModel
 import com.capstone.project.tourify.ui.viewmodel.finance.FinanceViewModel
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 
 class ViewModelFactory(private val repository: UserRepository) :
     ViewModelProvider.NewInstanceFactory() {
@@ -38,6 +39,9 @@ class ViewModelFactory(private val repository: UserRepository) :
             }
             modelClass.isAssignableFrom(FinanceViewModel::class.java) -> {
                 FinanceViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(SharedViewModel::class.java) -> {
+                SharedViewModel() as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

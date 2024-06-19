@@ -20,7 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "HOME_URL", "\"https://test-deploy-23.et.r.appspot.com/\"")
+        buildConfigField("String", "HOME_URL", "\"https://tourify-api-dot-tourify-app-project.as.r.appspot.com/\"")
     }
 
     buildTypes {
@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.androidx.paging.common.android)
     implementation(libs.tensorflow.lite.metadata)
     implementation(libs.tensorflow.lite.gpu)
+    implementation(libs.firebase.ml.modeldownloader.ktx)
     annotationProcessor(libs.compiler)
 
     //espresso

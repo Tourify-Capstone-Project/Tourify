@@ -94,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
                 // Simpan access token ke UserModel atau Preference
                 val userModel = UserModel(
+                    userId = response.user.uid,
                     email = response.user.email,
                     password = "",
                     token = accessToken,  // Menyimpan access token di sini
@@ -204,6 +205,7 @@ class LoginActivity : AppCompatActivity() {
         val tokenResult = user.getIdToken(false).await()
         val accessToken = tokenResult.token ?: ""
         val userModel = UserModel(
+            userId = user.uid,
             email = user.email ?: "",
             password = "",
             token = accessToken,  // Menyimpan access token di sini

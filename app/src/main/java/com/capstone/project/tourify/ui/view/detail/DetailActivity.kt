@@ -8,7 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.capstone.project.tourify.Helper.RecommendationHelper
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.local.entity.RecommendedItem
 import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
 import com.capstone.project.tourify.data.local.room.favorite.FavoriteDatabase
 import com.capstone.project.tourify.data.remote.pref.UserPreference
@@ -18,12 +20,14 @@ import com.capstone.project.tourify.ui.adapter.SectionPagerAdapter
 import com.capstone.project.tourify.ui.adapter.TabsAdapter
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 import com.capstone.project.tourify.ui.viewmodel.detail.DetailViewModel
+import com.capstone.project.tourify.ui.viewmodel.shared.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.absoluteValue
 
 class DetailActivity : AppCompatActivity() {
 
@@ -36,7 +40,12 @@ class DetailActivity : AppCompatActivity() {
 
     private var isFavorite = false
     private lateinit var favoriteDatabase: FavoriteDatabase
-    private lateinit var authToken: String
+    private lateinit var userId: String
+
+    private lateinit var recommendationHelper: RecommendationHelper
+    private val sharedViewModel: SharedViewModel by viewModels {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +55,10 @@ class DetailActivity : AppCompatActivity() {
         favoriteDatabase = FavoriteDatabase.getDatabase(this)
 
         val userPreference = UserPreference.getInstance(this)
-        authToken = runBlocking { userPreference.getSession().first().token }
+        userId = runBlocking { userPreference.getSession().first().userId }
+
+        recommendationHelper = RecommendationHelper(this)
+
 
         setupToolbar()
         setupRecyclerView()
@@ -65,13 +77,77 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun kirimRekomendasi(userId: String, tourismId: String, detail: DetailResponse) {
+        val tourismIdHash = (tourismId.hashCode().absoluteValue % 1000).toFloat()
+        val userIdHash = (userId.hashCode().absoluteValue % 1000).toFloat()
+
+        val skorRekomendasi = recommendationHelper.recommend(tourismIdHash, userIdHash)
+        Log.d(
+            "DetailActivity",
+            "Skor rekomendasi: ${skorRekomendasi.joinToString(", ")} untuk tourismId: $tourismId"
+        )
+
+        val placeId = detail.placeId
+        val placeName = detail.placeName
+        val placePhotoUrl = detail.placePhotoUrl
+        val price = detail.price
+        val rating = detail.rating
+
+        val itemRekomendasi = RecommendedItem(
+            id = "", // Generate an ID or get it from the server response
+            tourismId = placeId,
+            name = placeName,
+            imageUrl = placePhotoUrl,
+            price = price,
+            rating = rating,
+            userId = userId
+        )
+        Log.d("DetailActivity", "Menambahkan item rekomendasi: $itemRekomendasi")
+
+        // Kirim rekomendasi ke server
+        lifecycleScope.launch {
+            try {
+                val response = detailViewModel.postRecommendation(tourismId)
+                if (response.isSuccessful) {
+                    val recommendedResponse = response.body()
+                    if (recommendedResponse != null) {
+                        val recommendedItems = recommendedResponse.detailsFavorite.map {
+                            RecommendedItem(
+                                id = it.recomenId,
+                                tourismId = it.tourismId,
+                                name = it.detailPlace.placeName,
+                                imageUrl = it.detailPlace.placePhotoUrl,
+                                price = it.detailPlace.price,
+                                rating = it.detailPlace.rating,
+                                userId = it.userId
+                            )
+                        }
+                        recommendedItems.forEach { item ->
+                            detailViewModel.addRecommendedItemToDatabase(item.toString())
+                        }
+                        Log.d("DetailActivity", "Rekomendasi berhasil dikirim ke server dan disimpan ke database")
+                    } else {
+                        Log.e("DetailActivity", "RecommendedResponse dari server null")
+                    }
+                } else {
+                    Log.e("DetailActivity", "Gagal mengirim rekomendasi: ${response.code()} - ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("DetailActivity", "Gagal mengirim rekomendasi: ${e.message}")
+            }
+        }
+    }
+
+
+
+
+
     private fun updateUI(detail: DetailResponse) {
         Glide.with(this).load(detail.placePhotoUrl).into(binding.detailImageMain)
         binding.titleDetail.text = detail.placeName
         binding.priceDetail.text = detail.price
         binding.rating.text = detail.rating
     }
-
 
     private fun setupToolbar() {
         setSupportActionBar(binding.materialBarDetail)
@@ -122,46 +198,6 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-//    private fun showFavoriteConfirmationDialog(tourismId: String) {
-//        AlertDialog.Builder(this)
-//            .setMessage("Do you want to add this place to your favorites?")
-//            .setPositiveButton("Yes") { dialog, _ ->
-//                addFavorite(tourismId)
-//                dialog.dismiss()
-//            }
-//            .setNegativeButton("No") { dialog, _ ->
-//                dialog.dismiss()
-//            }
-//            .create()
-//            .apply {
-//                setOnShowListener {
-//                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
-//                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
-//                }
-//            }
-//            .show()
-//    }
-//
-//    private fun showUnfavoriteConfirmationDialog(tourismId: String) {
-//        AlertDialog.Builder(this)
-//            .setMessage("Are you sure you want to remove this place from your favorites?")
-//            .setPositiveButton("Yes") { dialog, _ ->
-//                removeFavorite(tourismId)
-//                dialog.dismiss()
-//            }
-//            .setNegativeButton("No") { dialog, _ ->
-//                dialog.dismiss()
-//            }
-//            .create()
-//            .apply {
-//                setOnShowListener {
-//                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
-//                    getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
-//                }
-//            }
-//            .show()
-//    }
-
     private fun checkFavoriteStatus(tourismId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val favorite = detailViewModel.getFavoriteById(tourismId)
@@ -174,7 +210,6 @@ class DetailActivity : AppCompatActivity() {
         val fabFavorite: FloatingActionButton = findViewById(R.id.fab_favorite)
         fabFavorite.setImageResource(if (isFavorite) R.drawable.favorite else R.drawable.favorite_border)
     }
-
 
     private fun addFavorite(tourismId: String) {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -192,8 +227,12 @@ class DetailActivity : AppCompatActivity() {
             if (response.isSuccessful) {
                 isFavorite = true
                 runOnUiThread { updateFavoriteIcon() }
+                kirimRekomendasi(userId, tourismId, detail)
             } else {
-                Log.e("DetailActivity", "Failed to add favorite: ${response.code()} - ${response.errorBody()?.string()}")
+                Log.e(
+                    "DetailActivity",
+                    "Failed to add favorite: ${response.code()} - ${response.errorBody()?.string()}"
+                )
             }
         }
     }
@@ -206,7 +245,12 @@ class DetailActivity : AppCompatActivity() {
                 isFavorite = false
                 runOnUiThread { updateFavoriteIcon() }
             } else {
-                Log.e("DetailActivity", "Failed to remove favorite: ${response.code()} - ${response.errorBody()?.string()}")
+                Log.e(
+                    "DetailActivity",
+                    "Failed to remove favorite: ${response.code()} - ${
+                        response.errorBody()?.string()
+                    }"
+                )
             }
         }
     }
