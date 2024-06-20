@@ -1,12 +1,12 @@
 package com.capstone.project.tourify.data.remote.response
 
+import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.capstone.project.tourify.Helper.ConverterHelper
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "detailresponse")
 @TypeConverters(ConverterHelper::class)
@@ -17,17 +17,14 @@ data class DetailResponse(
 	@field:SerializedName("placeId")
 	val placeId: String,
 
-	@field:SerializedName("placeDesc")
-	val placeDesc: String,
-
 	@field:SerializedName("city")
 	val city: String,
 
-	@field:SerializedName("price")
-	val price: String,
-
 	@field:SerializedName("additionalImages")
 	val additionalImages: List<AdditionalImagesItem>,
+
+	@field:SerializedName("latitude")
+	val latitude: String,
 
 	@field:SerializedName("rating")
 	val rating: String,
@@ -38,6 +35,12 @@ data class DetailResponse(
 	@field:SerializedName("placeGmapsUrl")
 	val placeGmapsUrl: String,
 
+	@field:SerializedName("placeDesc")
+	val placeDesc: String,
+
+	@field:SerializedName("price")
+	val price: String,
+
 	@field:SerializedName("category")
 	val category: String,
 
@@ -45,7 +48,10 @@ data class DetailResponse(
 	val placeName: String,
 
 	@field:SerializedName("placePhotoUrl")
-	val placePhotoUrl: String
+	val placePhotoUrl: String,
+
+	@field:SerializedName("longitude")
+	val longitude: String
 ) : Parcelable
 
 @Parcelize

@@ -1,5 +1,6 @@
 package com.capstone.project.tourify.ui.view.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -16,6 +17,7 @@ import com.capstone.project.tourify.data.remote.response.DetailResponse
 import com.capstone.project.tourify.databinding.ActivityDetailBinding
 import com.capstone.project.tourify.ui.adapter.SectionPagerAdapter
 import com.capstone.project.tourify.ui.adapter.TabsAdapter
+import com.capstone.project.tourify.ui.view.location.MapsActivity
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 import com.capstone.project.tourify.ui.viewmodel.detail.DetailViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -86,7 +88,15 @@ class DetailActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         val tabs = listOf("Description", "Photo Gallery", "Review", "Located")
         tabsAdapter = TabsAdapter(tabs) { position ->
-            binding.viewPager.currentItem = position
+            if (position == 3) {
+                val detail = detailViewModel.detail.value
+                val intent = Intent(this, MapsActivity::class.java).apply {
+                    putExtra("tourism_id", detail?.placeId)
+                }
+                startActivity(intent)
+            } else {
+                binding.viewPager.currentItem = position
+            }
         }
 
         binding.listItemTabs.apply {

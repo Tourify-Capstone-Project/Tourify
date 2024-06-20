@@ -85,4 +85,6 @@
     <string name="destination_not_found">Destination not found</string>
     <string name="izinkan">Izinkan</string>
     <string name="batal">Batal</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps">Maps</string>
 </resources>
