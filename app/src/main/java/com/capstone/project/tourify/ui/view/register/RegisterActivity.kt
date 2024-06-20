@@ -37,6 +37,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -214,10 +215,13 @@ class RegisterActivity : AppCompatActivity() {
 
     private suspend fun saveUserSession(user: FirebaseUser) {
         val userPreference = UserPreference.getInstance(this)
+        val tokenResult = user.getIdToken(false).await()
+        val accessToken = tokenResult.token ?: ""
         val userModel = UserModel(
+            userId = user.uid,
             email = user.email ?: "",
             password = "",
-            token = user.uid,
+            token = accessToken,
             displayName = user.displayName ?: "",
             isLogin = true
         )

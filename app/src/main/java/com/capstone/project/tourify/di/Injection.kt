@@ -1,6 +1,7 @@
 package com.capstone.project.tourify.di
 
 import android.content.Context
+import com.capstone.project.tourify.data.local.room.TourismDatabase
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
@@ -37,7 +38,11 @@ object Injection {
         val financeDatabase = FinanceDatabase.getDatabase(context)
         val financeDao = financeDatabase.financeDao()
 
-        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao)
+        // Tourism
+        val tourismDatabase = TourismDatabase.getDatabase(context)
+        val tourismDao = tourismDatabase.tourismDao()
+
+        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, tourismDao)
 
 
     }

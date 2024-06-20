@@ -1,5 +1,6 @@
 package com.capstone.project.tourify.data.remote.retrofit
 
+import com.capstone.project.tourify.data.local.entity.RecommendedItem
 import com.capstone.project.tourify.data.remote.response.AllDestinationResponseItem
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
@@ -7,6 +8,7 @@ import com.capstone.project.tourify.data.remote.response.DetailResponse
 
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import com.capstone.project.tourify.data.remote.response.RecommendedResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -54,4 +56,14 @@ interface ApiService {
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
     ): List<AllDestinationResponseItem>
+
+    @POST("destination/{tourism_id}/recommendation")
+    suspend fun postRecommendation(
+        @Path("tourism_id") tourismId: String
+    ): Response<RecommendedResponse>
+
+
+    @GET("home/recommendation")
+    suspend fun getRecommendations(): Response<RecommendedResponse>
+
 }

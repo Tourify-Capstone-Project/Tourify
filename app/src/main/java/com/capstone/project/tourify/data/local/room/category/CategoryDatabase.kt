@@ -8,7 +8,7 @@ import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeys
 import com.capstone.project.tourify.data.local.room.remotekeys.RemoteKeysDao
 
-@Database(entities = [CategoryEntity::class, RemoteKeys::class], version = 2, exportSchema = false)
+@Database(entities = [CategoryEntity::class, RemoteKeys::class], version = 1, exportSchema = false)
 abstract class CategoryDatabase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao

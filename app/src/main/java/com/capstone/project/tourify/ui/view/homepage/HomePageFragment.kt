@@ -1,6 +1,8 @@
 package com.capstone.project.tourify.ui.view.homepage
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,24 +15,15 @@ import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.local.entity.RecommendedItem
 import com.capstone.project.tourify.databinding.FragmentHomePageBinding
-import com.capstone.project.tourify.ui.adapter.ArticleAdapter
-import com.capstone.project.tourify.ui.adapter.CategoryAdapter
-import com.capstone.project.tourify.ui.adapter.CategoryHomeAdapter
-import com.capstone.project.tourify.ui.adapter.CategoryItem
-import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
-import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
-import com.capstone.project.tourify.ui.adapter.RecommendedItem
-import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
+import com.capstone.project.tourify.ui.adapter.*
+import com.capstone.project.tourify.ui.view.detail.DetailActivity
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
+import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.tensorflow.lite.Interpreter
-import java.io.FileInputStream
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.channels.FileChannel
 
 class HomePageFragment : Fragment() {
 
@@ -41,7 +34,6 @@ class HomePageFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
-    private lateinit var tflite: Interpreter
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoryHomeAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
@@ -54,28 +46,33 @@ class HomePageFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomePageBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        tflite = Interpreter(loadModelFile())
+        setupAdapterRecommended()
 
-        return binding.root
-    }
-
-    private fun loadModelFile(): ByteBuffer {
-        val fileDescriptor = requireContext().assets.openFd("tourify_model.tflite")
-        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val fileChannel = inputStream.channel
-        val startOffset = fileDescriptor.startOffset
-        val declaredLength = fileDescriptor.declaredLength
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength).apply {
-            order(ByteOrder.nativeOrder())
+        // Observe rekomendasi
+        viewModel.recommendations.observe(viewLifecycleOwner) { response ->
+            response?.let {
+                Log.d("HomePageFragment", "Rekomendasi berhasil dimuat: $it")
+                recommendedAdapter.setItems(it)
+            } ?: run {
+                Log.e("HomePageFragment", "Gagal memuat rekomendasi")
+                Toast.makeText(context, "Gagal memuat rekomendasi", Toast.LENGTH_SHORT).show()
+            }
         }
+
+        // Fetch rekomendasi
+        lifecycleScope.launch {
+            viewModel.fetchRecommendations()
+        }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupAdapterHomeCategory()
-        setupAdapterRecommended()
         setupRecyclerView()
         setupAdapterCategory()
         observeHeadlineNews()
@@ -85,27 +82,11 @@ class HomePageFragment : Fragment() {
     private fun setupAdapterHomeCategory() {
         val categoryItems = listOf(
             CategoryItem("Bahari", R.drawable.bahari, "ctgry0hdxzlz391ntutwchm7gfrtvptfry089"),
-            CategoryItem(
-                "Village \nTourism",
-                R.drawable.village_tourism,
-                "ctgryeu9qus02crsy52mxao1xqciihtfry089"
-            ),
-            CategoryItem(
-                "Cagar \nAlam",
-                R.drawable.cagar_alam,
-                "ctgryla6bw54fikev61qdftdgpxbkctfry089"
-            ),
-            CategoryItem(
-                "Taman \nNasional",
-                R.drawable.taman_nasional,
-                "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"
-            ),
-            CategoryItem("Culture", R.drawable.culture, "ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089"),
-            CategoryItem(
-                "Culinary \nDestination",
-                R.drawable.culinary,
-                "ctgry7hc1oq4or1ymwddw2bu8uan5ntfry089"
-            )
+            CategoryItem("Wisata \nDesa", R.drawable.village_tourism, "ctgryeu9qus02crsy52mxao1xqciihtfry089"),
+            CategoryItem("Cagar \nAlam", R.drawable.cagar_alam, "ctgryla6bw54fikev61qdftdgpxbkctfry089"),
+            CategoryItem("Taman \nNasional", R.drawable.taman_nasional, "ctgryeb3hb4el990rapy8v7x0ia84gtfry089"),
+            CategoryItem("Budaya", R.drawable.culture, "ctgry2l00j6i8btbjfsq5l2wt1dn2utfry089"),
+            CategoryItem("Destinasi \nKuliner", R.drawable.culinary, "ctgry7hc1oq4or1ymwddw2bu8uan5ntfry089")
         )
 
         categoryHomeAdapter = CategoryHomeAdapter(categoryItems) { categoryItem ->
@@ -119,22 +100,16 @@ class HomePageFragment : Fragment() {
     }
 
     private fun setupAdapterRecommended() {
-        val recommendedItems = listOf(
-            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
-            RecommendedItem("The Great Asia Africano numero uno", R.drawable.no_image),
-            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
-            RecommendedItem("The Great Asia Africa", R.drawable.no_image),
-            RecommendedItem("The Great Asia Africa", R.drawable.no_image)
-        )
-
-        recommendedAdapter = RecommendedAdapter(recommendedItems, tflite) { recommendedItem ->
+        recommendedAdapter = RecommendedAdapter { recommendedItem ->
             handleRecommendedItemClick(recommendedItem)
         }
 
-        binding.rvRecommend.adapter = recommendedAdapter
-        binding.rvRecommend.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvRecommend.apply {
+            adapter = recommendedAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
     }
+
     private fun setupRecyclerView() {
         articleAdapter = ArticleAdapter()
         binding.rvArticle.apply {
@@ -160,7 +135,7 @@ class HomePageFragment : Fragment() {
                 }
             }
         }
-        binding.rvArticle.itemAnimator = null // Disable item animator to avoid inconsistency issues
+        binding.rvArticle.itemAnimator = null // Nonaktifkan animator item untuk menghindari masalah ketidakonsistenan
     }
 
     private fun setupSearchView() {
@@ -176,7 +151,7 @@ class HomePageFragment : Fragment() {
                 if (!newText.isNullOrBlank()) {
                     searchJob?.cancel()
                     searchJob = lifecycleScope.launch {
-                        delay(1000) // debounce timeOut
+                        delay(1000) // waktu tunda debounce
                         performSearch(newText)
                     }
                 } else {
@@ -193,7 +168,7 @@ class HomePageFragment : Fragment() {
     }
 
     private fun performSearch(query: String) {
-        searchJob?.cancel() // Cancel any ongoing search
+        searchJob?.cancel() // Batalkan pencarian yang sedang berlangsung
         searchJob = lifecycleScope.launch {
             viewModel.searchDestinations(query)
             // Notifikasi adapter bahwa data telah berubah
@@ -212,7 +187,7 @@ class HomePageFragment : Fragment() {
                 if (isSearching) {
                     showSearchResultsUI(true)
                 } else {
-                    showSearchResultsUI(false) // Show original UI when search is not active
+                    showSearchResultsUI(false) // Tampilkan UI asli saat pencarian tidak aktif
                 }
             }
         }
@@ -261,12 +236,10 @@ class HomePageFragment : Fragment() {
     }
 
     private fun handleRecommendedItemClick(recommendedItem: RecommendedItem) {
-        when (recommendedItem.title) {
-            "The Great Asia Africa" -> {
-                Navigation.findNavController(requireView())
-                    .navigate(R.id.action_nav_home_to_detailActivity)
-            }
+        val intent = Intent(activity, DetailActivity::class.java).apply {
+            putExtra("tourism_id", recommendedItem.tourismId)
         }
+        startActivity(intent)
     }
 
     private fun handleCategoryItemClick(settingItem: CategoryItem) {

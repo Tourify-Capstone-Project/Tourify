@@ -10,7 +10,7 @@ import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 
 @Database(
     entities = [ArticlesResponseItem::class, RemoteKeys::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class ArticleDatabase : RoomDatabase() {
