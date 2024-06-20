@@ -61,7 +61,6 @@ class DetailActivity : AppCompatActivity() {
 
         recommendationHelper = RecommendationHelper(this)
 
-
         setupToolbar()
         setupRecyclerView()
         setupFavoriteButton()
@@ -83,11 +82,11 @@ class DetailActivity : AppCompatActivity() {
         val tourismIdHash = (tourismId.hashCode().absoluteValue % 1000).toFloat()
         val userIdHash = (userId.hashCode().absoluteValue % 1000).toFloat()
 
+        Log.d("DetailActivity", "Tourism ID Hash: $tourismIdHash")
+        Log.d("DetailActivity", "User ID Hash: $userIdHash")
+
         val skorRekomendasi = recommendationHelper.recommend(tourismIdHash, userIdHash)
-        Log.d(
-            "DetailActivity",
-            "Skor rekomendasi: ${skorRekomendasi.joinToString(", ")} untuk tourismId: $tourismId"
-        )
+        Log.d("DetailActivity", "Skor rekomendasi: ${skorRekomendasi?.joinToString(", ")} untuk tourismId: $tourismId")
 
         val placeId = detail.placeId
         val placeName = detail.placeName
@@ -140,10 +139,6 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     private fun updateUI(detail: DetailResponse) {
         Glide.with(this).load(detail.placePhotoUrl).into(binding.detailImageMain)
         binding.titleDetail.text = detail.placeName
@@ -176,8 +171,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         binding.listItemTabs.apply {
-            layoutManager =
-                LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = tabsAdapter
         }
     }
@@ -239,10 +233,7 @@ class DetailActivity : AppCompatActivity() {
                 runOnUiThread { updateFavoriteIcon() }
                 kirimRekomendasi(userId, tourismId, detail)
             } else {
-                Log.e(
-                    "DetailActivity",
-                    "Failed to add favorite: ${response.code()} - ${response.errorBody()?.string()}"
-                )
+                Log.e("DetailActivity", "Failed to add favorite: ${response.code()} - ${response.errorBody()?.string()}")
             }
         }
     }
@@ -255,12 +246,7 @@ class DetailActivity : AppCompatActivity() {
                 isFavorite = false
                 runOnUiThread { updateFavoriteIcon() }
             } else {
-                Log.e(
-                    "DetailActivity",
-                    "Failed to remove favorite: ${response.code()} - ${
-                        response.errorBody()?.string()
-                    }"
-                )
+                Log.e("DetailActivity", "Failed to remove favorite: ${response.code()} - ${response.errorBody()?.string()}")
             }
         }
     }

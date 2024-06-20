@@ -23,15 +23,11 @@ import com.capstone.project.tourify.ui.adapter.CategoryHomeAdapter
 import com.capstone.project.tourify.ui.adapter.CategoryItem
 import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
 import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
-import com.capstone.project.tourify.ui.adapter.RecommendedItem
 import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import com.capstone.project.tourify.ui.viewmodel.article.HomeViewModel
 import com.capstone.project.tourify.data.local.entity.RecommendedItem
-import com.capstone.project.tourify.databinding.FragmentHomePageBinding
-import com.capstone.project.tourify.ui.adapter.*
 import com.capstone.project.tourify.ui.view.detail.DetailActivity
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
-import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,7 +45,6 @@ class HomePageFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
-    private lateinit var tflite: Interpreter
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoryHomeAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
@@ -67,7 +62,7 @@ class HomePageFragment : Fragment() {
         setupAdapterRecommended()
 
         // Observe rekomendasi
-        viewModel.recommendations.observe(viewLifecycleOwner) { response ->
+        homeViewModel.recommendations.observe(viewLifecycleOwner) { response ->
             response?.let {
                 Log.d("HomePageFragment", "Rekomendasi berhasil dimuat: $it")
                 recommendedAdapter.setItems(it)
@@ -79,7 +74,7 @@ class HomePageFragment : Fragment() {
 
         // Fetch rekomendasi
         lifecycleScope.launch {
-            viewModel.fetchRecommendations()
+            homeViewModel.fetchRecommendations()
         }
 
         return view

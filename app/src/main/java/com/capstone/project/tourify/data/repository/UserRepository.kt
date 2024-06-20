@@ -32,8 +32,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import com.capstone.project.tourify.data.remote.response.RecommendedResponse
-import retrofit2.Response
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -197,6 +195,6 @@ class UserRepository(
             financeDao: FinanceDao,
             userPreference: UserPreference,
             tourismDao: TourismDao
-        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference, tourismDao: TourismDao)
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference, tourismDao)
     }
 }
