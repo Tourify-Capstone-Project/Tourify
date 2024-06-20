@@ -18,6 +18,7 @@ import com.capstone.project.tourify.data.remote.response.DetailUserResponse
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
 import com.capstone.project.tourify.data.remote.response.PhotoProfileResponse
+import com.capstone.project.tourify.data.remote.response.RecommendedResponse
 import com.capstone.project.tourify.data.remote.response.ReviewResponse
 import com.capstone.project.tourify.data.remote.response.ReviewUserResponse
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
@@ -117,6 +118,30 @@ class FakeApiService : ApiService {
         page: Int,
         size: Int,
     ): List<AllDestinationResponseItem> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getReviews(tourismId: String): ReviewResponse {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun submitReview(tourismId: String, review: String): ReviewUserResponse {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateUsername(newUsername: String): PhotoProfileResponse {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun uploadPhoto(imgProfile: MultipartBody.Part): PhotoProfileResponse {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun postRecommendation(tourismId: String): Response<RecommendedResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getRecommendations(): Response<RecommendedResponse> {
         TODO("Not yet implemented")
     }
 }
