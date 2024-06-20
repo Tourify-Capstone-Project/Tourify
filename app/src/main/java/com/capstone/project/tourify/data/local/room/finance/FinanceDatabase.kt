@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.capstone.project.tourify.data.local.entity.finance.FinanceEntity
 
-@Database(entities = [FinanceEntity::class], version = 2)
+@Database(entities = [FinanceEntity::class], version = 1)
 abstract class FinanceDatabase : RoomDatabase() {
     abstract fun financeDao(): FinanceDao
 

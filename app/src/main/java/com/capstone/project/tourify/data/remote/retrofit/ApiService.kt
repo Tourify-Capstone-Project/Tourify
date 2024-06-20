@@ -1,10 +1,10 @@
 package com.capstone.project.tourify.data.remote.retrofit
 
+import com.capstone.project.tourify.data.local.entity.RecommendedItem
 import com.capstone.project.tourify.data.remote.response.AllDestinationResponseItem
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
-
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
 import com.capstone.project.tourify.data.remote.response.PhotoProfileResponse
@@ -12,6 +12,7 @@ import com.capstone.project.tourify.data.remote.response.ReviewResponse
 import com.capstone.project.tourify.data.remote.response.ReviewUserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import com.capstone.project.tourify.data.remote.response.RecommendedResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -83,4 +84,13 @@ interface ApiService {
     suspend fun uploadPhoto(
         @Part imgProfile: MultipartBody.Part
     ): PhotoProfileResponse
+
+    @POST("destination/{tourism_id}/recommendation")
+    suspend fun postRecommendation(
+        @Path("tourism_id") tourismId: String
+    ): Response<RecommendedResponse>
+
+
+    @GET("home/recommendation")
+    suspend fun getRecommendations(): Response<RecommendedResponse>
 }

@@ -1,5 +1,6 @@
 package com.capstone.project.tourify.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -7,12 +8,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.capstone.project.tourify.data.local.entity.UserModel
+import com.capstone.project.tourify.data.local.entity.RecommendedItem
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
 import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.data.local.entity.category.toEntity
 import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
+import com.capstone.project.tourify.data.local.room.TourismDao
 import com.capstone.project.tourify.data.local.room.category.CategoryDao
 import com.capstone.project.tourify.data.local.room.category.CategoryDatabase
 import com.capstone.project.tourify.data.local.room.detail.DetailDao
@@ -28,6 +31,11 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
+import com.capstone.project.tourify.data.remote.response.RecommendedResponse
+import retrofit2.Response
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class UserRepository(
     private val apiService: ApiService,
@@ -37,7 +45,8 @@ class UserRepository(
     private val favoriteDao: FavoriteDao,
     private val categoryDatabase: CategoryDatabase,
     private val financeDao: FinanceDao,
-    private val userPreference: UserPreference
+    private val userPreference: UserPreference,
+    private val tourismDao: TourismDao
 ) {
 
     fun getSession(): Flow<UserModel> {
@@ -152,6 +161,31 @@ class UserRepository(
         }
     }
 
+    // Tourism Methods
+
+    suspend fun postRecommendation(tourismId: String): Response<RecommendedResponse> {
+        return apiService.postRecommendation(tourismId)
+    }
+
+    suspend fun insertAllRecommended(tourismId: String): Response<RecommendedResponse> {
+        return apiService.postRecommendation(tourismId)
+    }
+
+    suspend fun getRecommendations(): RecommendedResponse? {
+        return try {
+            val response = apiService.getRecommendations()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
     companion object {
         fun getInstance(
             apiService: ApiService,
@@ -161,7 +195,8 @@ class UserRepository(
             favoriteDao: FavoriteDao,
             categoryDatabase: CategoryDatabase,
             financeDao: FinanceDao,
-            userPreference: UserPreference
-        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference)
+            userPreference: UserPreference,
+            tourismDao: TourismDao
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference, tourismDao: TourismDao)
     }
 }

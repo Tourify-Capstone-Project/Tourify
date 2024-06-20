@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 
+
 @Database(entities = [CategoryEntity::class], version = 2, exportSchema = false)
 abstract class CategoryDatabase : RoomDatabase() {
 

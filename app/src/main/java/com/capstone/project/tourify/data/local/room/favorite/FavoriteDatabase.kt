@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
 
-@Database(entities = [FavoriteEntity::class], version = 2)
+@Database(entities = [FavoriteEntity::class], version = 1)
 abstract class FavoriteDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
 

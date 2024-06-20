@@ -9,7 +9,11 @@ import com.capstone.project.tourify.Helper.ConverterHelper
 import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 
-@Database(entities = [DetailResponse::class, FavoriteEntity::class], version = 2, exportSchema = false)
+@Database(
+    entities = [DetailResponse::class, FavoriteEntity::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(ConverterHelper::class)
 abstract class DetailDatabase : RoomDatabase() {
     abstract fun detailDao(): DetailDao

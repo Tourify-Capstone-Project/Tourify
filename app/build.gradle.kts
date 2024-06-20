@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.androidx.paging.common.android)
     implementation(libs.tensorflow.lite.metadata)
     implementation(libs.tensorflow.lite.gpu)
+    implementation(libs.firebase.ml.modeldownloader.ktx)
     annotationProcessor(libs.compiler)
 
     //espresso

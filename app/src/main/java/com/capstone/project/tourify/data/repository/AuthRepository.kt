@@ -20,6 +20,7 @@ class AuthRepository(
         val response = authApiService.login(email, password)
         if (response.message.isNotEmpty() && response.token.isNotEmpty()) {
             val userModel = UserModel(
+                userId = response.user.uid,
                 email = email,
                 password = password,
                 token = response.token,
