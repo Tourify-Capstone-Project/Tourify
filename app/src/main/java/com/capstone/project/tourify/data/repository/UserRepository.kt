@@ -21,6 +21,9 @@ import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import com.capstone.project.tourify.data.remote.response.ReviewResponse
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 
 class UserRepository(
@@ -61,6 +64,15 @@ class UserRepository(
             e.printStackTrace()
             null
         }
+    }
+
+    suspend fun getReviews(tourismId: String): ReviewResponse {
+        return apiService.getReviews(tourismId)
+    }
+
+    suspend fun submitReview(tourismId: String, review: String) {
+        val reviewBody = review.toRequestBody("text/plain".toMediaTypeOrNull())
+        apiService.submitReview(tourismId, reviewBody)
     }
 
     suspend fun saveDetail(detail: DetailResponse) {

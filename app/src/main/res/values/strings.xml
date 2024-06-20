@@ -87,4 +87,5 @@
     <string name="batal">Batal</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">Maps</string>
+    <string name="write_your_review_here">Write your review here</string>
 </resources>

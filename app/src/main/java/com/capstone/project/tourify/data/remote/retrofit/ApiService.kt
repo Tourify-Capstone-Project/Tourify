@@ -7,6 +7,9 @@ import com.capstone.project.tourify.data.remote.response.DetailResponse
 
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import com.capstone.project.tourify.data.remote.response.ReviewResponse
+import com.capstone.project.tourify.data.remote.response.ReviewUserResponse
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -54,4 +57,16 @@ interface ApiService {
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
     ): List<AllDestinationResponseItem>
+
+    @GET("/destination/{tourism_id}/review-destination")
+    suspend fun getReviews(
+        @Path("tourism_id") tourismId: String
+    ): ReviewResponse
+
+    @Multipart
+    @POST("/destination/{tourism_id}/review-destination")
+    suspend fun submitReview(
+        @Path("tourism_id") tourismId: String,
+        @Part("review_desc") reviewDesc: RequestBody,
+    ): ReviewUserResponse
 }

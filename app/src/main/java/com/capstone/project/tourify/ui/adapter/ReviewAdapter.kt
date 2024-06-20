@@ -1,37 +1,45 @@
 package com.capstone.project.tourify.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.capstone.project.tourify.R
-import de.hdodenhof.circleimageview.CircleImageView
+import com.capstone.project.tourify.data.remote.response.ReviewsItem
+import com.capstone.project.tourify.databinding.ListItemReviewBinding
 
-class ReviewAdapter(private val dataList: List<ReviewItem>) :
-    RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+
+    private var dataList: List<ReviewsItem> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.list_item_review, parent, false)
-        return ViewHolder(view)
+        val binding = ListItemReviewBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = dataList[position]
-        holder.imgListReview.setImageResource(currentItem.imageResource)
-        holder.userName.text = currentItem.userName
-
+        val review = dataList[position]
+        holder.bind(review)
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
+    override fun getItemCount(): Int = dataList.size
+
+    fun submitList(dataList: List<ReviewsItem>) {
+        this.dataList = dataList
+        notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imgListReview = itemView.findViewById<CircleImageView>(R.id.img_list_review)!!
-        val userName = itemView.findViewById<TextView>(R.id.j_username)!!
+    class ViewHolder(private val binding: ListItemReviewBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(review: ReviewsItem) {
+            binding.jUsername.text = review.username
+            binding.jDescription.text = review.reviewDesc
+            Glide.with(binding.imgListReview.context)
+                .load(review.photoPublicUrl)
+                .apply(RequestOptions.placeholderOf(R.drawable.no_profile))
+                .into(binding.imgListReview)
+        }
     }
 }
-
-data class ReviewItem(val imageResource: Int, val userName: String)
