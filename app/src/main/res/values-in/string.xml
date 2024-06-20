@@ -81,4 +81,7 @@
     <string name="kirim">kirim</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">Maps</string>
+    <string name="pesan_review">Bagikan pengalaman Anda!</string>
+    <string name="desc_review">Ulasan Anda membantu kami terus meningkatkan pelayanan untuk Anda dan semua pelanggan kami. Terima kasih atas dukungan dan kepercayaan Anda!</string>
+    <string name="no_reviews">tidak ada ulasan</string>
 </resources>

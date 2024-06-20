@@ -58,15 +58,15 @@ interface ApiService {
         @Query("size") size: Int = 20
     ): List<AllDestinationResponseItem>
 
-    @GET("/destination/{tourism_id}/review-destination")
+    @GET("destination/{tourism_id}/review-destination")
     suspend fun getReviews(
         @Path("tourism_id") tourismId: String
     ): ReviewResponse
 
-    @Multipart
-    @POST("/destination/{tourism_id}/review-destination")
+    @FormUrlEncoded
+    @POST("destination/{tourismId}/review-destination")
     suspend fun submitReview(
-        @Path("tourism_id") tourismId: String,
-        @Part("review_desc") reviewDesc: RequestBody,
+        @Path("tourismId") tourismId: String,
+        @Field("review") review: String
     ): ReviewUserResponse
 }

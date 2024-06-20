@@ -1,5 +1,7 @@
 package com.capstone.project.tourify.ui.view.review
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +14,18 @@ import com.capstone.project.tourify.data.remote.response.ReviewsItem
 import com.capstone.project.tourify.databinding.FragmentReviewBinding
 import com.capstone.project.tourify.ui.adapter.ReviewAdapter
 import com.capstone.project.tourify.ui.viewmodel.detail.DetailViewModel
-
+import com.capstone.project.tourify.ui.view.review.ReviewActivity
 import com.capstone.project.tourify.ui.viewmodelfactory.ViewModelFactory
 
-class ReviewFragment : Fragment(), WriteReviewDialogFragment.WriteReviewDialogListener {
+class ReviewFragment : Fragment() {
 
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewModel: DetailViewModel
     private lateinit var reviewAdapter: ReviewAdapter
+    private var tourismId: String? = null
+    private val REQUEST_UPLOAD_REVIEW = 101
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +38,7 @@ class ReviewFragment : Fragment(), WriteReviewDialogFragment.WriteReviewDialogLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tourismId = requireActivity().intent.getStringExtra("tourism_id") ?: ""
+        tourismId = requireActivity().intent.getStringExtra("tourism_id") ?: ""
 
         viewModel = ViewModelProvider(
             this,
@@ -50,11 +54,12 @@ class ReviewFragment : Fragment(), WriteReviewDialogFragment.WriteReviewDialogLi
             }
         })
 
-        viewModel.fetchReviews(tourismId)
+        viewModel.fetchReviews(tourismId ?: "")
 
-        // Tampilkan dialog write review saat fragment pertama kali ditampilkan
-        binding.btnWriteReview.setOnClickListener() {
-            showWriteReviewDialog()
+        binding.btnWriteReview.setOnClickListener {
+            val intent = Intent(activity, ReviewActivity::class.java)
+            intent.putExtra("tourism_id", tourismId)
+            startActivityForResult(intent, REQUEST_UPLOAD_REVIEW)
         }
     }
 
@@ -67,24 +72,26 @@ class ReviewFragment : Fragment(), WriteReviewDialogFragment.WriteReviewDialogLi
     }
 
     private fun showReviews(reviews: List<ReviewsItem>) {
-        reviewAdapter.submitList(reviews)
+        if (reviews.isEmpty()) {
+            binding.listItemImageReview.visibility = View.GONE
+            binding.tvNoReviews.visibility = View.VISIBLE
+        } else {
+            binding.listItemImageReview.visibility = View.VISIBLE
+            binding.tvNoReviews.visibility = View.GONE
+            reviewAdapter.submitList(reviews)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_UPLOAD_REVIEW && resultCode == Activity.RESULT_OK) {
+            // Refresh reviews after upload
+            viewModel.fetchReviews(tourismId ?: "")
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onReviewSubmitted(review: String) {
-        // Implement logic to submit review to ViewModel or repository
-        // For example:
-        // viewModel.submitReview(review)
-        // Then refresh reviews list if needed
-    }
-
-    private fun showWriteReviewDialog() {
-        val dialogFragment = WriteReviewDialogFragment()
-        dialogFragment.setWriteReviewDialogListener(this)
-        dialogFragment.show(parentFragmentManager, "write_review_dialog")
     }
 }

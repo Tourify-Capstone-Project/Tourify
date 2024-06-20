@@ -6,6 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
@@ -18,10 +19,12 @@ import com.capstone.project.tourify.data.local.room.detail.DetailDao
 import com.capstone.project.tourify.data.local.room.favorite.FavoriteDao
 import com.capstone.project.tourify.data.local.room.finance.FinanceDao
 import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
+import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
 import com.capstone.project.tourify.data.remote.response.ReviewResponse
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
@@ -34,8 +37,12 @@ class UserRepository(
     private val favoriteDao: FavoriteDao,
     private val categoryDatabase: CategoryDatabase,
     private val financeDao: FinanceDao,
+    private val userPreference: UserPreference
 ) {
 
+    fun getSession(): Flow<UserModel> {
+        return userPreference.getSession()
+    }
     // Category Methods
     fun getCategoriesByType(category: String): LiveData<List<CategoryEntity>> {
         return categoryDao.getCategoriesByType(category)
@@ -68,11 +75,6 @@ class UserRepository(
 
     suspend fun getReviews(tourismId: String): ReviewResponse {
         return apiService.getReviews(tourismId)
-    }
-
-    suspend fun submitReview(tourismId: String, review: String) {
-        val reviewBody = review.toRequestBody("text/plain".toMediaTypeOrNull())
-        apiService.submitReview(tourismId, reviewBody)
     }
 
     suspend fun saveDetail(detail: DetailResponse) {
@@ -158,7 +160,8 @@ class UserRepository(
             articleDatabase: ArticleDatabase,
             favoriteDao: FavoriteDao,
             categoryDatabase: CategoryDatabase,
-            financeDao: FinanceDao
-        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao)
+            financeDao: FinanceDao,
+            userPreference: UserPreference
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference)
     }
 }

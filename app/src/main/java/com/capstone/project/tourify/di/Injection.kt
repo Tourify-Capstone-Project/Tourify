@@ -37,7 +37,7 @@ object Injection {
         val financeDatabase = FinanceDatabase.getDatabase(context)
         val financeDao = financeDatabase.financeDao()
 
-        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao)
+        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference)
 
 
     }

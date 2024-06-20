@@ -80,4 +80,7 @@
     <string name="kirim">Send</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">Maps</string>
+    <string name="pesan_review">Share your experience!</string>
+    <string name="desc_review">Your reviews help us continue to improve our services for you and all our customers. Thank you for your support and trust!</string>
+    <string name="no_reviews">no reviews</string>
 </resources>

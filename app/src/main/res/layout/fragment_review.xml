@@ -44,8 +44,15 @@
             app:layout_constraintHorizontal_bias="0.95"
             app:pressedTranslationZ="12dp"
             app:rippleColor="@color/white" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/tv_no_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_reviews"
+        android:visibility="visible"
+        style="@style/TextTitle"
+        android:padding="16dp"/>
 </FrameLayout>

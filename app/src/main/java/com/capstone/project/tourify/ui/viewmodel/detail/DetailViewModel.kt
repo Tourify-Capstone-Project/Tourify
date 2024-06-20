@@ -3,7 +3,9 @@ package com.capstone.project.tourify.ui.viewmodel.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 import com.capstone.project.tourify.data.remote.response.ReviewResponse
@@ -58,10 +60,7 @@ class DetailViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun submitReview(tourismId: String, review: String) {
-        viewModelScope.launch {
-            repository.submitReview(tourismId, review)
-            fetchReviews(tourismId)
-        }
+    fun getSession(): LiveData<UserModel> {
+        return repository.getSession().asLiveData()
     }
 }
