@@ -24,29 +24,22 @@
     <string name="string_rating">4.4</string>
     <string name="string_review">(137 review)</string>
     <string name="string_price">44.000</string>
-    <string name="string_kategori">Kategori</string>
+    <string name="string_kategori">Category</string>
     <string name="string_favorite">Favorite</string>
     <string name="title_kategori">Mount Rinjani</string>
     <string name="string_search_category">Search Category</string>
     <string name="string_edit_profile">Edit Profile</string>
     <string name="string_about_application">About Application</string>
-    <string name="string_layanan_tourify">Layanan Tourify</string>
+    <string name="string_layanan_tourify">Tourify Service</string>
 
     <string name="tab_text_1">Overview</string>
     <string name="tab_text_2">Review</string>
     <string name="tab_text_3">Location</string>
 
 
-    <string name="string_description_layanan_tourify">Lorem Ipsum is simply dummy text of the printing
-        and typesetting industry.
-        Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-        It has survived not only five centuries, but also the leap into electronic typesetting,
-        remaining essentially unchanged.
-        It was popularised in the 1960s with the release of
-        Letraset sheets containing Lorem Ipsum passages,
-        and more recently with desktop publishing software
-        like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="string_description_layanan_tourify">Tourify is an innovative application designed to provide recommendations for the best tourist attractions in Indonesia. This application offers a wide selection of interesting tourist destinations, ranging from natural beauty, culture, to culinary specialties in various regions in Indonesia.
+        \n \nEnjoy your vacation with Tourify, the trusted travel recommendation app that takes you to dream destinations across the archipelago. Tourify - Exploring Indonesia Easier and More Fun.
+    </string>
     <string name="overview_text">The Great Asia Africa: A Historical and Cultural Destination on Jalan Asia Afrika, Bandung\n\n The Great Asia Africa, located on Jalan Asia Afrika in Bandung, is a unique destination that allows visitors to explore the rich history, art, and culture of two diverse continents. This site offers a profound insight into the diplomatic journey and international relations between Asia and Africa.\n\n </string>
 
     <string name="string_write_a_review">Write</string>
@@ -77,15 +70,14 @@
     <string name="login_failed">Login Failed</string>
     <string name="String_ok">Oke</string>
     <string name="your_web_client_id">237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com</string>
-    <string name="retry">Coba lagi</string>
+    <string name="retry">Retry</string>
     <string name="str_rp">Rp.</string>
     <string name="str_forgot_password">Forgot Password</string>
     <string name="reset_password">Enter your email to reset your password</string>
     <string name="str_back_page_login">Back Page <font color="#4F4FC2">Login</font></string>
+    <string name="write_your_review_here">Write your review here</string>
     <string name="destination_not_found">Destination not found</string>
-    <string name="izinkan">Izinkan</string>
-    <string name="batal">Batal</string>
+    <string name="kirim">Send</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="maps">Maps</string>
-    <string name="write_your_review_here">Write your review here</string>
 </resources>

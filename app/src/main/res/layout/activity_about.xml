@@ -51,7 +51,8 @@
             style="@style/TextTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="32dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="32dp"
             android:text="@string/string_layanan_tourify"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imgView" />

@@ -3,6 +3,7 @@ package com.capstone.project.tourify.ui.view.profile
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import com.capstone.project.tourify.databinding.FragmentProfileBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
 import com.capstone.project.tourify.ui.view.MainActivity
+import com.capstone.project.tourify.ui.view.about.AboutActivity
 import com.capstone.project.tourify.ui.view.editprofile.EditProfileActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
@@ -156,8 +158,13 @@ class ProfileFragment : Fragment() {
 
     private fun handleSettingItemClick(settingItem: SettingItem) {
         when (settingItem.title) {
-            "About Us" -> Navigation.findNavController(requireActivity(), R.id.viewPager)
-                .navigate(R.id.action_nav_profile_to_aboutActivity)
+            "About Us" -> {
+                val intent = Intent(requireContext(), AboutActivity::class.java)
+                startActivity(intent)
+            }
+            "Language" ->  {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+            }
             "Logout" -> logout()
         }
     }
