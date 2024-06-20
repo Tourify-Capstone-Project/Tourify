@@ -5,9 +5,13 @@ import com.capstone.project.tourify.data.remote.response.AllDestinationResponseI
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.response.CategoryResponseItem
 import com.capstone.project.tourify.data.remote.response.DetailResponse
-
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import com.capstone.project.tourify.data.remote.response.PhotoProfileResponse
+import com.capstone.project.tourify.data.remote.response.ReviewResponse
+import com.capstone.project.tourify.data.remote.response.ReviewUserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import com.capstone.project.tourify.data.remote.response.RecommendedResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -57,6 +61,30 @@ interface ApiService {
         @Query("size") size: Int = 20
     ): List<AllDestinationResponseItem>
 
+    @GET("destination/{tourism_id}/review-destination")
+    suspend fun getReviews(
+        @Path("tourism_id") tourismId: String
+    ): ReviewResponse
+
+    @FormUrlEncoded
+    @POST("destination/{tourismId}/review-destination")
+    suspend fun submitReview(
+        @Path("tourismId") tourismId: String,
+        @Field("review") review: String
+    ): ReviewUserResponse
+
+    @PUT("profile")
+    @FormUrlEncoded
+    suspend fun updateUsername(
+        @Field("username") newUsername: String
+    ): PhotoProfileResponse
+
+    @Multipart
+    @POST("profile")
+    suspend fun uploadPhoto(
+        @Part imgProfile: MultipartBody.Part
+    ): PhotoProfileResponse
+
     @POST("destination/{tourism_id}/recommendation")
     suspend fun postRecommendation(
         @Path("tourism_id") tourismId: String
@@ -65,5 +93,4 @@ interface ApiService {
 
     @GET("home/recommendation")
     suspend fun getRecommendations(): Response<RecommendedResponse>
-
 }

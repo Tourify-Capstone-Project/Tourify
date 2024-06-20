@@ -37,13 +37,11 @@ object Injection {
         // Finance
         val financeDatabase = FinanceDatabase.getDatabase(context)
         val financeDao = financeDatabase.financeDao()
-
+        
         // Tourism
         val tourismDatabase = TourismDatabase.getDatabase(context)
         val tourismDao = tourismDatabase.tourismDao()
-
-        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, tourismDao)
-
-
+        
+        return UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference, tourismDao)
     }
 }

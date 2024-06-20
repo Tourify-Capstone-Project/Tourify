@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tourify</string>
+    <string name="hello_world_welcome">Halo Dunia Selamat datang!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="search_hint">Cari Lokasi</string>
+    <string name="title_onBoarding_1">Temukan Destinasi Impianmu</string>
+    <string name="title_onBoarding_2">Rencanakan Perjalananmu dengan Mudah</string>
+    <string name="desc_onBoarding_1">Selamat datang di Tourify! Kami di sini untuk membantu Anda menemukan dan merencanakan perjalanan impian Anda. Jelajahi destinasi yang menakjubkan, mulai dari pantai yang indah hingga kota bersejarah, semua dalam satu aplikasi.</string>
+    <string name="desc_onBoarding_2">Dengan Tourify, merencanakan perjalanan menjadi lebih mudah dan menyenangkan. Temukan rekomendasi tempat terbaik untuk dikunjungi, aktivitas seru yang bisa Anda lakukan, dan paket perjalanan yang sesuai dengan kebutuhan Anda. Ayo mulai petualangan Anda dengan Tourify!</string>
+    <string name="btn_onBoarding_start">Mulai</string>
+    <string name="appBar_Detail">Detail Destinansi</string>
+    <string name="email_not_valid">Email Tidak Valid</string>
+    <string name="password_cannot_be_less_than_8_character">Kata Sandi Tidak Boleh Kurang dari 8 Karakter</string>
+    <string name="string_login">Masuk</string>
+    <string name="string_email">Email</string>
+    <string name="string_password">Kata Sandi</string>
+    <string name="don_t_have_account_sign_up">Belum Punya Akun? <font color="#4F4FC2">Daftar</font></string>
+    <string name="i_have_account_sign_in">Punya Akun! <font color="#4F4FC2">Masuk</font></string>
+    <string name="string_forgot_password">Forgot Password?</string>
+    <string name="string_username">Nama Pengguna</string>
+    <string name="string_register">Daftar</string>
+    <string name="title_detail">The Great Asia Africa</string>
+    <string name="string_rating">4.4</string>
+    <string name="string_review">(137 review)</string>
+    <string name="string_price">44.000</string>
+    <string name="string_kategori">Kategori</string>
+    <string name="string_favorite">Favorite</string>
+    <string name="title_kategori">Mount Rinjani</string>
+    <string name="string_search_category">Cari Kategori</string>
+    <string name="string_edit_profile">Edit Profil</string>
+    <string name="string_about_application">Tentang Aplikasi</string>
+    <string name="string_layanan_tourify">Layanan Tourify</string>
+
+    <string name="tab_text_1">Deskripsi</string>
+    <string name="tab_text_2">Ulasan</string>
+    <string name="tab_text_3">Lokasi</string>
+
+
+    <string name="string_description_layanan_tourify">Tourify adalah aplikasi inovatif yang dirancang untuk memberikan rekomendasi tempat wisata terbaik di Indonesia. Aplikasi ini menawarkan berbagai pilihan destinasi wisata yang menarik, mulai dari keindahan alam, budaya, hingga kuliner khas di berbagai daerah di Indonesia.
+        \n \nNikmati liburan Anda dengan Tourify, aplikasi rekomendasi tempat wisata terpercaya yang membawa Anda ke destinasi impian di seluruh nusantara. Tourify - Menjelajah Indonesia dengan Lebih Mudah dan Menyenangkan.
+    </string>
+    <string name="overview_text">The Great Asia Africa: A Historical and Cultural Destination on Jalan Asia Afrika, Bandung\n\n The Great Asia Africa, located on Jalan Asia Afrika in Bandung, is a unique destination that allows visitors to explore the rich history, art, and culture of two diverse continents. This site offers a profound insight into the diplomatic journey and international relations between Asia and Africa.\n\n </string>
+
+    <string name="string_write_a_review">Tulis</string>
+    <string name="category">Kategori</string>
+    <string name="article_title">Article Title</string>
+    <string name="article_description">Article Description</string>
+    <string name="info_aplikasi">Info Aplikasi</string>
+    <string name="example_email">example@gmail.com</string>
+    <string name="my_profile">Profil Saya</string>
+    <string name="home">Beranda</string>
+    <string name="finance">Anggaran</string>
+    <string name="profile">Profil</string>
+    <string name="cost">Total:</string>
+    <string name="adventure_finance">Anggaran Perjalanan</string>
+    <string name="sign_in_unlock">Masuk atau Daftar untuk Membuka Fitur Ini</string>
+    <string name="sign_in_desc_unlock">Lanjutkan pengalaman Anda dengan masuk atau daftarkan akun.</string>
+    <string name="string_welcome">Selamat Datang</string>
+    <string name="string_please_login_with_your_information">Silakan masukkan informasi Anda</string>
+    <string name="string_or_login_with">Or Login with</string>
+    <string name="string_or_signup_with">Or SignUp with</string>
+    <string name="string_join_us">Bergabunglah dengan kami</string>
+    <string name="string_description">Deskripsi</string>
+    <string name="string_photo_gallery">Galeri Foto</string>
+    <string name="string_next">Lanjut</string>
+    <string name="string_success">Berhasil</string>
+    <string name="string_yeaay">Yeayyy</string>
+    <string name="string_error">Error</string>
+    <string name="login_failed">Gagal Masuk</string>
+    <string name="String_ok">Oke</string>
+    <string name="your_web_client_id">237378734832-trj6vhkldci8k19ajsn5hpk2gposn7k6.apps.googleusercontent.com</string>
+    <string name="retry">Coba Lagi</string>
+    <string name="str_rp">Rp.</string>
+    <string name="str_forgot_password">Forgot Password</string>
+    <string name="reset_password">Enter your email to reset your password</string>
+    <string name="str_back_page_login">Back Page <font color="#4F4FC2">Masuk</font></string>
+    <string name="write_your_review_here">Berikan Ulasan</string>
+    <string name="destination_not_found">Destinasi tidak ditemukan</string>
+    <string name="kirim">kirim</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="maps">Maps</string>
+    <string name="pesan_review">Bagikan pengalaman Anda!</string>
+    <string name="desc_review">Ulasan Anda membantu kami terus meningkatkan pelayanan untuk Anda dan semua pelanggan kami. Terima kasih atas dukungan dan kepercayaan Anda!</string>
+    <string name="no_reviews">tidak ada ulasan</string>
+    <string name="review">Ulasan</string>
+</resources>

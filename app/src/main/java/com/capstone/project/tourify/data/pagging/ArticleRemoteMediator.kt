@@ -15,8 +15,7 @@ import retrofit2.HttpException
 @OptIn(ExperimentalPagingApi::class)
 class ArticleRemoteMediator(
     private val database: ArticleDatabase,
-    private val apiService: ApiService,
-    private val category: String
+    private val apiService: ApiService
 ) : RemoteMediator<Int, ArticlesResponseItem>() {
 
     private val articleDao = database.articleDao()
@@ -56,7 +55,7 @@ class ArticleRemoteMediator(
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 val keys = articles.map {
-                    RemoteKeys(id = it.articleId, category = category, prevKey = prevKey, nextKey = nextKey)
+                    RemoteKeys(id = it.articleId, prevKey = prevKey, nextKey = nextKey)
                 }
                 remoteKeysDao.insertAll(keys)
                 articleDao.insertArticle(articles)
@@ -73,14 +72,14 @@ class ArticleRemoteMediator(
         return state.pages
             .lastOrNull { it.data.isNotEmpty() }
             ?.data?.lastOrNull()
-            ?.let { article -> remoteKeysDao.getRemoteKeysId(article.articleId, category) }
+            ?.let { article -> remoteKeysDao.getRemoteKeysId(article.articleId) }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ArticlesResponseItem>): RemoteKeys? {
         return state.pages
             .firstOrNull { it.data.isNotEmpty() }
             ?.data?.firstOrNull()
-            ?.let { article -> remoteKeysDao.getRemoteKeysId(article.articleId, category) }
+            ?.let { article -> remoteKeysDao.getRemoteKeysId(article.articleId) }
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
@@ -88,7 +87,7 @@ class ArticleRemoteMediator(
     ): RemoteKeys? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.articleId?.let { articleId ->
-                remoteKeysDao.getRemoteKeysId(articleId, category)
+                remoteKeysDao.getRemoteKeysId(articleId)
             }
         }
     }

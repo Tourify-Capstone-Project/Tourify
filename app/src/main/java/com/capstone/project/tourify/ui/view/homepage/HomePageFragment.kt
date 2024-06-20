@@ -15,6 +15,17 @@ import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
+import com.capstone.project.tourify.databinding.FragmentHomePageBinding
+import com.capstone.project.tourify.ui.adapter.ArticleAdapter
+import com.capstone.project.tourify.ui.adapter.CategoryAdapter
+import com.capstone.project.tourify.ui.adapter.CategoryHomeAdapter
+import com.capstone.project.tourify.ui.adapter.CategoryItem
+import com.capstone.project.tourify.ui.adapter.LoadingStateAdapter
+import com.capstone.project.tourify.ui.adapter.RecommendedAdapter
+import com.capstone.project.tourify.ui.adapter.RecommendedItem
+import com.capstone.project.tourify.ui.viewmodel.article.ArticleViewModel
+import com.capstone.project.tourify.ui.viewmodel.article.HomeViewModel
 import com.capstone.project.tourify.data.local.entity.RecommendedItem
 import com.capstone.project.tourify.databinding.FragmentHomePageBinding
 import com.capstone.project.tourify.ui.adapter.*
@@ -34,6 +45,11 @@ class HomePageFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
+    private val homeViewModel: HomeViewModel by viewModels {
+        ViewModelFactory.getInstance(requireContext())
+    }
+
+    private lateinit var tflite: Interpreter
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoryHomeAdapter: CategoryHomeAdapter
     private lateinit var recommendedAdapter: RecommendedAdapter
@@ -74,9 +90,9 @@ class HomePageFragment : Fragment() {
 
         setupAdapterHomeCategory()
         setupRecyclerView()
-        setupAdapterCategory()
         observeHeadlineNews()
         setupSearchView()
+        setupAdapterCategory()
     }
 
     private fun setupAdapterHomeCategory() {
@@ -141,14 +157,14 @@ class HomePageFragment : Fragment() {
     private fun setupSearchView() {
         binding.listSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrBlank()) {
+                if (query != null) {
                     performSearch(query)
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrBlank()) {
+                if (newText != null && newText.isNotEmpty()) {
                     searchJob?.cancel()
                     searchJob = lifecycleScope.launch {
                         delay(1000) // waktu tunda debounce
@@ -166,15 +182,12 @@ class HomePageFragment : Fragment() {
             true
         }
     }
-
     private fun performSearch(query: String) {
         searchJob?.cancel() // Batalkan pencarian yang sedang berlangsung
         searchJob = lifecycleScope.launch {
-            viewModel.searchDestinations(query)
-            // Notifikasi adapter bahwa data telah berubah
-            categoryAdapter.notifyDataSetChanged()
+            homeViewModel.searchDestinations(query)
+            showSearchResultsUI(true)
         }
-        showSearchResultsUI(true)
     }
 
     private fun observeHeadlineNews() {
@@ -182,21 +195,33 @@ class HomePageFragment : Fragment() {
             articleAdapter.submitData(lifecycle, pagingData)
         }
 
-        lifecycleScope.launch {
-            viewModel.isSearching.collect { isSearching ->
-                if (isSearching) {
-                    showSearchResultsUI(true)
-                } else {
-                    showSearchResultsUI(false) // Tampilkan UI asli saat pencarian tidak aktif
-                }
+        homeViewModel.isSearching.observe(viewLifecycleOwner) { isSearching ->
+            if (isSearching) {
+                showSearchResultsUI(true)
+            } else {
+                showSearchResultsUI(true)
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.searchResults.collect { results ->
-                categoryAdapter.submitData(lifecycle, results)
+        homeViewModel.searchResults.observe(viewLifecycleOwner) { results ->
+            if (results.isNotEmpty()) {
+                showSearchResults(results)
+            } else {
+                showSearchResultsUI(false)
             }
         }
+    }
+
+    private fun showSearchResults(results: List<CategoryEntity>) {
+        categoryAdapter.updateCategories(results)
+        binding.rvSearchResults.adapter = categoryAdapter
+        binding.rvSearchResults.visibility = View.VISIBLE
+        binding.rvCategory.visibility = View.GONE
+        binding.rvRecommend.visibility = View.GONE
+        binding.rvArticle.visibility = View.GONE
+        binding.titleCategory.visibility = View.GONE
+        binding.titleRecommend.visibility = View.GONE
+        binding.titleArticle.visibility = View.GONE
     }
 
     private fun showSearchResultsUI(show: Boolean) {
@@ -252,7 +277,7 @@ class HomePageFragment : Fragment() {
     }
 
     private fun setupAdapterCategory() {
-        categoryAdapter = CategoryAdapter()
+        categoryAdapter = CategoryAdapter(emptyList())
         binding.rvSearchResults.apply {
             adapter = categoryAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

@@ -1,5 +1,7 @@
 package com.capstone.project.tourify.ui.viewmodel.category.culinary
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -9,18 +11,35 @@ import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
 import com.capstone.project.tourify.data.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-class CulinaryViewModel(private val repository: UserRepository) : ViewModel() {
+class CulinaryViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    fun getCategoriesByType(type: String): Flow<PagingData<CategoryEntity>> {
-        return repository.getCategoriesByType(type).cachedIn(viewModelScope)
+    private val _categories = MutableLiveData<List<CategoryEntity>>()
+    val categories: LiveData<List<CategoryEntity>> = _categories
+
+    private val _filteredCategories = MutableLiveData<List<CategoryEntity>>()
+    val filteredCategories: LiveData<List<CategoryEntity>> = _filteredCategories
+
+    init {
+        _categories.value = emptyList()
+        _filteredCategories.value = emptyList()
     }
 
-    fun filterCategories(query: String, type: String): Flow<PagingData<CategoryEntity>> {
-        return getCategoriesByType(type).map { pagingData ->
-            pagingData.filter { category ->
-                category.placeName.contains(query, ignoreCase = true)
+    fun getCategoriesByType(category: String) {
+        viewModelScope.launch {
+            userRepository.refreshCategories(category)
+            userRepository.getCategoriesByType(category).observeForever { categoryList ->
+                _categories.value = categoryList
+                _filteredCategories.value = categoryList
             }
         }
+    }
+
+    fun filterCategories(query: String) {
+        val filteredList = _categories.value?.filter {
+            it.placeName.contains(query, ignoreCase = true) || it.placeId.contains(query, ignoreCase = true)
+        } ?: emptyList()
+        _filteredCategories.value = filteredList
     }
 }

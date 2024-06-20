@@ -1,163 +1,116 @@
 package com.capstone.project.tourify.ui.view.profile
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.capstone.project.tourify.R
 import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.databinding.FragmentProfileBinding
 import com.capstone.project.tourify.ui.adapter.SettingAdapter
 import com.capstone.project.tourify.ui.adapter.SettingItem
 import com.capstone.project.tourify.ui.view.MainActivity
+import com.capstone.project.tourify.ui.view.about.AboutActivity
 import com.capstone.project.tourify.ui.view.editprofile.EditProfileActivity
 import com.capstone.project.tourify.ui.view.login.LoginActivity
 import com.capstone.project.tourify.ui.view.register.RegisterActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var settingAdapter: SettingAdapter
     private lateinit var userPreference: UserPreference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
         userPreference = UserPreference.getInstance(requireContext().applicationContext)
 
-        setupUI()
-
-        return view
-    }
-
-    private fun setupUI() {
         binding.buttonEdit.setOnClickListener {
-            val intent = Intent(requireContext(), EditProfileActivity::class.java)
-            lifecycleScope.launch {
-                try {
-                    val user = userPreference.getSession().first()
-                    Log.d("ProfileFragment", "Passing username: ${user.displayName}")
-                    intent.putExtra("username", user.displayName)
-                    resultLauncher.launch(intent)
-                } catch (e: Exception) {
-                    handleException(e)
-                }
+            val intent = Intent(activity, EditProfileActivity::class.java).apply {
+                putExtra("username", binding.tvUsername.text.toString()) // Pass current username
             }
+            startActivityForResult(intent, EDIT_PROFILE_REQUEST_CODE)
         }
 
         val settingItems = mutableListOf(
             SettingItem("About Us", R.drawable.info_light),
-            SettingItem("Language", R.drawable.global_search)
+            SettingItem("Language", R.drawable.global_search),
         )
 
         lifecycleScope.launch {
-            try {
-                val user = userPreference.getSession().first()
-                if (user.isLogin) {
-                    settingItems.add(SettingItem("Logout", R.drawable.logout_light))
-                    updateUIForLoggedInUser(user.displayName, user.email)
-                } else {
-                    updateUIForLoggedOutUser()
+            val user = userPreference.getSession().first()
+            if (user.isLogin) {
+                settingItems.add(SettingItem("Logout", R.drawable.logout_light))
+                binding.buttonLogin.visibility = View.GONE
+                binding.buttonRegister.visibility = View.GONE
+                binding.tvUsername.visibility = View.VISIBLE
+                binding.tvEmail.visibility = View.VISIBLE
+                binding.buttonEdit.visibility = View.VISIBLE
+                binding.tvUsername.text = user.displayName
+                binding.tvEmail.text = user.email
+            } else {
+                binding.buttonLogin.visibility = View.VISIBLE
+                binding.buttonRegister.visibility = View.VISIBLE
+                binding.tvUsername.visibility = View.GONE
+                binding.tvEmail.visibility = View.GONE
+                binding.buttonEdit.visibility = View.GONE
+
+                binding.buttonLogin.setOnClickListener {
+                    val intent = Intent(activity, LoginActivity::class.java)
+                    startActivity(intent)
                 }
 
-                setupRecyclerView(settingItems)
-            } catch (e: Exception) {
-                handleException(e)
-            }
-        }
-    }
-    private fun handleException(e: Exception) {
-        if (e is HttpException) {
-            when (e.code()) {
-                401 -> {
-                    // Handle HTTP 401 error
-                    Log.e("ProfileFragment", "Unauthorized error: ${e.message}")
-                    // You might want to redirect the user to the login screen
-                }
-                // Handle other HTTP errors if needed
-                else -> {
-                    Log.e("ProfileFragment", "HTTP error: ${e.message}")
+                binding.buttonRegister.setOnClickListener {
+                    val intent = Intent(activity, RegisterActivity::class.java)
+                    startActivity(intent)
                 }
             }
-        } else {
-            Log.e("ProfileFragment", "Unexpected error: ${e.message}")
-        }
-    }
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            val updatedUsername = data?.getStringExtra("updatedUsername")
-            val photoUrl = data?.getStringExtra("photoUrl")
-            if (!updatedUsername.isNullOrBlank()) {
-                lifecycleScope.launch {
-                    val user = userPreference.getSession().first()
-                    updateUIForLoggedInUser(updatedUsername, user.email)
-                }
+            settingAdapter = SettingAdapter(settingItems, this@ProfileFragment::handleSettingItemClick)
+
+            with(binding.rvSetting) {
+                adapter = settingAdapter
+                layoutManager = LinearLayoutManager(context)
             }
         }
+
+        return view
     }
 
-    private fun updateUIForLoggedInUser(username: String, email: String) {
-        binding.apply {
-            buttonLogin.visibility = View.GONE
-            buttonRegister.visibility = View.GONE
-            tvUsername.visibility = View.VISIBLE
-            tvEmail.visibility = View.VISIBLE
-            buttonEdit.visibility = View.VISIBLE
-            tvUsername.text = username
-            tvEmail.text = email
-        }
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    private fun updateUIForLoggedOutUser() {
-        binding.apply {
-            buttonLogin.visibility = View.VISIBLE
-            buttonRegister.visibility = View.VISIBLE
-            tvUsername.visibility = View.GONE
-            tvEmail.visibility = View.GONE
-            buttonEdit.visibility = View.GONE
-            imageProfile.visibility = View.VISIBLE
-
-            buttonLogin.setOnClickListener {
-                startActivity(Intent(activity, LoginActivity::class.java))
-            }
-
-            buttonRegister.setOnClickListener {
-                startActivity(Intent(activity, RegisterActivity::class.java))
-            }
-        }
-    }
-
-    private fun setupRecyclerView(settingItems: List<SettingItem>) {
-        settingAdapter = SettingAdapter(settingItems, this::handleSettingItemClick)
-        binding.rvSetting.apply {
-            adapter = settingAdapter
-            layoutManager = LinearLayoutManager(context)
+        lifecycleScope.launch {
+            val user = userPreference.getSession().first()
+            binding.tvUsername.text = user.displayName
         }
     }
 
     private fun handleSettingItemClick(settingItem: SettingItem) {
         when (settingItem.title) {
-            "About Us" -> Navigation.findNavController(requireActivity(), R.id.viewPager)
-                .navigate(R.id.action_nav_profile_to_aboutActivity)
+            "About Us" -> {
+                val intent = Intent(requireContext(), AboutActivity::class.java)
+                startActivity(intent)
+            }
+            "Language" ->  {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+            }
             "Logout" -> logout()
         }
     }
@@ -165,7 +118,8 @@ class ProfileFragment : Fragment() {
     private fun logout() {
         lifecycleScope.launch {
             userPreference.logout()
-            startActivity(Intent(requireContext(), MainActivity::class.java))
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
             requireActivity().finish()
         }
     }
@@ -173,5 +127,20 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == EDIT_PROFILE_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
+            val updatedUsername = data?.getStringExtra("updatedUsername")
+            Log.d("ProfileFragment", "onActivityResult: updatedUsername=$updatedUsername")
+            if (!updatedUsername.isNullOrEmpty()) {
+                binding.tvUsername.text = updatedUsername
+            }
+        }
+    }
+
+    companion object {
+        const val EDIT_PROFILE_REQUEST_CODE = 100
     }
 }

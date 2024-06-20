@@ -2,19 +2,18 @@ package com.capstone.project.tourify.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
 import androidx.paging.liveData
+import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.local.entity.RecommendedItem
-
 import com.capstone.project.tourify.data.local.room.article.ArticleDatabase
 import com.capstone.project.tourify.data.remote.response.ArticlesResponseItem
 import com.capstone.project.tourify.data.remote.retrofit.ApiService
 import com.capstone.project.tourify.data.local.entity.category.CategoryEntity
+import com.capstone.project.tourify.data.local.entity.category.toEntity
 import com.capstone.project.tourify.data.local.entity.favorite.FavoriteEntity
 import com.capstone.project.tourify.data.local.room.TourismDao
 import com.capstone.project.tourify.data.local.room.category.CategoryDao
@@ -23,11 +22,15 @@ import com.capstone.project.tourify.data.local.room.detail.DetailDao
 import com.capstone.project.tourify.data.local.room.favorite.FavoriteDao
 import com.capstone.project.tourify.data.local.room.finance.FinanceDao
 import com.capstone.project.tourify.data.pagging.ArticleRemoteMediator
-import com.capstone.project.tourify.data.pagging.CategoryRemoteMediator
-import com.capstone.project.tourify.data.pagging.DestinationRemoteMediator
+import com.capstone.project.tourify.data.remote.pref.UserPreference
 import com.capstone.project.tourify.data.remote.response.DetailResponse
 import com.capstone.project.tourify.data.remote.response.FavoriteResponse
 import com.capstone.project.tourify.data.remote.response.FinanceResponse
+import com.capstone.project.tourify.data.remote.response.ReviewResponse
+import kotlinx.coroutines.flow.Flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Response
 import com.capstone.project.tourify.data.remote.response.RecommendedResponse
 import retrofit2.Response
 import kotlinx.coroutines.flow.Flow
@@ -42,35 +45,16 @@ class UserRepository(
     private val favoriteDao: FavoriteDao,
     private val categoryDatabase: CategoryDatabase,
     private val financeDao: FinanceDao,
+    private val userPreference: UserPreference,
     private val tourismDao: TourismDao
 ) {
 
+    fun getSession(): Flow<UserModel> {
+        return userPreference.getSession()
+    }
     // Category Methods
-    @OptIn(ExperimentalPagingApi::class)
-    fun getCategoriesByType(category: String): Flow<PagingData<CategoryEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 5,
-                enablePlaceholders = false
-            ),
-            remoteMediator = CategoryRemoteMediator(categoryDatabase, apiService, category),
-            pagingSourceFactory = { categoryDao.getCategoriesByType(category) }
-        ).flow.map { pagingData ->
-            pagingData.map { categoryResponseItem ->
-                CategoryEntity(
-                    placeId = categoryResponseItem.placeId,
-                    placeName = categoryResponseItem.placeName,
-                    placeDesc = categoryResponseItem.placeDesc,
-                    placeAddress = categoryResponseItem.placeAddress,
-                    placePhotoUrl = categoryResponseItem.placePhotoUrl,
-                    placeGmapsUrl = categoryResponseItem.placeGmapsUrl,
-                    city = categoryResponseItem.city,
-                    price = categoryResponseItem.price,
-                    rating = categoryResponseItem.rating,
-                    category = categoryResponseItem.category
-                )
-            }
-        }
+    fun getCategoriesByType(category: String): LiveData<List<CategoryEntity>> {
+        return categoryDao.getCategoriesByType(category)
     }
 
     suspend fun refreshCategories(category: String) {
@@ -97,49 +81,32 @@ class UserRepository(
             null
         }
     }
+
+    suspend fun getReviews(tourismId: String): ReviewResponse {
+        return apiService.getReviews(tourismId)
+    }
+
     suspend fun saveDetail(detail: DetailResponse) {
         detailDao.insertDetail(detail)
     }
 
-    @OptIn(ExperimentalPagingApi::class)
-    fun getArticles(category: String): LiveData<PagingData<ArticlesResponseItem>> {
+    fun getArticles(): LiveData<PagingData<ArticlesResponseItem>> {
+        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
-                pageSize = 5,
-                enablePlaceholders = false
+                pageSize = 5
             ),
-            remoteMediator = ArticleRemoteMediator(articleDatabase, apiService, category),
-            pagingSourceFactory = { articleDatabase.articleDao().getAllArticle() }
+            remoteMediator = ArticleRemoteMediator(articleDatabase, apiService),
+            pagingSourceFactory = {
+                articleDatabase.articleDao().getAllArticle()
+            }
         ).liveData
     }
 
-    @OptIn(ExperimentalPagingApi::class)
-    fun searchDestinations(category: String): Flow<PagingData<CategoryEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 5,
-                enablePlaceholders = false
-            ),
-            remoteMediator = DestinationRemoteMediator(categoryDatabase, apiService, category),
-            pagingSourceFactory = { categoryDao.getAllPlace() }
-        ).flow.map { pagingData ->
-            pagingData.map { categoryResponseItem ->
-                CategoryEntity(
-                    placeId = categoryResponseItem.placeId,
-                    placeName = categoryResponseItem.placeName,
-                    placeDesc = categoryResponseItem.placeDesc,
-                    placeAddress = categoryResponseItem.placeAddress,
-                    placePhotoUrl = categoryResponseItem.placePhotoUrl,
-                    placeGmapsUrl = categoryResponseItem.placeGmapsUrl,
-                    city = categoryResponseItem.city,
-                    price = categoryResponseItem.price,
-                    rating = categoryResponseItem.rating,
-                    category = categoryResponseItem.category
-                )
-            }
-        }
+    suspend fun searchDestinations(query: String): List<CategoryEntity> {
+        val response = apiService.searchDestinations(query)
+        return response.map { it.toEntity() }
     }
-
 
     suspend fun getAllFavorites(): List<FavoriteEntity> {
         return favoriteDao.getAllFavorites()
@@ -228,7 +195,8 @@ class UserRepository(
             favoriteDao: FavoriteDao,
             categoryDatabase: CategoryDatabase,
             financeDao: FinanceDao,
+            userPreference: UserPreference,
             tourismDao: TourismDao
-        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, tourismDao)
+        ) = UserRepository(apiService, categoryDao, detailDao, articleDatabase, favoriteDao, categoryDatabase, financeDao, userPreference, tourismDao: TourismDao)
     }
 }

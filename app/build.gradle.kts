@@ -44,6 +44,10 @@ android {
         buildConfig = true
         mlModelBinding = true
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -117,4 +121,13 @@ dependencies {
     implementation("nl.joery.animatedbottombar:library:1.1.0")
     implementation("com.google.android.material:material:1.9.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    //testing
+    androidTestImplementation(libs.androidx.core.testing) //InstantTaskExecutorRule
+    androidTestImplementation(libs.kotlinx.coroutines.test) //TestDispatcher
+
+    testImplementation(libs.androidx.core.testing) // InstantTaskExecutorRule
+    testImplementation(libs.kotlinx.coroutines.test) //TestDispatcher
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
 }
