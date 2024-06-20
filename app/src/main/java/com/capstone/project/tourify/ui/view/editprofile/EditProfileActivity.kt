@@ -1,210 +1,67 @@
 package com.capstone.project.tourify.ui.view.editprofile
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import com.bumptech.glide.Glide
+import androidx.lifecycle.lifecycleScope
 import com.capstone.project.tourify.R
+import com.capstone.project.tourify.data.remote.pref.UserPreference
+import com.capstone.project.tourify.data.remote.retrofit.ApiConfig
+import com.capstone.project.tourify.data.remote.retrofit.ApiService
 import com.capstone.project.tourify.databinding.ActivityEditProfileBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
 
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
-    private lateinit var auth: FirebaseAuth
-    private lateinit var storage: FirebaseStorage
-    private lateinit var storageRef: StorageReference
+    private lateinit var apiService: ApiService
+    private lateinit var token: String
 
-    private var imageUri: Uri? = null // variable to store image URI
+    companion object {
+        private const val REQUEST_IMAGE_CAPTURE = 1
+        private const val REQUEST_IMAGE_PICK = 2
+        private const val REQUEST_CAMERA_PERMISSION = 3
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-        storage = Firebase.storage
-        storageRef = storage.reference
-
-        setupToolbar()
-
-        val currentUser = auth.currentUser
-        currentUser?.let { user ->
-            val username = user.displayName
-            binding.edEditProfileUsername.setText(username)
-            user.photoUrl?.let { photoUri ->
-                Glide.with(this)
-                    .load(photoUri)
-                    .into(binding.imgUser)
-            }
+        lifecycleScope.launch {
+            val userPreference = UserPreference.getInstance(applicationContext)
+            val user = userPreference.getSession().first()
+            token = user.token
+            apiService = ApiConfig.getApiService(token)
         }
 
+        val username = intent.getStringExtra("username")
+        binding.edEditProfileUsername.setText(username)
+
         binding.btnEdit.setOnClickListener {
-            val updatedUsername = binding.edEditProfileUsername.text.toString()
-            updateProfileInFirebase(updatedUsername)
+            val newUsername = binding.edEditProfileUsername.text.toString()
+            updateUsername(newUsername)
         }
 
         binding.btnAddPhoto.setOnClickListener {
-            showImagePicker()
+            openPhotoOptions()
         }
-    }
 
-    private fun showImagePicker() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // Request camera permission if not granted
-            requestCameraPermission()
-        } else {
-            val options = arrayOf<CharSequence>("Ambil Foto", "Pilih dari Galeri")
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Pilih Aksi")
-            builder.setItems(options) { _, which ->
-                when (which) {
-                    0 -> dispatchTakePictureIntent()
-                    1 -> dispatchPickPictureIntent()
-                }
-            }
-            builder.show()
-        }
-    }
-
-    private fun requestCameraPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.CAMERA),
-            CAMERA_PERMISSION_CODE
-        )
-    }
-
-    private fun createImageFile(): File? {
-        return try {
-            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val storageDir: File? = getExternalFilesDir("Pictures")
-            File.createTempFile(
-                "JPEG_${timeStamp}_", ".jpg", storageDir
-            ).apply {
-                imageUri = FileProvider.getUriForFile(
-                    this@EditProfileActivity,
-                    "${packageName}.fileprovider",
-                    this
-                )
-            }
-        } catch (ex: IOException) {
-            Log.e(TAG, "Error creating image file: ${ex.message}")
-            null
-        }
-    }
-
-    private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                createImageFile()?.also { file ->
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        this,
-                        "${packageName}.fileprovider",
-                        file
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, TAKE_PHOTO)
-                }
-            }
-        }
-    }
-
-    private fun dispatchPickPictureIntent() {
-        Intent(Intent.ACTION_GET_CONTENT).also { pickPhotoIntent ->
-            pickPhotoIntent.type = "image/*"
-            startActivityForResult(Intent.createChooser(pickPhotoIntent, "Pilih Gambar"), PICK_IMAGE)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_IMAGE -> {
-                    imageUri = data?.data
-                    binding.imgUser.setImageURI(imageUri)
-                }
-                TAKE_PHOTO -> {
-                    binding.imgUser.setImageURI(imageUri)
-                }
-            }
-        }
-    }
-
-    private fun updateProfileInFirebase(updatedUsername: String) {
-        val currentUser = auth.currentUser
-        currentUser?.let { user ->
-            val profileUpdates = userProfileChangeRequest {
-                displayName = updatedUsername
-            }
-            user.updateProfile(profileUpdates).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "User profile updated.")
-                    imageUri?.let { uri ->
-                        uploadProfilePicture(uri, user, updatedUsername)
-                    } ?: run {
-                        val resultIntent = Intent()
-                        resultIntent.putExtra("updatedUsername", updatedUsername)
-                        setResult(Activity.RESULT_OK, resultIntent)
-                        finish()
-                    }
-                } else {
-                    Log.w(TAG, "Failed to update profile", task.exception)
-                }
-            }
-        }
-    }
-
-    private fun uploadProfilePicture(uri: Uri, user: FirebaseUser, updatedUsername: String) {
-        val filePath = "user-profile-img/${user.uid}/${uri.lastPathSegment}"
-        Log.d(TAG, "Uploading to path: $filePath with UID: ${user.uid}")
-
-        val profilePicRef = storageRef.child(filePath)
-        profilePicRef.putFile(uri)
-            .addOnSuccessListener {
-                profilePicRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    val profileUpdatesWithPhoto = userProfileChangeRequest {
-                        photoUri = downloadUri
-                    }
-                    user.updateProfile(profileUpdatesWithPhoto).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(TAG, "User profile photo updated.")
-                            val resultIntent = Intent().apply {
-                                putExtra("updatedUsername", updatedUsername)
-                                putExtra("photoUrl", downloadUri.toString())
-                            }
-                            setResult(Activity.RESULT_OK, resultIntent)
-                            finish()
-                        } else {
-                            Log.w(TAG, "Failed to update profile photo", task.exception)
-                        }
-                    }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error uploading profile picture", e)
-            }
+        setupToolbar()
     }
 
     private fun setupToolbar() {
@@ -220,10 +77,110 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val TAG = "EditProfileActivity"
-        private const val PICK_IMAGE = 1
-        private const val TAKE_PHOTO = 2
-        private const val CAMERA_PERMISSION_CODE = 101
+    private fun openPhotoOptions() {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Select Option")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> {
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
+                    } else {
+                        dispatchTakePictureIntent()
+                    }
+                }
+                1 -> dispatchPickPictureIntent()
+            }
+        }
+        builder.show()
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    private fun dispatchPickPictureIntent() {
+        val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK)
+    }
+
+    private fun updateUsername(newUsername: String) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val response = apiService.updateUsername(newUsername)
+                if (response.message == "Username updated successfully!") {
+                    val intent = Intent().apply {
+                        putExtra("updatedUsername", newUsername)
+                    }
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                } else {
+                    // Handle error case
+                    Log.e("EditProfileActivity", "Failed to update username: ${response.message}")
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                Log.e("EditProfileActivity", "Exception occurred: ${e.message}")
+            }
+        }
+    }
+
+    private fun uploadPhoto(imageBitmap: Bitmap) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val stream = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                val byteArray = stream.toByteArray()
+                val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), byteArray)
+                val photoPart = MultipartBody.Part.createFormData("imgProfile", "profile.jpg", requestBody)
+                val response = apiService.uploadPhoto(photoPart)
+                if (response.message == "Profile picture updated successfully!") {
+                    // Handle success case
+                } else {
+                    // Handle error case
+                    Log.e("EditProfileActivity", "Failed to upload profile photo: ${response.message}")
+                }
+            } catch (e: Exception) {
+                // Handle exception
+                e.printStackTrace()
+                Log.e("EditProfileActivity", "Exception occurred: ${e.message}")
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                dispatchTakePictureIntent()
+            } else {
+                // Permission denied, show a message to the user
+                Log.e("EditProfileActivity", "Camera permission denied")
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {
+                    val imageBitmap = data?.extras?.get("data") as Bitmap
+                    binding.imgUser.setImageBitmap(imageBitmap)
+                    uploadPhoto(imageBitmap)
+                }
+                REQUEST_IMAGE_PICK -> {
+                    val selectedImageUri: Uri? = data?.data
+                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImageUri)
+                    binding.imgUser.setImageBitmap(bitmap)
+                    uploadPhoto(bitmap)
+                }
+            }
+        }
     }
 }

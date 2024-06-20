@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.capstone.project.tourify.R
 import com.capstone.project.tourify.data.local.entity.UserModel
 import com.capstone.project.tourify.data.remote.response.ReviewUserResponse
 import com.capstone.project.tourify.data.remote.retrofit.ApiConfig
@@ -33,6 +34,8 @@ class ReviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityReviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setupToolbar()
 
         tourismId = intent.getStringExtra("tourism_id")
 
@@ -110,6 +113,19 @@ class ReviewActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.materialBarCategory)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowTitleEnabled(true)
+            title = getString(R.string.review)
+        }
+
+        binding.materialBarCategory.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 }
 

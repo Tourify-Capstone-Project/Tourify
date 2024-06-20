@@ -83,4 +83,5 @@
     <string name="pesan_review">Share your experience!</string>
     <string name="desc_review">Your reviews help us continue to improve our services for you and all our customers. Thank you for your support and trust!</string>
     <string name="no_reviews">no reviews</string>
+    <string name="review">Review</string>
 </resources>
